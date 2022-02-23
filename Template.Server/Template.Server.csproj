@@ -18,4 +18,8 @@
     <ProjectReference Include="..\Template.Core\Template.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="appsettings.*.json" CopyToPublishDirectory="Never" />
+  </ItemGroup>
+
 </Project>
