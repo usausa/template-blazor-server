@@ -11,12 +11,12 @@ global using System.Threading.Tasks;
 
 //global using Microsoft.Extensions.Logging;
 
-//global using Smart;
-//global using Smart.Collections.Generic;
+global using Smart;
+global using Smart.Collections.Generic;
 //global using Smart.Data;
 //global using Smart.Data.Accessor;
 //global using Smart.Data.Accessor.Attributes;
-//global using Smart.Text;
+global using Smart.Text;
 
 //global using Template.Domain;
 //global using Template.Models.Connector;
