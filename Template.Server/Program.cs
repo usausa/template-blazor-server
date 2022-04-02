@@ -59,9 +59,6 @@ builder.Services
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-// Swagger
-builder.Services.AddSwaggerGen();
-
 //--------------------------------------------------------------------------------
 // Configure the HTTP request pipeline
 //--------------------------------------------------------------------------------
@@ -88,18 +85,8 @@ app.UseStaticFiles(new StaticFileOptions
     }
 });
 
-// Swagger
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
 // Routing
 app.UseRouting();
-
-// API
-app.MapControllers();
 
 // Blazor
 app.MapBlazorHub();
