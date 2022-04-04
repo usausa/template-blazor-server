@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Net.Http.Headers;
 
 using Serilog;
 
@@ -38,7 +37,6 @@ builder.Services.AddScoped<AuthenticationStateProvider>(p => p.GetRequiredServic
 //--------------------------------------------------------------------------------
 // Configure the HTTP request pipeline
 //--------------------------------------------------------------------------------
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -52,14 +50,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 // Static files
-app.UseStaticFiles(new StaticFileOptions
-{
-    OnPrepareResponse = ctx =>
-    {
-        ctx.Context.Response.Headers[HeaderNames.CacheControl] = "public, max-age=31536000";
-        ctx.Context.Response.Headers.Append("Expires", DateTime.UtcNow.AddYears(1).ToString("R", CultureInfo.InvariantCulture));
-    }
-});
+app.UseStaticFiles();
 
 // Authentication
 app.UseAuthentication();
