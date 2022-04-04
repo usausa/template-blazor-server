@@ -1,15 +1,9 @@
-using System.Text.Encodings.Web;
-using System.Text.Json.Serialization;
-using System.Text.Unicode;
-
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Net.Http.Headers;
 
 using Serilog;
 
-using Smart.AspNetCore;
-using Smart.AspNetCore.ApplicationModels;
-
-using Template.Components.Json;
+using Template.Server.Components.Authentication;
 
 #pragma warning disable CA1812
 
@@ -17,6 +11,9 @@ using Template.Components.Json;
 // Configure builder
 //--------------------------------------------------------------------------------
 var builder = WebApplication.CreateBuilder(args);
+
+// Add framework Services.
+builder.Services.AddHttpContextAccessor();
 
 // Log
 builder.Host
@@ -29,35 +26,14 @@ builder.Host
         loggerConfiguration.ReadFrom.Configuration(hostingContext.Configuration);
     });
 
-// Route
-builder.Services.Configure<RouteOptions>(options =>
-{
-    options.AppendTrailingSlash = true;
-});
-
-// Filter
-builder.Services.AddTimeLogging(options =>
-{
-    options.Threshold = 5000;
-});
-
-// API
-builder.Services
-    .AddControllers(options =>
-    {
-        options.Filters.AddTimeLogging();
-        options.Conventions.Add(new LowercaseControllerModelConvention());
-    })
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-        options.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
-        options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
-    });
-
 // Blazor
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+
+// Add Authentication component.
+builder.Services.Configure<CookieAuthenticationSetting>(builder.Configuration.GetSection("Authentication"));
+builder.Services.AddScoped<CookieAuthenticationStateProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider>(p => p.GetRequiredService<CookieAuthenticationStateProvider>());
 
 //--------------------------------------------------------------------------------
 // Configure the HTTP request pipeline
@@ -84,6 +60,10 @@ app.UseStaticFiles(new StaticFileOptions
         ctx.Context.Response.Headers.Append("Expires", DateTime.UtcNow.AddYears(1).ToString("R", CultureInfo.InvariantCulture));
     }
 });
+
+// Authentication
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Routing
 app.UseRouting();
