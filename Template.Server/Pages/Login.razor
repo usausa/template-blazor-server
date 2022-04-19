@@ -34,18 +34,15 @@
     public class LoginForm
     {
         [Required]
-        [AllowNull]
-        public string Username { get; set; }
+        public string Username { get; set; } = default!;
 
         [Required]
-        [AllowNull]
-        public string Password { get; set; }
+        public string Password { get; set; } = default!;
     }
 
     private readonly LoginForm form = new();
 
-    [AllowNull]
-    private CustomValidator customValidator;
+    private CustomValidator customValidator = default!;
 
     private async Task Submit()
     {

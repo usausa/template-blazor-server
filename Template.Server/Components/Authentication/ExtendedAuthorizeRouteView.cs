@@ -1,7 +1,5 @@
 namespace Template.Server.Components.Authentication;
 
-using System.Diagnostics.CodeAnalysis;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -40,8 +38,7 @@ public sealed class ExtendedAuthorizeRouteView : RouteView
     public object? Resource { get; set; }
 
     [Parameter]
-    [AllowNull]
-    public Type NotAuthorizedLayout { get; set; }
+    public Type NotAuthorizedLayout { get; set; } = default!;
 
     [CascadingParameter]
     private Task<AuthenticationState>? ExistingCascadedAuthenticationState { get; set; }
