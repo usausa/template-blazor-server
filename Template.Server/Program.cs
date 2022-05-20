@@ -1,3 +1,7 @@
+using System.Text.Encodings.Web;
+using System.Text.Json.Serialization;
+using System.Text.Unicode;
+
 using Microsoft.AspNetCore.Components.Authorization;
 
 using Serilog;
@@ -29,6 +33,19 @@ builder.Host
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
+// API TODO
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+        options.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
+        //options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
+    });
+
+// Swagger
+builder.Services.AddSwaggerGen();
+
 // Add Authentication component.
 builder.Services.Configure<CookieAuthenticationSetting>(builder.Configuration.GetSection("Authentication"));
 builder.Services.AddScoped<CookieAuthenticationStateProvider>();
@@ -42,7 +59,6 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
 
@@ -52,12 +68,22 @@ app.UseHttpsRedirection();
 // Static files
 app.UseStaticFiles();
 
+// Swagger
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 // Authentication
 app.UseAuthentication();
 app.UseAuthorization();
 
 // Routing
 app.UseRouting();
+
+// API
+app.MapControllers();
 
 // Blazor
 app.MapBlazorHub();
