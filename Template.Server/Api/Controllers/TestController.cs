@@ -13,6 +13,6 @@ public class TestController : BaseApiController
     [HttpGet]
     public IActionResult Error()
     {
-        throw new Exception("API error.");
+        throw new InvalidOperationException("API error.");
     }
 }
