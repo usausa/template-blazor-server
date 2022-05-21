@@ -4,6 +4,9 @@ using System.Text.Unicode;
 
 using Microsoft.AspNetCore.Components.Authorization;
 
+using MudBlazor;
+using MudBlazor.Services;
+
 using Serilog;
 
 using Template.Server.Components.Authentication;
@@ -32,6 +35,19 @@ builder.Host
 // Blazor
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+
+builder.Services.AddMudServices(config =>
+{
+    // Snackbar
+    config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight;
+    config.SnackbarConfiguration.PreventDuplicates = false;
+    config.SnackbarConfiguration.NewestOnTop = false;
+    config.SnackbarConfiguration.ShowCloseIcon = true;
+    config.SnackbarConfiguration.VisibleStateDuration = 5000;
+    config.SnackbarConfiguration.HideTransitionDuration = 500;
+    config.SnackbarConfiguration.ShowTransitionDuration = 500;
+    config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
+});
 
 // API TODO
 builder.Services

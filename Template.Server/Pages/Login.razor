@@ -5,30 +5,21 @@
 
 <PageTitle>Login</PageTitle>
 
-<div class="col-md-6 offset-md-3 mt-5">
-    <div class="card">
-        <h4 class="card-header">Login</h4>
-        <div class="card-body">
-            <EditForm Model="@form" OnValidSubmit="Submit">
-                <DataAnnotationsValidator />
-                <CustomValidator @ref="customValidator" />
-                <ValidationSummary />
+<EditForm Model="@form" OnValidSubmit="Submit">
+    <DataAnnotationsValidator />
+    <CustomValidator @ref="customValidator" />
+    <ValidationSummary />
 
-                <div class="mb-3">
-                    <label class="form-label">Username</label>
-                    <InputText @bind-Value="form.Username" class="form-control"/>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Password</label>
-                    <InputText @bind-Value="form.Password" type="password" class="form-control" />
-                </div>
-
-                <button type="submit" class="btn btn-primary">Login</button>
-            </EditForm>
-
-        </div>
+    <div class="mb-3">
+        <label class="form-label">Username</label>
+        <InputText @bind-Value="form.Username" class="form-control"/>
     </div>
-</div>
+    <div class="mb-3">
+        <label class="form-label">Password</label>
+        <InputText @bind-Value="form.Password" type="password" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+</EditForm>
 
 @code {
     public class LoginForm

@@ -1,0 +1,15 @@
+<PageTitle>Error</PageTitle>
+
+<h1>500 Error</h1>
+
+<p>@Exception?.Message</p>
+
+<button class="btn btn-outline-primary" @onclick="() => RecoverRequest.InvokeAsync()">Recover</button>
+
+@code {
+    [Parameter]
+    public Exception? Exception { get; set; }
+
+    [Parameter]
+    public EventCallback RecoverRequest { get; set; }
+}
