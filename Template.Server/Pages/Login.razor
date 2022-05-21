@@ -35,13 +35,19 @@
 
     private CustomValidator customValidator = default!;
 
+    [Parameter]
+    public bool Reload { get; set; }
+
     private async Task Submit()
     {
         customValidator.ClearErrors();
 
         if (await AuthenticationStateProvider.LoginAsync(form.Username, form.Password))
         {
-            NavigationManager.NavigateTo("/");
+            if (!Reload)
+            {
+                NavigationManager.NavigateTo("/");
+            }
         }
         else
         {
