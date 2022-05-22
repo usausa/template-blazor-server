@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using System.Text.Unicode;
 
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Extensions.Hosting.WindowsServices;
 
 using MudBlazor;
 using MudBlazor.Services;
@@ -20,7 +21,19 @@ using Template.Server.Components.Authentication;
 //--------------------------------------------------------------------------------
 // Configure builder
 //--------------------------------------------------------------------------------
-var builder = WebApplication.CreateBuilder(args);
+Directory.SetCurrentDirectory(AppContext.BaseDirectory);
+
+// Configure builder
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    Args = args,
+    ContentRootPath = WindowsServiceHelpers.IsWindowsService() ? AppContext.BaseDirectory : default
+});
+
+// Service
+builder.Host
+    .UseWindowsService()
+    .UseSystemd();
 
 // Add framework Services.
 builder.Services.AddHttpContextAccessor();
