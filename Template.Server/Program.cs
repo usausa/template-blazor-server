@@ -9,6 +9,10 @@ using MudBlazor.Services;
 
 using Serilog;
 
+using Smart.AspNetCore;
+using Smart.AspNetCore.ApplicationModels;
+
+using Template.Components.Json;
 using Template.Server.Components.Authentication;
 
 #pragma warning disable CA1812
@@ -32,6 +36,18 @@ builder.Host
         loggerConfiguration.ReadFrom.Configuration(hostingContext.Configuration);
     });
 
+// Route
+builder.Services.Configure<RouteOptions>(options =>
+{
+    options.AppendTrailingSlash = true;
+});
+
+// Filter
+builder.Services.AddTimeLogging(options =>
+{
+    options.Threshold = 5000;
+});
+
 // Blazor
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
@@ -49,14 +65,18 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
 });
 
-// API TODO
+// API
 builder.Services
-    .AddControllers()
+    .AddControllers(options =>
+    {
+        options.Filters.AddTimeLogging();
+        options.Conventions.Add(new LowercaseControllerModelConvention());
+    })
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         options.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
-        //options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
+        options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
     });
 
 // Swagger
