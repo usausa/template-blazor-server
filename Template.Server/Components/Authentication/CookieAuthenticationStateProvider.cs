@@ -53,19 +53,19 @@ public sealed class CookieAuthenticationStateProvider : AuthenticationStateProvi
         return Task.FromResult(new AuthenticationState(Anonymous));
     }
 
-    public async Task<bool> LoginAsync(string username, string password)
+    public async Task<bool> LoginAsync(string id, string password)
     {
         // TODO
-        if (username != password)
+        if (id != password)
         {
             return false;
         }
 
         var claims = new List<Claim>
         {
-            new(ClaimTypes.Name, username)
+            new(ClaimTypes.Name, id)
         };
-        if (username == "admin")
+        if (id == "admin")
         {
             claims.Add(new Claim(ClaimTypes.Role, "Administrator"));
         }
