@@ -1,1 +1,1 @@
-# Template for Blazor Server
+# Template project for Blazor Server
