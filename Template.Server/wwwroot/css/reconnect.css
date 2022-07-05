@@ -1,4 +1,4 @@
-﻿#components-reconnect-modal {
+#components-reconnect-modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -44,7 +44,7 @@
             left: 0;
             right: 0;
             margin: auto;
-            animation: rotation 1.5s linear 0s infinite;
+            animation: rotation 1.5s linear 0 infinite;
         }
 
 @keyframes rotation {
