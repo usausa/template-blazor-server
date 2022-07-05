@@ -1,0 +1,21 @@
+@page "/section"
+
+<PageTitle>Section</PageTitle>
+
+<LayoutSection>
+    <Menu>
+        <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Dense="true" AnchorOrigin="Origin.BottomRight">
+            <MudMenuItem OnClick="(() => OnClick(1))">Menu Item 1</MudMenuItem>
+            <MudMenuItem OnClick="(() => OnClick(2))">Menu Item 2</MudMenuItem>
+            <MudMenuItem OnClick="(() => OnClick(3))">Menu Item 3</MudMenuItem>
+        </MudMenu>
+    </Menu>
+</LayoutSection>
+
+@code
+{
+    private static void OnClick(int item)
+    {
+        System.Diagnostics.Debug.WriteLine($"Clicked: Item-{item}");
+    }
+}
