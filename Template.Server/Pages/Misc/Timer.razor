@@ -1,0 +1,39 @@
+@page "/misc/timer"
+@implements IDisposable
+
+<PageTitle>Timer</PageTitle>
+
+<MudText Typo="Typo.body1">@lastUpdate</MudText>
+
+@code {
+    private readonly System.Timers.Timer timer = new(1000);
+
+    private string? lastUpdate;
+
+    protected override void OnInitialized()
+    {
+        timer.Elapsed += (_, _) => OnTimerTick();
+        timer.Start();
+
+        Update();
+    }
+
+    public void Dispose()
+    {
+        timer.Dispose();
+    }
+
+    private void OnTimerTick()
+    {
+        InvokeAsync(() =>
+        {
+            Update();
+            StateHasChanged();
+        });
+    }
+
+    private void Update()
+    {
+        lastUpdate = DateTime.Now.ToString("HH:mm:ss");
+    }
+}

@@ -1,0 +1,69 @@
+@page "/misc/toast"
+@inject ISnackbar Snackbar
+
+<PageTitle>Toast</PageTitle>
+
+<MudButton Color="Color.Dark" @onclick="@(() => Snackbar.Add("Normal"))">Normal Snackbar</MudButton>
+<MudButton Color="Color.Info" @onclick="@(() => Snackbar.Add("Info", Severity.Info))">Info Snackbar</MudButton>
+<MudButton Color="Color.Success" @onclick="@(() => Snackbar.Add("Success", Severity.Success))">Success Snackbar</MudButton>
+<MudButton Color="Color.Warning" @onclick="@(() => Snackbar.Add("Warning", Severity.Warning))">Warning Snackbar</MudButton>
+<MudButton Color="Color.Error" @onclick="@(() => Snackbar.Add("Error", Severity.Error))">Error Snackbar</MudButton>
+
+<MudDivider />
+
+<MudButton Color="Color.Primary" @onclick="@(() => ChangeVariant("Text Snackbar", Variant.Text))">Open Text Snackbar</MudButton>
+<MudButton Color="Color.Secondary" @onclick="@(() => ChangeVariant("Filled Snackbar", Variant.Filled))">Open Filled Snackbar</MudButton>
+<MudButton Color="Color.Tertiary" @onclick="@(() => ChangeVariant("Outlined Snackbar", Variant.Outlined))">Open Outlined Snackbar</MudButton>
+
+<MudDivider />
+
+<MudButton Color="Color.Primary" OnClick="@ShowClickable">Clickable Snackbar</MudButton>
+
+<MudDivider />
+
+<MudButton Color="Color.Primary" OnClick="@ShowAction">Open Action Snackbar</MudButton>
+
+<MudDivider />
+
+<MudButton Color="Color.Primary" @onclick="@(() => Snackbar.Add("Snackbar with no icon.", Severity.Success, config => { config.HideIcon = true; }))">Open Snackbar</MudButton>
+<MudButton Color="Color.Primary" @onclick="@(() => Snackbar.Add("Snackbar with a custom icon.", Severity.Info, config => { config.Icon = Icons.Custom.Brands.GitHub; }))">Open Snackbar</MudButton>
+
+@code {
+    private void ChangeVariant(string message, Variant variant)
+    {
+        Snackbar.Clear();
+        Snackbar.Configuration.SnackbarVariant = variant;
+        Snackbar.Configuration.MaxDisplayedSnackbars = 10;
+        Snackbar.Add($"Normal {message}");
+        Snackbar.Add($"Info {message}", Severity.Info);
+        Snackbar.Add($"Success {message}", Severity.Success);
+        Snackbar.Add($"Warning {message}", Severity.Warning);
+        Snackbar.Add($"Error {message}", Severity.Error);
+    }
+
+    private void ShowClickable()
+    {
+        Snackbar.Add("Message", Severity.Normal, config =>
+        {
+            config.Onclick = _ =>
+            {
+                Snackbar.Add("Hello World!");
+                return Task.CompletedTask;
+            };
+        });
+    }
+
+    private void ShowAction()
+    {
+        Snackbar.Add("Message", Severity.Normal, config =>
+        {
+            config.Action = "Help";
+            config.ActionColor = Color.Primary;
+            config.Onclick = _ =>
+            {
+                Snackbar.Add("Help");
+                return Task.CompletedTask;
+            };
+        });
+    }
+}

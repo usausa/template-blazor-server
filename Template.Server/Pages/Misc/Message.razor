@@ -1,0 +1,66 @@
+@page "/misc/message"
+@inject IDialogService DialogService
+
+<PageTitle>Message</PageTitle>
+
+<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OnTestButtonClicked" >Test</MudButton>
+<MudChip>@result1</MudChip>
+
+<MudDivider />
+
+<MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="OnMarkupButtonClicked">Markup</MudButton>
+<MudChip>@result2</MudChip>
+
+<MudDivider />
+
+<MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="OnCustomButtonClicked" >Custom</MudButton>
+<MudChip>@result3</MudChip>
+<MudMessageBox @ref="customMessageBox" Title="Warning" CancelText="Cancel">
+    <MessageContent>
+        test <b><i>test</i></b> test
+    </MessageContent>
+    <YesButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Delete</MudButton>
+    </YesButton>
+</MudMessageBox>
+
+@code {
+    private bool? result1;
+
+    private bool? result2;
+
+    private bool? result3;
+
+    private MudMessageBox customMessageBox = default!;
+
+    private async void OnTestButtonClicked()
+    {
+        result1 = await DialogService.ShowMessageBox(
+            "Title",
+            "Message",
+            yesText: "OK",
+            noText: "No",
+            cancelText: "Cancel",
+            new DialogOptions
+            {
+                Position = DialogPosition.Center
+            });
+        StateHasChanged();
+    }
+
+    private async void OnMarkupButtonClicked()
+    {
+        result2 = await DialogService.ShowMessageBox(
+            "Secure The Ring",
+            (MarkupString)"123<br />456<br />789<br /><b>test<b/>",
+            yesText: "Yes",
+            cancelText: "Cancel");
+        StateHasChanged();
+    }
+
+    private async void OnCustomButtonClicked()
+    {
+        result3 = await customMessageBox.Show();
+        StateHasChanged();
+    }
+}
