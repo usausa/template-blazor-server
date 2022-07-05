@@ -4,5 +4,17 @@
     "inputFiles": [
       "wwwroot/css/site.css"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/css/reconnect.min.css",
+    "inputFiles": [
+      "wwwroot/css/reconnect.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/reconnect.min.js",
+    "inputFiles": [
+      "wwwroot/js/reconnect.js"
+    ]
   }
 ]

@@ -10,6 +10,7 @@
     <base href="~/" />
     <link href="lib/roboto-fontface-material/fonts/roboto-fontface-material.css" rel="stylesheet" />
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+    <link href="css/reconnect.min.css" rel="stylesheet" />
     <link href="css/site.min.css" rel="stylesheet" />
     <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
@@ -27,7 +28,15 @@
         <a class="dismiss">🗙</a>
     </div>
 
+    <div id="components-reconnect-modal">
+        <div class="loading">
+            <div class="loading-caption">Server disconnected. Reconnecting...</div>
+            <div class="loading-progress-ring"></div>
+        </div>
+    </div>
+
     <script src="_framework/blazor.server.js"></script>
+    <script src="js/reconnect.min.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
 </body>
 </html>
