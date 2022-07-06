@@ -8,12 +8,16 @@ using Microsoft.Extensions.Hosting.WindowsServices;
 using MudBlazor;
 using MudBlazor.Services;
 
+using PdfSharpCore.Fonts;
+
 using Serilog;
 
 using Smart.AspNetCore;
 using Smart.AspNetCore.ApplicationModels;
+using Smart.AspNetCore.Components;
 
 using Template.Components.Json;
+using Template.Components.Reports;
 using Template.Server.Components.Authentication;
 
 #pragma warning disable CA1812
@@ -99,6 +103,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.Configure<CookieAuthenticationSetting>(builder.Configuration.GetSection("Authentication"));
 builder.Services.AddScoped<CookieAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(p => p.GetRequiredService<CookieAuthenticationStateProvider>());
+
+// PDF
+GlobalFontSettings.FontResolver = new FontResolver(Directory.GetCurrentDirectory(), FontNames.Gothic, new Dictionary<string, string>
+{
+    { FontNames.Gothic, "ipaexg.ttf" }
+});
 
 //--------------------------------------------------------------------------------
 // Configure the HTTP request pipeline

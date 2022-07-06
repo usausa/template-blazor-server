@@ -1,0 +1,40 @@
+@page "/misc/pdf"
+@inject IJSRuntime Js
+@using PdfSharpCore.Pdf
+@using PdfSharpCore
+@using PdfSharpCore.Drawing
+@using Template.Components.Reports
+
+<PageTitle>Timer</PageTitle>
+
+<MudButton Color="Color.Primary" @onclick="@OnSaveClick">Save</MudButton>
+<MudButton Color="Color.Primary" @onclick="@OnNewWindowClick">New Window</MudButton>
+
+@code {
+    private async Task OnSaveClick()
+    {
+        await Js.SaveAsFile("test.pdf", "application/pdf", Generate());
+    }
+
+    private async Task OnNewWindowClick()
+    {
+        await Js.OpenNewWindow("application/pdf", Generate());
+    }
+
+    private static byte[] Generate()
+    {
+        using var ms = new MemoryStream();
+
+        using var document = new PdfDocument();
+
+        var page = document.AddPage();
+        page.Size = PageSize.A4;
+
+        using var gfx = XGraphics.FromPdfPage(page);
+        gfx.DrawStringTopLeft("てすと", Fonts.LargeFontB, 0, 0);
+
+        document.Save(ms);
+
+        return ms.ToArray();
+    }
+}
