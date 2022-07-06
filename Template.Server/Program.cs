@@ -14,7 +14,6 @@ using Serilog;
 
 using Smart.AspNetCore;
 using Smart.AspNetCore.ApplicationModels;
-using Smart.AspNetCore.Components;
 
 using Template.Components.Json;
 using Template.Components.Reports;
