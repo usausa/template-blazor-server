@@ -3,41 +3,55 @@
 @inject NavigationManager NavigationManager
 @inject CookieAuthenticationStateProvider AuthenticationStateProvider
 
-<MudThemeProvider Theme="@Styles.Theme" />
-<MudDialogProvider />
-<MudSnackbarProvider />
-
 <CascadingValue Value="this">
-    <MudLayout>
-        <MudAppBar Dense="true">
-            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(_ => DrawerToggle())" />
-            <MudSpacer />
-            @menu
-            <AuthorizeView>
-                <NotAuthorized>
-                    <MudIconButton Icon="@Icons.Material.Filled.Login" Color="Color.Inherit" OnClick="OnLoginClick" />
-                </NotAuthorized>
-                <Authorized>
-                    <MudText>@authenticationState!.User.Identity!.Name</MudText>
-                    <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" OnClick="OnLogoutClick"/>
-                </Authorized>
-            </AuthorizeView>
-        </MudAppBar>
-        <MudDrawer @bind-Open="drawerOpen" Elevation="1">
-            <MudDrawerHeader Dense="true">
-                <MudText Typo="Typo.h6">Typography</MudText>
-            </MudDrawerHeader>
-            <NavMenu />
-        </MudDrawer>
-        <MudMainContent>
-            <MudContainer MaxWidth="MaxWidth.Large" Class="pt-4">
-                @Body
-            </MudContainer>
-        </MudMainContent>
-    </MudLayout>
+    <ExtendedErrorBoundary @ref="errorBoundary">
+        <ChildContent>
+            <MudThemeProvider Theme="@Styles.Theme" />
+            <MudDialogProvider />
+            <MudSnackbarProvider />
+            <MudLayout>
+                <MudAppBar Dense="true">
+                    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(_ => DrawerToggle())" />
+                    <MudSpacer />
+                    @menu
+                    <AuthorizeView>
+                        <NotAuthorized>
+                            <MudIconButton Icon="@Icons.Material.Filled.Login" Color="Color.Inherit" OnClick="OnLoginClick" />
+                        </NotAuthorized>
+                        <Authorized>
+                            <MudText>@authenticationState!.User.Identity!.Name</MudText>
+                            <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" OnClick="OnLogoutClick"/>
+                        </Authorized>
+                    </AuthorizeView>
+                </MudAppBar>
+                <MudDrawer @bind-Open="drawerOpen" Elevation="1">
+                    <MudDrawerHeader Dense="true">
+                        <MudText Typo="Typo.h6">Typography</MudText>
+                    </MudDrawerHeader>
+                </MudDrawer>
+                <MudMainContent>
+                    <MudContainer MaxWidth="MaxWidth.Large" Class="pt-4">
+                        @Body
+                    </MudContainer>
+                </MudMainContent>
+            </MudLayout>
+        </ChildContent>
+        <ErrorContent>
+            <MudThemeProvider Theme="@Styles.NoMenuTheme" />
+            <MudDialogProvider />
+            <MudSnackbarProvider />
+            <MudMainContent>
+                <MudContainer MaxWidth="MaxWidth.Large" Class="d-flex justify-center pt-16">
+                    <ErrorDispatcher Exception="context" RecoverRequest="() => errorBoundary?.Recover()" />
+                </MudContainer>
+            </MudMainContent>
+        </ErrorContent>
+    </ExtendedErrorBoundary>
 </CascadingValue>
 
 @code {
+    private ErrorBoundary? errorBoundary;
+
     private RenderFragment? menu;
 
     private bool drawerOpen = true;
@@ -49,6 +63,8 @@
 
     protected override async Task OnParametersSetAsync()
     {
+        errorBoundary?.Recover();
+
         authenticationState = await AuthenticationState;
     }
 
