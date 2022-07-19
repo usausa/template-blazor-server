@@ -1,4 +1,4 @@
-namespace Template.Server.Components.Authentication;
+namespace Template.Server.Components;
 
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Ignore")]
 public class AuthorizeException : Exception
