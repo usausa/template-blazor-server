@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using System.Text.Unicode;
 
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Hosting.WindowsServices;
 
 using MudBlazor;
@@ -17,6 +18,7 @@ using Smart.AspNetCore.ApplicationModels;
 
 using Template.Components.Json;
 using Template.Components.Reports;
+using Template.Server.Components;
 using Template.Server.Components.Authentication;
 
 #pragma warning disable CA1812
@@ -80,6 +82,8 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.ShowTransitionDuration = 500;
     config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
 });
+
+builder.Services.AddSingleton<IErrorBoundaryLogger, ErrorBoundaryLogger>();
 
 // API
 builder.Services
