@@ -1,7 +1,7 @@
 @inherits LayoutComponentBase
 @implements IMenuSectionCallback
 @inject NavigationManager NavigationManager
-@inject CookieAuthenticationStateProvider AuthenticationStateProvider
+@inject LoginManager LoginManager
 
 <CascadingValue Value="this">
     <ErrorBoundary @ref="errorBoundary">
@@ -19,7 +19,7 @@
                             <MudIconButton Icon="@Icons.Material.Filled.Login" Color="Color.Inherit" OnClick="OnLoginClick" />
                         </NotAuthorized>
                         <Authorized>
-                            <MudText>@authenticationState!.User.Identity!.Name</MudText>
+                            <MudText>@user!.Name()</MudText>
                             <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" OnClick="OnLogoutClick"/>
                         </Authorized>
                     </AuthorizeView>
@@ -56,7 +56,7 @@
 
     private bool drawerOpen = true;
 
-    private AuthenticationState? authenticationState;
+    private ClaimsPrincipal? user;
 
     [CascadingParameter]
     private Task<AuthenticationState> AuthenticationState { get; set; } = default!;
@@ -65,7 +65,7 @@
     {
         errorBoundary?.Recover();
 
-        authenticationState = await AuthenticationState;
+        user = (await AuthenticationState).User;
     }
 
     public void SetMenu(RenderFragment? value)
@@ -86,7 +86,7 @@
 
     private async Task OnLogoutClick()
     {
-        await AuthenticationStateProvider.LogoutAsync();
+        await LoginManager.LogoutAsync();
         NavigationManager.NavigateTo("/");
     }
 }

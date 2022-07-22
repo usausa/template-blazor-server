@@ -104,8 +104,9 @@ builder.Services.AddSwaggerGen();
 
 // Add Authentication component.
 builder.Services.Configure<CookieAuthenticationSetting>(builder.Configuration.GetSection("Authentication"));
-builder.Services.AddScoped<CookieAuthenticationStateProvider>();
-builder.Services.AddScoped<AuthenticationStateProvider>(p => p.GetRequiredService<CookieAuthenticationStateProvider>());
+builder.Services.AddScoped<AuthenticationStateProvider, CookieAuthenticationStateProvider>();
+builder.Services.AddScoped(p => (ILoginProvider)p.GetRequiredService<AuthenticationStateProvider>());
+builder.Services.AddScoped<LoginManager>();
 
 // PDF
 GlobalFontSettings.FontResolver = new FontResolver(Directory.GetCurrentDirectory(), FontNames.Gothic, new Dictionary<string, string>

@@ -2,7 +2,7 @@
 @layout SimpleLayout
 @attribute [AllowAnonymous]
 @inject NavigationManager NavigationManager
-@inject CookieAuthenticationStateProvider AuthenticationStateProvider
+@inject LoginManager LoginManager
 
 <PageTitle>Login</PageTitle>
 
@@ -56,7 +56,7 @@
     {
         customValidator.ClearErrors();
 
-        if (await AuthenticationStateProvider.LoginAsync(form.Id, form.Password))
+        if (await LoginManager.LoginAsync(form.Id, form.Password))
         {
             if (!Reload)
             {

@@ -10,10 +10,8 @@ using Microsoft.JSInterop;
 
 using Smart.Text;
 
-public sealed class CookieAuthenticationStateProvider : AuthenticationStateProvider
+public sealed class CookieAuthenticationStateProvider : AuthenticationStateProvider, ILoginProvider
 {
-    private const string AccountKey = "__account";
-
     private static readonly DateTime ExpireDate = new(1970, 1, 1);
 
     private static readonly ClaimsPrincipal Anonymous = new();
@@ -53,30 +51,12 @@ public sealed class CookieAuthenticationStateProvider : AuthenticationStateProvi
         return Task.FromResult(new AuthenticationState(Anonymous));
     }
 
-    public async Task<bool> LoginAsync(string id, string password)
+    public async Task LoginAsync(ClaimsIdentity identity)
     {
-        // TODO
-        if (id != password)
-        {
-            return false;
-        }
+        await SaveAccountAsync(identity).ConfigureAwait(false);
 
-        var claims = new List<Claim>
-        {
-            new(ClaimTypes.Name, id)
-        };
-        if (id == "admin")
-        {
-            claims.Add(new Claim(ClaimTypes.Role, "Administrator"));
-        }
-
-        var identify = new ClaimsIdentity(claims, "custom");
-        await SaveAccountAsync(identify).ConfigureAwait(false);
-
-        cachedPrincipal = new ClaimsPrincipal(identify);
+        cachedPrincipal = new ClaimsPrincipal(identity);
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(cachedPrincipal)));
-
-        return true;
     }
 
     public async Task LogoutAsync()
@@ -106,7 +86,7 @@ public sealed class CookieAuthenticationStateProvider : AuthenticationStateProvi
 
     private ClaimsPrincipal? LoadAccount()
     {
-        var value = httpContextAccessor.HttpContext?.Request.Cookies[AccountKey];
+        var value = httpContextAccessor.HttpContext?.Request.Cookies[setting.AccountKey];
         if (String.IsNullOrEmpty(value))
         {
             return null;
@@ -137,6 +117,6 @@ public sealed class CookieAuthenticationStateProvider : AuthenticationStateProvi
 
     private async Task UpdateCookie(string value, DateTime expire)
     {
-        await jsRuntime.InvokeVoidAsync("eval", $"document.cookie = \"{AccountKey}={value}; expires={expire.ToUniversalTime():R}\"").ConfigureAwait(false);
+        await jsRuntime.InvokeVoidAsync("eval", $"document.cookie = \"{setting.AccountKey}={value}; expires={expire.ToUniversalTime():R}\"").ConfigureAwait(false);
     }
 }
