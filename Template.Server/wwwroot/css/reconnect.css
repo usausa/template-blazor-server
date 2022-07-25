@@ -1,3 +1,4 @@
+/* ReSharper disable RedundantUnits */
 #components-reconnect-modal {
     position: fixed;
     top: 0;
@@ -44,7 +45,7 @@
             left: 0;
             right: 0;
             margin: auto;
-            animation: rotation 1.5s linear 0 infinite;
+            animation: rotation 1.5s linear 0s infinite;
         }
 
 @keyframes rotation {
@@ -56,3 +57,5 @@
         transform: rotate(405deg);
     }
 }
+
+/* ReSharper restore RedundantUnits */
