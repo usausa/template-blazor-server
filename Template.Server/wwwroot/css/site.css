@@ -2,6 +2,27 @@ h1:focus {
     outline: none;
 }
 
-.text-center {
-    text-align: center;
+/* Basic
+----------------------------------------*/
+.text-nowrap {
+    white-space: nowrap;
+}
+
+/* Error page
+----------------------------------------*/
+.exception-detail {
+    white-space: pre-wrap;
+}
+
+/* Table
+----------------------------------------*/
+.column-shrink {
+    width: 0.1%;
+    white-space: nowrap;
+}
+
+/* Components
+----------------------------------------*/
+.tab-switch {
+    width: 6rem !important;
 }
