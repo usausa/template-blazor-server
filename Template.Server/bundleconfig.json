@@ -24,15 +24,15 @@
     ]
   },
   {
-    "outputFileName": "wwwroot/js/progress.min.js",
-    "inputFiles": [
-      "wwwroot/js/progress.js"
-    ]
-  },
-  {
     "outputFileName": "wwwroot/css/progress.min.css",
     "inputFiles": [
       "wwwroot/css/progress.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/progress.min.js",
+    "inputFiles": [
+      "wwwroot/js/progress.js"
     ]
   }
 ]

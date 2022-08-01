@@ -13,7 +13,7 @@
     {
         System.Diagnostics.Debug.WriteLine("**** Start ****");
 
-        using (Progress.Using())
+        using (Progress.Using("Waiting..."))
         {
             await Task.Delay(3000);
         }

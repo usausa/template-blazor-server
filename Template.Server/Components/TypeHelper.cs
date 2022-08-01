@@ -2,7 +2,7 @@ namespace Template.Server.Components;
 
 using System.Runtime.CompilerServices;
 
-public class TypeHelper
+public static class TypeHelper
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Func<T, bool> FilterBy<T>(Func<T, bool> func) => func;

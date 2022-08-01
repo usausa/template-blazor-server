@@ -5,7 +5,12 @@
     @ChildContent
 </CascadingValue>
 
-<dialog id="progress-modal" style="visibility: @visibility"><div id="progress-message-message">@progress.Message</div></dialog>
+<dialog id="progress-modal" style="visibility: @visibility">
+    <div class="progress">
+        <div class="progress-message">@progress.Message</div>
+        <div class="progress-indicator"></div>
+    </div>
+</dialog>
 
 @code {
     private readonly ProgressState progress = new();
@@ -29,5 +34,6 @@
     {
         visibility = progress.IsBusy ? "visible" : "hidden";
         Script.InvokeVoidAsync(progress.IsBusy ? "Progress.showProgress" : "Progress.hideProgress", "progress-modal");
+        StateHasChanged();
     }
 }

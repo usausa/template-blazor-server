@@ -17,8 +17,7 @@
     }
 
     #components-reconnect-modal .loading {
-        width: 360px;
-        height: 108px;
+        height: 80px;
         position: fixed;
         top: 0;
         bottom: 0;
@@ -27,15 +26,15 @@
         margin: auto;
     }
 
-        #components-reconnect-modal .loading .loading-caption {
-            color: #88a;
+        #components-reconnect-modal .loading .loading-message {
+            color: #E53935;
             font-size: 18px;
             text-align: center;
         }
 
-        #components-reconnect-modal .loading .loading-progress-ring {
+        #components-reconnect-modal .loading .loading-indicator {
             border: solid 10px;
-            border-color: #88a #eee #eee;
+            border-color: #E53935 #FFEBEE #FFEBEE;
             border-radius: 48px;
             position: absolute;
             width: 48px;
@@ -45,10 +44,10 @@
             left: 0;
             right: 0;
             margin: auto;
-            animation: rotation 1.5s linear 0s infinite;
+            animation: reconnect-rotation 1.5s linear 0s infinite;
         }
 
-@keyframes rotation {
+@keyframes reconnect-rotation {
     0% {
         transform: rotate(45deg);
     }
@@ -57,5 +56,4 @@
         transform: rotate(405deg);
     }
 }
-
 /* ReSharper restore RedundantUnits */
