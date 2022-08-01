@@ -1,0 +1,33 @@
+@implements IDisposable
+@inject IJSRuntime Script
+
+<CascadingValue Value="@progress">
+    @ChildContent
+</CascadingValue>
+
+<dialog id="progress-modal" style="visibility: @visibility"><div id="progress-message-message">@progress.Message</div></dialog>
+
+@code {
+    private readonly ProgressState progress = new();
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    private string visibility = "hidden";
+
+    protected override void OnInitialized()
+    {
+        progress.StateChanged += OnStateChanged;
+    }
+
+    public void Dispose()
+    {
+        progress.StateChanged -= OnStateChanged;
+    }
+
+    private void  OnStateChanged(object? sender, EventArgs e)
+    {
+        visibility = progress.IsBusy ? "visible" : "hidden";
+        Script.InvokeVoidAsync(progress.IsBusy ? "Progress.showProgress" : "Progress.hideProgress", "progress-modal");
+    }
+}

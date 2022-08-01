@@ -1,0 +1,23 @@
+@page "/misc/progress"
+
+<PageTitle>Progress</PageTitle>
+
+<MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="OnExecuteClick">Execute</MudButton>
+
+@code {
+    [CascadingParameter]
+    [AllowNull]
+    public ProgressState Progress { get; set; }
+
+    private async Task OnExecuteClick()
+    {
+        System.Diagnostics.Debug.WriteLine("**** Start ****");
+
+        using (Progress.Using())
+        {
+            await Task.Delay(3000);
+        }
+
+        System.Diagnostics.Debug.WriteLine("**** End ****");
+    }
+}

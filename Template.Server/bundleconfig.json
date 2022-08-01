@@ -6,6 +6,12 @@
     ]
   },
   {
+    "outputFileName": "wwwroot/js/app.min.js",
+    "inputFiles": [
+      "wwwroot/js/app.js"
+    ]
+  },
+  {
     "outputFileName": "wwwroot/css/reconnect.min.css",
     "inputFiles": [
       "wwwroot/css/reconnect.css"
@@ -15,6 +21,18 @@
     "outputFileName": "wwwroot/js/reconnect.min.js",
     "inputFiles": [
       "wwwroot/js/reconnect.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/progress.min.js",
+    "inputFiles": [
+      "wwwroot/js/progress.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/progress.min.css",
+    "inputFiles": [
+      "wwwroot/css/progress.css"
     ]
   }
 ]

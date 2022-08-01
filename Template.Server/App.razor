@@ -1,19 +1,21 @@
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
-            <ExtendedAuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" NotAuthorizedLayout="@typeof(SimpleLayout)">
-                <NotAuthorized>
-                    @if (context.User.Identity?.IsAuthenticated != true)
-                    {
-                        <Template.Server.Pages.LoginPage Reload="true" />
-                    }
-                    else
-                    {
-                        <Error403 />
-                    }
-                </NotAuthorized>
-            </ExtendedAuthorizeRouteView>
-            <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
+            <ProgressView>
+                <ExtendedAuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" NotAuthorizedLayout="@typeof(SimpleLayout)">
+                    <NotAuthorized>
+                        @if (context.User.Identity?.IsAuthenticated != true)
+                        {
+                            <Template.Server.Pages.LoginPage Reload="true" />
+                        }
+                        else
+                        {
+                            <Error403 />
+                        }
+                    </NotAuthorized>
+                </ExtendedAuthorizeRouteView>
+                <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
+            </ProgressView>
         </Found>
         <NotFound>
             <LayoutView Layout="@typeof(SimpleLayout)">
