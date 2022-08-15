@@ -117,6 +117,6 @@ public sealed class CookieAuthenticationStateProvider : AuthenticationStateProvi
 
     private async Task UpdateCookie(string value, DateTime expire)
     {
-        await jsRuntime.InvokeVoidAsync("eval", $"document.cookie = \"{setting.AccountKey}={value}; expires={expire.ToUniversalTime():R}\"").ConfigureAwait(false);
+        await jsRuntime.InvokeVoidAsync("eval", $"document.cookie = \"{setting.AccountKey}={value}; path=/; expires={expire.ToUniversalTime():R}\"").ConfigureAwait(false);
     }
 }
