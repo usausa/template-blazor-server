@@ -16,7 +16,6 @@ using Serilog;
 using Smart.AspNetCore;
 using Smart.AspNetCore.ApplicationModels;
 
-using Template.Components.Json;
 using Template.Components.Reports;
 using Template.Server.Components;
 using Template.Server.Components.Authentication;
@@ -96,7 +95,7 @@ builder.Services
     {
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         options.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
-        options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
+        options.JsonSerializerOptions.Converters.Add(new Template.Components.Json.DateTimeConverter());
     });
 
 // Swagger
