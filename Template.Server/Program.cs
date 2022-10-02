@@ -2,11 +2,8 @@ using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Hosting.WindowsServices;
 
-using MudBlazor;
 using MudBlazor.Services;
 
 using PdfSharpCore.Fonts;
