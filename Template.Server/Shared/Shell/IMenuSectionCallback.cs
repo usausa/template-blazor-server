@@ -1,4 +1,4 @@
-namespace Template.Server.Shared;
+namespace Template.Server.Shared.Shell;
 
 using Microsoft.AspNetCore.Components;
 

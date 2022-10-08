@@ -13,17 +13,17 @@ global using System.IO;
 global using System.Linq;
 global using System.Net;
 global using System.Net.Http;
-//global using System.Reactive;
-//global using System.Reactive.Disposables;
+global using System.Reactive;
+global using System.Reactive.Disposables;
 global using System.Runtime.CompilerServices;
 global using System.Security.Claims;
 global using System.Text;
 global using System.Threading;
 global using System.Threading.Tasks;
 
-//global using AutoMapper;
+global using AutoMapper;
 
-//global using FluentValidation;
+global using FluentValidation;
 
 global using Microsoft.AspNetCore.Authentication;
 global using Microsoft.AspNetCore.Authorization;
