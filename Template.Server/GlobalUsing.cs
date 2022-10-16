@@ -44,15 +44,20 @@ global using Smart;
 global using Smart.Collections.Generic;
 global using Smart.Text;
 
-//global using Template;
+// TODO
+global using Template;
 //global using Template.Domain;
 //global using Template.Models.Connector;
 //global using Template.Models.Entity;
 //global using Template.Models.Paging;
 //global using Template.Models.View;
 //global using Template.Services;
-//global using Template.Web.Authentication;
-//global using Template.Web.Infrastructure.Filters;
-//global using Template.Web.Infrastructure.Mvc;
-//global using Template.Web.Infrastructure.Token;
-//global using Template.Web.Settings;
+global using Template.Server.Components;
+global using Template.Server.Components.Authentication;
+global using Template.Server.Infrastructure;
+//global using Template.Server.Infrastructure.Bindings;
+//global using Template.Server.Infrastructure.Validation;
+//global using Template.Server.Pages.Dialogs;
+//global using Template.Server.Settings;
+global using Template.Server.Shared.Progress;
+global using Template.Server.Shared.Shell;

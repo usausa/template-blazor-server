@@ -8,14 +8,14 @@ using MudBlazor.Services;
 
 using PdfSharpCore.Fonts;
 
+using Prometheus;
+
 using Serilog;
 
 using Smart.AspNetCore;
 using Smart.AspNetCore.ApplicationModels;
 
 using Template.Components.Reports;
-using Template.Server.Components;
-using Template.Server.Components.Authentication;
 
 #pragma warning disable CA1812
 
@@ -56,12 +56,6 @@ builder.Services.Configure<RouteOptions>(options =>
     options.AppendTrailingSlash = true;
 });
 
-// Filter
-builder.Services.AddTimeLogging(options =>
-{
-    options.Threshold = 5000;
-});
-
 // Blazor
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
@@ -82,9 +76,16 @@ builder.Services.AddMudServices(config =>
 builder.Services.AddSingleton<IErrorBoundaryLogger, ErrorBoundaryLogger>();
 
 // API
+builder.Services.AddExceptionLogging();
+builder.Services.AddTimeLogging(options =>
+{
+    options.Threshold = 10_000;
+});
+
 builder.Services
     .AddControllers(options =>
     {
+        options.Filters.AddExceptionLogging();
         options.Filters.AddTimeLogging();
         options.Conventions.Add(new LowercaseControllerModelConvention());
     })
@@ -94,6 +95,9 @@ builder.Services
         options.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
         options.JsonSerializerOptions.Converters.Add(new Template.Components.Json.DateTimeConverter());
     });
+
+// Health
+builder.Services.AddHealthChecks();
 
 // Swagger
 builder.Services.AddSwaggerGen();
@@ -110,6 +114,20 @@ GlobalFontSettings.FontResolver = new FontResolver(Directory.GetCurrentDirectory
     { FontNames.Gothic, "ipaexg.ttf" }
 });
 
+// HTTP
+builder.Services.AddHttpClient();
+
+// TODO Data
+
+// TODO Mapper
+
+// TODO Security
+
+// TODO Storage
+
+// Service
+// TODO
+
 //--------------------------------------------------------------------------------
 // Configure the HTTP request pipeline
 //--------------------------------------------------------------------------------
@@ -123,6 +141,12 @@ if (!app.Environment.IsDevelopment())
 
 // HTTPS redirection
 app.UseHttpsRedirection();
+
+// Health
+app.UseHealthChecks("/health");
+
+// Metrics
+app.UseHttpMetrics();
 
 // Static files
 app.UseStaticFiles();
@@ -140,6 +164,9 @@ app.UseAuthorization();
 
 // Routing
 app.UseRouting();
+
+// Metrics
+app.MapMetrics();
 
 // API
 app.MapControllers();
