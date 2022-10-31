@@ -24,6 +24,10 @@ using Template.Components.Storage;
 using Template.Server.Application;
 using Template.Server.Application.Authentication;
 using System.Text.RegularExpressions;
+using Smart.Data.Accessor;
+
+using Template.Accessor;
+using Template.Services;
 
 #pragma warning disable CA1812
 
@@ -168,12 +172,19 @@ builder.Services.AddSingleton(static p => p.GetRequiredService<IOptions<FileStor
 builder.Services.AddSingleton<IStorage, FileStorage>();
 
 // Service
-// TODO
+builder.Services.AddSingleton<DataService>();
 
 //--------------------------------------------------------------------------------
 // Configure the HTTP request pipeline
 //--------------------------------------------------------------------------------
 var app = builder.Build();
+
+// Prepare
+if (!File.Exists(connectionStringBuilder.DataSource))
+{
+    var accessor = app.Services.GetRequiredService<IAccessorResolver<IDataAccessor>>().Accessor;
+    accessor.Create();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
