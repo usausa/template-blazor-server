@@ -1,7 +1,4 @@
 @inherits LayoutComponentBase
-@implements IMenuSectionCallback
-@inject NavigationManager NavigationManager
-@inject LoginManager LoginManager
 
 <CascadingValue Value="this">
     <ErrorBoundary @ref="errorBoundary">
@@ -16,10 +13,10 @@
                     @menu
                     <AuthorizeView>
                         <NotAuthorized>
-                            <MudIconButton Icon="@Icons.Material.Filled.Login" Color="Color.Inherit" OnClick="OnLoginClick" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Login" Color="Color.Inherit" Href="/login" />
                         </NotAuthorized>
                         <Authorized>
-                            <MudText>@user!.Name()</MudText>
+                            <MudText>@account.Name</MudText>
                             <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" OnClick="OnLogoutClick" />
                         </Authorized>
                     </AuthorizeView>
@@ -49,45 +46,3 @@
         </ErrorContent>
     </ErrorBoundary>
 </CascadingValue>
-
-@code {
-    private ErrorBoundary? errorBoundary;
-
-    private RenderFragment? menu;
-
-    private bool drawerOpen = true;
-
-    private ClaimsPrincipal? user;
-
-    [CascadingParameter]
-    private Task<AuthenticationState> AuthenticationState { get; set; } = default!;
-
-    protected override async Task OnParametersSetAsync()
-    {
-        errorBoundary?.Recover();
-
-        user = (await AuthenticationState).User;
-    }
-
-    public void SetMenu(RenderFragment? value)
-    {
-        menu = value;
-        StateHasChanged();
-    }
-
-    private void DrawerToggle()
-    {
-        drawerOpen = !drawerOpen;
-    }
-
-    private void OnLoginClick()
-    {
-        NavigationManager.NavigateTo("/login");
-    }
-
-    private async Task OnLogoutClick()
-    {
-        await LoginManager.LogoutAsync();
-        NavigationManager.NavigateTo("/");
-    }
-}

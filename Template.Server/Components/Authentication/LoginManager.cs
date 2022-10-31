@@ -4,11 +4,11 @@ using System.Security.Claims;
 
 public sealed class LoginManager
 {
-    private readonly ILoginProvider provider;
+    private readonly ILoginProvider loginProvider;
 
-    public LoginManager(ILoginProvider provider)
+    public LoginManager(ILoginProvider loginProvider)
     {
-        this.provider = provider;
+        this.loginProvider = loginProvider;
     }
 
     public async Task<bool> LoginAsync(string id, string password)
@@ -21,7 +21,9 @@ public sealed class LoginManager
 
         var claims = new List<Claim>
         {
-            new(ClaimTypes.Name, id)
+            new(ClaimTypes.NameIdentifier, id),
+            new(ClaimTypes.Name, id),
+            new(Claims.Group, "00"),
         };
         if (id == "admin")
         {
@@ -29,10 +31,12 @@ public sealed class LoginManager
         }
 
         var identify = new ClaimsIdentity(claims, "custom");
-        await provider.LoginAsync(identify);
+        await loginProvider.LoginAsync(identify);
 
         return true;
     }
 
-    public Task LogoutAsync() => provider.LogoutAsync();
+    public Task LogoutAsync() => loginProvider.LogoutAsync();
+
+    public Task UpdateToken() => loginProvider.UpdateToken();
 }

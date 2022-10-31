@@ -26,12 +26,3 @@
         </MudLayout>
     </ErrorContent>
 </ErrorBoundary>
-
-@code {
-    private ErrorBoundary? errorBoundary;
-
-    protected override void OnParametersSet()
-    {
-        errorBoundary?.Recover();
-    }
-}

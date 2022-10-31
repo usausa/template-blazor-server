@@ -1,14 +1,10 @@
 namespace Template.Server.Components.Authentication;
 
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.JSInterop;
-
-using Smart.Text;
 
 public sealed class CookieAuthenticationStateProvider : AuthenticationStateProvider, ILoginProvider
 {
@@ -53,7 +49,8 @@ public sealed class CookieAuthenticationStateProvider : AuthenticationStateProvi
 
     public async Task LoginAsync(ClaimsIdentity identity)
     {
-        await SaveAccountAsync(identity).ConfigureAwait(false);
+        var value = TokenHelper.BuildToken(identity, secretKey, setting.Issuer, setting.Expire);
+        await UpdateCookie(value, DateTime.Now.AddMinutes(setting.Expire)).ConfigureAwait(false);
 
         cachedPrincipal = new ClaimsPrincipal(identity);
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(cachedPrincipal)));
@@ -67,23 +64,6 @@ public sealed class CookieAuthenticationStateProvider : AuthenticationStateProvi
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(Anonymous)));
     }
 
-    private async Task SaveAccountAsync(ClaimsIdentity identity)
-    {
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = identity,
-            Expires = DateTime.UtcNow.AddDays(setting.Expire),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKey), SecurityAlgorithms.HmacSha256Signature),
-            Audience = setting.Issuer,
-            Issuer = setting.Issuer
-        };
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        var value = tokenHandler.WriteToken(token);
-
-        await UpdateCookie(value, DateTime.Now.AddMinutes(setting.Expire)).ConfigureAwait(false);
-    }
-
     private ClaimsPrincipal? LoadAccount()
     {
         var value = httpContextAccessor.HttpContext?.Request.Cookies[setting.AccountKey];
@@ -92,27 +72,19 @@ public sealed class CookieAuthenticationStateProvider : AuthenticationStateProvi
             return null;
         }
 
-        try
-        {
-            var parameter = new TokenValidationParameters
-            {
-                IssuerSigningKey = new SymmetricSecurityKey(secretKey),
-                ValidAudience = setting.Issuer,
-                ValidIssuer = setting.Issuer
-            };
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var principal = tokenHandler.ValidateToken(value, parameter, out var validatedToken);
-            if (validatedToken.ValidTo < DateTime.UtcNow)
-            {
-                return null;
-            }
+        return TokenHelper.ParseToken(value, secretKey, setting.Issuer);
+    }
 
-            return principal;
-        }
-        catch (SecurityTokenException)
+    public async Task UpdateToken()
+    {
+        if (cachedPrincipal is null)
         {
-            return null;
+            return;
         }
+
+        var identity = cachedPrincipal.Identities.First();
+        var value = TokenHelper.BuildToken(identity, secretKey, setting.Issuer, setting.Expire);
+        await UpdateCookie(value, DateTime.Now.AddMinutes(setting.Expire)).ConfigureAwait(false);
     }
 
     private async Task UpdateCookie(string value, DateTime expire)

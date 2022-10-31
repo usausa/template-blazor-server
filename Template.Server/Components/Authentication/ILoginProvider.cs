@@ -7,4 +7,6 @@ public interface ILoginProvider
     Task LoginAsync(ClaimsIdentity identity);
 
     Task LogoutAsync();
+
+    Task UpdateToken();
 }

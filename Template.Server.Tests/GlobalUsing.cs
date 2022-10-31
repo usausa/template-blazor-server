@@ -19,17 +19,29 @@ global using System.Text;
 global using System.Threading;
 global using System.Threading.Tasks;
 
+global using AutoMapper;
+
+// TODO
+global using Bunit;
+
+global using Microsoft.AspNetCore.Authentication;
+global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.Mvc;
+
 global using Microsoft.Extensions.Logging;
 
 global using Smart;
 global using Smart.Collections.Generic;
-//global using Smart.Data;
-//global using Smart.Data.Accessor;
-//global using Smart.Data.Accessor.Attributes;
 global using Smart.Text;
 
+// TODO
+global using Template;
 global using Template.Domain;
 //global using Template.Models.Connector;
 //global using Template.Models.Entity;
 //global using Template.Models.Paging;
 //global using Template.Models.View;
+//global using Template.Services;
+
+global using Xunit;

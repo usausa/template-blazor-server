@@ -16,8 +16,15 @@ using Smart.AspNetCore;
 using Smart.AspNetCore.ApplicationModels;
 
 using Template.Components.Reports;
+using Template.Components.Security;
+using Template.Components.Storage;
+using Template.Server.Application;
+using Template.Server.Application.Authentication;
 
 #pragma warning disable CA1812
+
+// System
+Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
 //--------------------------------------------------------------------------------
 // Configure builder
@@ -67,10 +74,10 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.PreventDuplicates = false;
     config.SnackbarConfiguration.NewestOnTop = false;
     config.SnackbarConfiguration.ShowCloseIcon = true;
-    config.SnackbarConfiguration.VisibleStateDuration = 5000;
+    config.SnackbarConfiguration.VisibleStateDuration = 3000;
     config.SnackbarConfiguration.HideTransitionDuration = 500;
     config.SnackbarConfiguration.ShowTransitionDuration = 500;
-    config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
+    config.SnackbarConfiguration.SnackbarVariant = Variant.Outlined;
 });
 
 builder.Services.AddSingleton<IErrorBoundaryLogger, ErrorBoundaryLogger>();
@@ -81,13 +88,16 @@ builder.Services.AddTimeLogging(options =>
 {
     options.Threshold = 10_000;
 });
+builder.Services.AddSingleton<AuthorizeExceptionFilter>();
 
 builder.Services
     .AddControllers(options =>
     {
         options.Filters.AddExceptionLogging();
         options.Filters.AddTimeLogging();
+        options.Filters.AddService<AuthorizeExceptionFilter>();
         options.Conventions.Add(new LowercaseControllerModelConvention());
+        options.ModelBinderProviders.Insert(0, new AccountModelBinderProvider());
     })
     .AddJsonOptions(options =>
     {
@@ -105,8 +115,15 @@ builder.Services.AddSwaggerGen();
 // Add Authentication component.
 builder.Services.Configure<CookieAuthenticationSetting>(builder.Configuration.GetSection("Authentication"));
 builder.Services.AddScoped<AuthenticationStateProvider, CookieAuthenticationStateProvider>();
-builder.Services.AddScoped(p => (ILoginProvider)p.GetRequiredService<AuthenticationStateProvider>());
+builder.Services.AddScoped(static p => (ILoginProvider)p.GetRequiredService<AuthenticationStateProvider>());
 builder.Services.AddScoped<LoginManager>();
+
+// Validation
+ValidatorOptions.Global
+    .UseDisplayName()
+    .UseCustomLocalizeMessage();
+ValidatorOptions.Global.DefaultClassLevelCascadeMode = CascadeMode.Continue;
+ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Stop;
 
 // PDF
 GlobalFontSettings.FontResolver = new FontResolver(Directory.GetCurrentDirectory(), FontNames.Gothic, new Dictionary<string, string>
@@ -119,11 +136,20 @@ builder.Services.AddHttpClient();
 
 // TODO Data
 
-// TODO Mapper
+// Mapper
+builder.Services.AddSingleton<IMapper>(new Mapper(new MapperConfiguration(c =>
+{
+    c.AddProfile<MappingProfile>();
+})));
 
-// TODO Security
+// Security
+builder.Services.AddSingleton<SaltHashPasswordOptions>();
+builder.Services.AddSingleton<IPasswordProvider, SaltHashPasswordProvider>();
 
-// TODO Storage
+// Storage
+builder.Services.Configure<FileStorageOptions>(builder.Configuration.GetSection("Storage"));
+builder.Services.AddSingleton(static p => p.GetRequiredService<IOptions<FileStorageOptions>>().Value);
+builder.Services.AddSingleton<IStorage, FileStorage>();
 
 // Service
 // TODO
@@ -167,6 +193,10 @@ app.UseRouting();
 
 // Metrics
 app.MapMetrics();
+
+// Authentication
+app.UseAuthentication();
+app.UseAuthorization();
 
 // API
 app.MapControllers();

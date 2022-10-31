@@ -1,14 +1,12 @@
 @page "/login"
+@inherits AppComponentBase
 @layout SimpleLayout
-@attribute [AllowAnonymous]
-@inject NavigationManager NavigationManager
-@inject LoginManager LoginManager
 
 <PageTitle>Login</PageTitle>
 
 <MudPaper Class="pa-4" Style="width: 360px">
-    <EditForm Model="@form" OnValidSubmit="Submit">
-        <DataAnnotationsValidator />
+    <EditForm Model="form" OnValidSubmit="OnValidSubmit">
+        <FluentValidationValidator Validator="Validator" />
         <CustomValidator @ref="customValidator" />
 
         <MudGrid Spacing="1">
@@ -16,65 +14,22 @@
                 <MudText Typo="Typo.h4">Login</MudText>
             </MudItem>
             <MudItem xs="12" Class="d-flex justify-center">
-                <MudTextField
-                    Label="Id" Variant="Variant.Outlined" Margin="Margin.Dense"
-                    @bind-Value="form.Id" For="@(() => form.Id)" />
+                <MudTextField @bind-Value="form.Id" For="() => form.Id" MaxLength="Length.Id"
+                              Label="ID" Variant="Variant.Outlined" Margin="Margin.Dense" />
             </MudItem>
             <MudItem xs="12" Class="d-flex justify-center">
-                <MudTextField
-                    Label="Password" Variant="Variant.Outlined" Margin="Margin.Dense"
-                    @bind-Value="form.Password" For="@(() => form.Password)"
-                    InputType="@PasswordInputType(passwordVisible)" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon(passwordVisible)" OnAdornmentClick="TogglePasswordVisibility" />
+                <MudTextField @bind-Value="form.Password" For="() => form.Password" MaxLength="Length.Password"
+                              Label="パスワード" Variant="Variant.Outlined" Margin="Margin.Dense"
+                              InputType="PasswordInputType(passwordVisible)" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon(passwordVisible)" OnAdornmentClick="TogglePasswordVisibility" />
             </MudItem>
             <MudItem xs="12" Class="d-flex justify-center">
-                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" Style="width: 100%">Login</MudButton>
+                <MudButton ButtonType="ButtonType.Submit" Class="btn-full" EndIcon="@Icons.Material.Filled.Login" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large">ログイン</MudButton>
             </MudItem>
+            <Condition Value="!String.IsNullOrEmpty(errorMessage)">
+                <MudItem xs="12" Class="d-flex flex-column">
+                    <MudAlert Severity="Severity.Error" NoIcon="true" ContentAlignment="HorizontalAlignment.Center">@errorMessage</MudAlert>
+                </MudItem>
+            </Condition>
         </MudGrid>
     </EditForm>
 </MudPaper>
-
-@code {
-    public class LoginForm
-    {
-        [Required]
-        public string Id { get; set; } = default!;
-
-        [Required]
-        public string Password { get; set; } = default!;
-    }
-
-    private readonly LoginForm form = new();
-
-    private CustomValidator customValidator = default!;
-
-    private bool passwordVisible;
-
-    [Parameter]
-    public bool Reload { get; set; }
-
-    private async Task Submit()
-    {
-        customValidator.ClearErrors();
-
-        if (await LoginManager.LoginAsync(form.Id, form.Password))
-        {
-            if (!Reload)
-            {
-                NavigationManager.NavigateTo("/");
-            }
-        }
-        else
-        {
-            var errors = new Dictionary<string, List<string>>
-            {
-                { nameof(form.Id), new() { "Login failed." } }
-            };
-            customValidator.DisplayErrors(errors);
-        }
-    }
-
-    private void TogglePasswordVisibility()
-    {
-        passwordVisible = !passwordVisible;
-    }
-}
