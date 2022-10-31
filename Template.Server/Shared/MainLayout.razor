@@ -13,7 +13,7 @@
                     @menu
                     <AuthorizeView>
                         <NotAuthorized>
-                            <MudIconButton Icon="@Icons.Material.Filled.Login" Color="Color.Inherit" Href="/login" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Login" Color="Color.Inherit" OnClick="OnLoginClick"  />
                         </NotAuthorized>
                         <Authorized>
                             <MudText>@account.Name</MudText>

@@ -19,11 +19,11 @@
             </MudItem>
             <MudItem xs="12" Class="d-flex justify-center">
                 <MudTextField @bind-Value="form.Password" For="() => form.Password" MaxLength="Length.Password"
-                              Label="パスワード" Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Label="Password" Variant="Variant.Outlined" Margin="Margin.Dense"
                               InputType="PasswordInputType(passwordVisible)" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon(passwordVisible)" OnAdornmentClick="TogglePasswordVisibility" />
             </MudItem>
             <MudItem xs="12" Class="d-flex justify-center">
-                <MudButton ButtonType="ButtonType.Submit" Class="btn-full" EndIcon="@Icons.Material.Filled.Login" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large">ログイン</MudButton>
+                <MudButton ButtonType="ButtonType.Submit" Class="btn-full" EndIcon="@Icons.Material.Filled.Login" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large">Login</MudButton>
             </MudItem>
             <Condition Value="!String.IsNullOrEmpty(errorMessage)">
                 <MudItem xs="12" Class="d-flex flex-column">

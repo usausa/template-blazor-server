@@ -23,7 +23,7 @@ public sealed class LoginManager
         {
             new(ClaimTypes.NameIdentifier, id),
             new(ClaimTypes.Name, id),
-            new(Claims.Group, "00"),
+            new(Claims.Group, "00")
         };
         if (id == "admin")
         {
