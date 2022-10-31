@@ -39,7 +39,7 @@ global using Smart.Text;
 global using Template;
 global using Template.Domain;
 //global using Template.Models.Connector;
-//global using Template.Models.Entity;
+global using Template.Models.Entity;
 //global using Template.Models.Paging;
 //global using Template.Models.View;
 //global using Template.Services;

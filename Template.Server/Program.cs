@@ -2,6 +2,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Hosting.WindowsServices;
 
 using MudBlazor.Services;
@@ -14,12 +15,15 @@ using Serilog;
 
 using Smart.AspNetCore;
 using Smart.AspNetCore.ApplicationModels;
+using Smart.Data.Accessor.Extensions.DependencyInjection;
+using Smart.Data;
 
 using Template.Components.Reports;
 using Template.Components.Security;
 using Template.Components.Storage;
 using Template.Server.Application;
 using Template.Server.Application.Authentication;
+using System.Text.RegularExpressions;
 
 #pragma warning disable CA1812
 
@@ -134,7 +138,19 @@ GlobalFontSettings.FontResolver = new FontResolver(Directory.GetCurrentDirectory
 // HTTP
 builder.Services.AddHttpClient();
 
-// TODO Data
+// Data
+var connectionStringBuilder = new SqliteConnectionStringBuilder
+{
+    DataSource = "Data.db",
+    Pooling = true,
+    Cache = SqliteCacheMode.Shared
+};
+var connectionString = connectionStringBuilder.ConnectionString;
+builder.Services.AddSingleton<IDbProvider>(new DelegateDbProvider(() => new SqliteConnection(connectionString)));
+builder.Services.AddSingleton<IDialect>(new DelegateDialect(
+    static ex => (ex as SqliteException)?.SqliteErrorCode == 1555,
+    static x => Regex.Replace(x, @"[%_]", "[$0]")));
+builder.Services.AddDataAccessor();
 
 // Mapper
 builder.Services.AddSingleton<IMapper>(new Mapper(new MapperConfiguration(c =>
