@@ -38,7 +38,7 @@ public static class ProgressStateExtensions
         }
     }
 
-    public static async ValueTask Using(this ProgressState state, Task func)
+    public static async ValueTask UsingAsync(this ProgressState state, Task func)
     {
         using (new ProgressStateScope(state))
         {
@@ -46,7 +46,7 @@ public static class ProgressStateExtensions
         }
     }
 
-    public static async ValueTask Using(this ProgressState state, string message, Task func)
+    public static async ValueTask UsingAsync(this ProgressState state, string message, Task func)
     {
         using (new ProgressStateScope(state, message))
         {
@@ -54,7 +54,7 @@ public static class ProgressStateExtensions
         }
     }
 
-    public static async ValueTask Using(this ProgressState state, ValueTask func)
+    public static async ValueTask UsingAsync(this ProgressState state, ValueTask func)
     {
         using (new ProgressStateScope(state))
         {
@@ -62,7 +62,7 @@ public static class ProgressStateExtensions
         }
     }
 
-    public static async ValueTask Using(this ProgressState state, string message, ValueTask func)
+    public static async ValueTask UsingAsync(this ProgressState state, string message, ValueTask func)
     {
         using (new ProgressStateScope(state, message))
         {
@@ -70,7 +70,7 @@ public static class ProgressStateExtensions
         }
     }
 
-    public static async ValueTask<T> Using<T>(this ProgressState state, Task<T> func)
+    public static async ValueTask<T> UsingAsync<T>(this ProgressState state, Task<T> func)
     {
         using (new ProgressStateScope(state))
         {
@@ -78,7 +78,7 @@ public static class ProgressStateExtensions
         }
     }
 
-    public static async ValueTask<T> Using<T>(this ProgressState state, string message, Task<T> func)
+    public static async ValueTask<T> UsingAsync<T>(this ProgressState state, string message, Task<T> func)
     {
         using (new ProgressStateScope(state, message))
         {
@@ -86,7 +86,7 @@ public static class ProgressStateExtensions
         }
     }
 
-    public static async ValueTask<T> Using<T>(this ProgressState state, ValueTask<T> func)
+    public static async ValueTask<T> UsingAsync<T>(this ProgressState state, ValueTask<T> func)
     {
         using (new ProgressStateScope(state))
         {
@@ -94,7 +94,7 @@ public static class ProgressStateExtensions
         }
     }
 
-    public static async ValueTask<T> Using<T>(this ProgressState state, string message, ValueTask<T> func)
+    public static async ValueTask<T> UsingAsync<T>(this ProgressState state, string message, ValueTask<T> func)
     {
         using (new ProgressStateScope(state, message))
         {
