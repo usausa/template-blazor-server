@@ -32,7 +32,7 @@ public class DataService
     {
         try
         {
-            await dataAccessor.InsertAsync(entity);
+            await dataAccessor.InsertAsync(entity).ConfigureAwait(false);
             return true;
         }
         catch (DbException ex)
