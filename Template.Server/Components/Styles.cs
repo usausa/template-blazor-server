@@ -10,7 +10,8 @@ public static class Styles
         {
             Primary = Colors.Blue.Default,
             Secondary = Colors.Cyan.Accent4,
-            Info = Colors.Teal.Default,
+            Tertiary = Colors.Teal.Accent4,
+            Info = Colors.LightBlue.Default,
             AppbarBackground = Colors.Blue.Darken4
         }
     };
@@ -21,7 +22,8 @@ public static class Styles
         {
             Primary = Colors.Blue.Default,
             Secondary = Colors.Green.Accent4,
-            Info = Colors.Teal.Default,
+            Tertiary = Colors.Teal.Accent4,
+            Info = Colors.LightBlue.Default,
             AppbarBackground = Colors.Blue.Darken4
         },
         LayoutProperties = new LayoutProperties

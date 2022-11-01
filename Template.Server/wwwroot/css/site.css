@@ -68,6 +68,52 @@ h1:focus {
         padding: 4px 8px !important;
     }
 
+/* Button
+----------------------------------------*/
+.btn-xs {
+    width: 64px;
+    min-width: 64px !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+}
+
+.btn-sm {
+    width: 80px;
+    min-width: 80px !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+}
+
+.btn-md {
+    width: 96px;
+    min-width: 96px !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+}
+
+.btn-lg {
+    width: 112px;
+    min-width: 112px !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+}
+
+.btn-xl {
+    width: 128px;
+    min-width: 128px !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+}
+
+.btn-full {
+    width: 100%;
+}
+
+.btn-dense {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
 /* Table
 ----------------------------------------*/
 .column-shrink {
