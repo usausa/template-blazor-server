@@ -23,12 +23,13 @@ using Template.Components.Reports;
 using Template.Components.Security;
 using Template.Components.Storage;
 using Template.Server.Application;
-using Template.Server.Application.Authentication;
 
 using Smart.Data.Accessor;
 
 using Template.Accessor;
 using Template.Services;
+
+using Smart.AspNetCore.Filters;
 
 #pragma warning disable CA1812
 
@@ -97,14 +98,14 @@ builder.Services.AddTimeLogging(options =>
 {
     options.Threshold = 10_000;
 });
-builder.Services.AddSingleton<AuthorizeExceptionFilter>();
+builder.Services.AddSingleton<ExceptionStatusFilter>();
 
 builder.Services
     .AddControllers(options =>
     {
         options.Filters.AddExceptionLogging();
         options.Filters.AddTimeLogging();
-        options.Filters.AddService<AuthorizeExceptionFilter>();
+        options.Filters.AddService<ExceptionStatusFilter>();
         options.Conventions.Add(new LowercaseControllerModelConvention());
         options.ModelBinderProviders.Insert(0, new AccountModelBinderProvider());
     })
