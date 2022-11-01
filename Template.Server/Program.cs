@@ -213,10 +213,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Authentication
-app.UseAuthentication();
-app.UseAuthorization();
-
 // Routing
 app.UseRouting();
 
