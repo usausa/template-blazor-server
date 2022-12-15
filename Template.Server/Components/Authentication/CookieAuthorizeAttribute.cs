@@ -10,7 +10,7 @@ public sealed class CookieAuthorizeAttribute : Attribute, IFilterFactory
 
     public IFilterMetadata CreateInstance(IServiceProvider serviceProvider)
     {
-        return new CookieAuthorizeFilter(serviceProvider.GetRequiredService<IOptions<CookieAuthenticationSetting>>().Value!);
+        return new CookieAuthorizeFilter(serviceProvider.GetRequiredService<IOptions<CookieAuthenticationSetting>>().Value);
     }
 
     public sealed class CookieAuthorizeFilter : IAuthorizationFilter
