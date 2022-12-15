@@ -14,18 +14,14 @@ public sealed class SaltHashPasswordProvider : IPasswordProvider
     public bool Match(string password, string hash)
     {
         var salt = hash[..options.SaltLength];
-
-        using var algorithm = SHA256.Create();
-        var bytes = algorithm.ComputeHash(Encoding.ASCII.GetBytes(salt + password));
+        var bytes = SHA256.HashData(Encoding.ASCII.GetBytes(salt + password));
         return salt + Convert.ToBase64String(bytes) == hash;
     }
 
     public string GenerateHash(string password)
     {
         var salt = GenerateSalt();
-
-        using var algorithm = SHA256.Create();
-        var bytes = algorithm.ComputeHash(Encoding.ASCII.GetBytes(salt + password));
+        var bytes = SHA256.HashData(Encoding.ASCII.GetBytes(salt + password));
         return salt + Convert.ToBase64String(bytes);
     }
 

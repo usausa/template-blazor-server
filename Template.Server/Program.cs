@@ -31,7 +31,7 @@ using Template.Services;
 
 using Smart.AspNetCore.Filters;
 
-#pragma warning disable CA1812
+#pragma warning disable CA1852
 
 // System
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
