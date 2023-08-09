@@ -27,7 +27,7 @@ public sealed class CookieAuthenticationStateProvider : AuthenticationStateProvi
         this.httpContextAccessor = httpContextAccessor;
         this.jsRuntime = jsRuntime;
         this.setting = setting.Value;
-        secretKey = HexEncoder.Decode(setting.Value.SecretKey);
+        secretKey = Convert.FromHexString(setting.Value.SecretKey);
     }
 
     public override Task<AuthenticationState> GetAuthenticationStateAsync()

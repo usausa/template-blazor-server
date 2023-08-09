@@ -22,7 +22,7 @@ public sealed class CookieAuthorizeAttribute : Attribute, IFilterFactory
         public CookieAuthorizeFilter(CookieAuthenticationSetting setting)
         {
             this.setting = setting;
-            secretKey = HexEncoder.Decode(setting.SecretKey);
+            secretKey = Convert.FromHexString(setting.SecretKey);
         }
 
         public void OnAuthorization(AuthorizationFilterContext context)
