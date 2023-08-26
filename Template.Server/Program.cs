@@ -159,8 +159,8 @@ builder.Services.AddSingleton<IMapper>(new Mapper(new MapperConfiguration(c =>
 })));
 
 // Security
-builder.Services.AddSingleton<SaltHashPasswordOptions>();
-builder.Services.AddSingleton<IPasswordProvider, SaltHashPasswordProvider>();
+builder.Services.AddSingleton<DefaultPasswordProviderOptions>();
+builder.Services.AddSingleton<IPasswordProvider, DefaultPasswordProvider>();
 
 // Storage
 builder.Services.Configure<FileStorageOptions>(builder.Configuration.GetSection("Storage"));

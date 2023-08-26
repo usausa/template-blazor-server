@@ -2,7 +2,7 @@ namespace Template.Components.Security;
 
 public interface IPasswordProvider
 {
-    bool Match(string password, string hash);
+    bool Match(string password, byte[] hash);
 
-    string GenerateHash(string password);
+    byte[] Generate(string password);
 }
