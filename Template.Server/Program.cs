@@ -112,15 +112,6 @@ builder.Services
 
 builder.Services.AddEndpointsApiExplorer();
 
-// Health
-builder.Services.AddHealthChecks();
-
-if (!builder.Environment.IsProduction())
-{
-    // Swagger
-    builder.Services.AddSwaggerGen();
-}
-
 // Add Authentication component.
 builder.Services.Configure<CookieAuthenticationSetting>(builder.Configuration.GetSection("Authentication"));
 builder.Services.AddScoped<AuthenticationStateProvider, CookieAuthenticationStateProvider>();
@@ -175,6 +166,16 @@ builder.Services.AddSingleton<IStorage, FileStorage>();
 // Service
 builder.Services.AddSingleton<DataService>();
 
+// Health
+builder.Services.AddHealthChecks();
+
+// Develop
+if (!builder.Environment.IsProduction())
+{
+    // Swagger
+    builder.Services.AddSwaggerGen();
+}
+
 //--------------------------------------------------------------------------------
 // Configure the HTTP request pipeline
 //--------------------------------------------------------------------------------
@@ -214,9 +215,10 @@ app.UseHealthChecks("/health");
 // Metrics
 app.UseHttpMetrics();
 
-// Swagger
+// Develop
 if (app.Environment.IsDevelopment())
 {
+    // Swagger
     app.UseSwagger();
     app.UseSwaggerUI();
 }
