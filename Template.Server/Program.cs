@@ -110,11 +110,16 @@ builder.Services
         options.JsonSerializerOptions.Converters.Add(new Template.Components.Json.DateTimeConverter());
     });
 
+builder.Services.AddEndpointsApiExplorer();
+
 // Health
 builder.Services.AddHealthChecks();
 
-// Swagger
-builder.Services.AddSwaggerGen();
+if (!builder.Environment.IsProduction())
+{
+    // Swagger
+    builder.Services.AddSwaggerGen();
+}
 
 // Add Authentication component.
 builder.Services.Configure<CookieAuthenticationSetting>(builder.Configuration.GetSection("Authentication"));
@@ -182,6 +187,18 @@ if (!File.Exists(connectionStringBuilder.DataSource))
     accessor.Create();
 }
 
+// Serilog
+if (!app.Environment.IsProduction())
+{
+    app.UseSerilogRequestLogging(options =>
+    {
+        options.IncludeQueryInRequestPath = true;
+    });
+}
+
+// Forwarded headers
+app.UseForwardedHeaders();
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -197,9 +214,6 @@ app.UseHealthChecks("/health");
 // Metrics
 app.UseHttpMetrics();
 
-// Static files
-app.UseStaticFiles();
-
 // Swagger
 if (app.Environment.IsDevelopment())
 {
@@ -207,11 +221,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Static files
+app.UseStaticFiles();
+
 // Routing
 app.UseRouting();
-
-// Metrics
-app.MapMetrics();
 
 // Authentication
 app.UseAuthentication();
@@ -219,6 +233,9 @@ app.UseAuthorization();
 
 // API
 app.MapControllers();
+
+// Metrics
+app.MapMetrics();
 
 // Blazor
 app.MapBlazorHub();
