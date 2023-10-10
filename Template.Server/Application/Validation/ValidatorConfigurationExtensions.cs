@@ -1,4 +1,4 @@
-namespace Template.Server.Infrastructure.Validation;
+namespace Template.Server.Application.Validation;
 
 using System.ComponentModel;
 using System.Reflection;

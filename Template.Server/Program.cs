@@ -3,8 +3,11 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Text.Unicode;
 
+using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Hosting.WindowsServices;
+using Microsoft.FeatureManagement;
 
 using MudBlazor.Services;
 
@@ -22,14 +25,12 @@ using Smart.Data;
 using Template.Components.Reports;
 using Template.Components.Security;
 using Template.Components.Storage;
-using Template.Server.Application;
 
 using Smart.Data.Accessor;
 
 using Template.Accessor;
 using Template.Services;
-
-using Smart.AspNetCore.Filters;
+using Template.Server.Application.Validation;
 
 #pragma warning disable CA1852
 
@@ -50,9 +51,6 @@ builder.Host
     .UseWindowsService()
     .UseSystemd();
 
-// Add framework Services.
-builder.Services.AddHttpContextAccessor();
-
 // Log
 builder.Logging.ClearProviders();
 builder.Host
@@ -61,10 +59,39 @@ builder.Host
         loggerConfiguration.ReadFrom.Configuration(hostingContext.Configuration);
     });
 
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddHttpLogging(options =>
+    {
+        //options.LoggingFields = HttpLoggingFields.All | HttpLoggingFields.RequestQuery;
+        options.LoggingFields = HttpLoggingFields.RequestPropertiesAndHeaders |
+                                HttpLoggingFields.RequestQuery |
+                                HttpLoggingFields.ResponsePropertiesAndHeaders;
+    });
+}
+
+// Add framework Services.
+builder.Services.AddHttpContextAccessor();
+
+// TODO setting
+
+// Feature management
+builder.Services.AddFeatureManagement();
+
 // Route
 builder.Services.Configure<RouteOptions>(options =>
 {
     options.AppendTrailingSlash = true;
+});
+
+// XForward
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+
+    // Do not restrict to local network/proxy
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
 });
 
 // Blazor
@@ -88,19 +115,19 @@ builder.Services.AddSingleton<IErrorBoundaryLogger, ErrorBoundaryLogger>();
 
 // API
 builder.Services.AddExceptionLogging();
+builder.Services.AddExceptionStatus();
 builder.Services.AddTimeLogging(options =>
 {
     options.Threshold = 10_000;
 });
-builder.Services.AddSingleton<ExceptionStatusFilter>();
 
 builder.Services
     .AddControllers(options =>
     {
-        options.Filters.AddExceptionLogging();
-        options.Filters.AddTimeLogging();
-        options.Filters.AddService<ExceptionStatusFilter>();
         options.Conventions.Add(new LowercaseControllerModelConvention());
+        options.Filters.AddExceptionLogging();
+        options.Filters.AddExceptionStatus();
+        options.Filters.AddTimeLogging();
         options.ModelBinderProviders.Insert(0, new AccountModelBinderProvider());
     })
     .AddJsonOptions(options =>
@@ -111,6 +138,40 @@ builder.Services
     });
 
 builder.Services.AddEndpointsApiExplorer();
+
+// Swagger
+if (!builder.Environment.IsProduction())
+{
+    builder.Services.AddSwaggerGen();
+}
+
+// Error handler
+builder.Services.AddProblemDetails(options =>
+{
+    options.CustomizeProblemDetails = context =>
+    {
+        context.ProblemDetails.Extensions.Add("nodeId", Environment.MachineName);
+    };
+});
+
+// TODO SignalR
+
+// Compress
+//builder.Services.AddRequestDecompression();
+//builder.Services.AddResponseCompression(options =>
+//{
+//    // Default false (for CRIME and BREACH attacks)
+//    options.EnableForHttps = true;
+//    options.Providers.Add<GzipCompressionProvider>();
+//    options.MimeTypes = new[] { MediaTypeNames.Application.Json };
+//});
+//builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+//{
+//    options.Level = CompressionLevel.Fastest;
+//});
+
+// Health
+builder.Services.AddHealthChecks();
 
 // Add Authentication component.
 builder.Services.Configure<CookieAuthenticationSetting>(builder.Configuration.GetSection("Authentication"));
@@ -166,16 +227,6 @@ builder.Services.AddSingleton<IStorage, FileStorage>();
 // Service
 builder.Services.AddSingleton<DataService>();
 
-// Health
-builder.Services.AddHealthChecks();
-
-// Develop
-if (!builder.Environment.IsProduction())
-{
-    // Swagger
-    builder.Services.AddSwaggerGen();
-}
-
 //--------------------------------------------------------------------------------
 // Configure the HTTP request pipeline
 //--------------------------------------------------------------------------------
@@ -188,17 +239,28 @@ if (!File.Exists(connectionStringBuilder.DataSource))
     accessor.Create();
 }
 
-// Serilog
-if (!app.Environment.IsProduction())
+// Log
+if (app.Environment.IsDevelopment())
 {
+    // Serilog
     app.UseSerilogRequestLogging(options =>
     {
         options.IncludeQueryInRequestPath = true;
     });
+
+    // HTTP log
+    app.UseWhen(
+        c => c.Request.Path.StartsWithSegments("/api", StringComparison.OrdinalIgnoreCase),
+        b => b.UseHttpLogging());
 }
 
 // Forwarded headers
 app.UseForwardedHeaders();
+
+// Error handler
+app.UseWhen(
+    c => c.Request.Path.StartsWithSegments("/api", StringComparison.OrdinalIgnoreCase),
+    b => b.UseExceptionHandler());
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -209,39 +271,56 @@ if (!app.Environment.IsDevelopment())
 // HTTPS redirection
 app.UseHttpsRedirection();
 
-// Health
-app.UseHealthChecks("/health");
+// Static files
+app.UseStaticFiles();
 
-// Metrics
-app.UseHttpMetrics();
-
-// Develop
+// Swagger
 if (app.Environment.IsDevelopment())
 {
-    // Swagger
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// Static files
-app.UseStaticFiles();
-
 // Routing
 app.UseRouting();
 
-// Authentication
+// Swagger
+if (!app.Environment.IsProduction())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+// Metrics
+app.UseHttpMetrics();
+
+// Authentication/Authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
-// API
-app.MapControllers();
-
-// Metrics
-app.MapMetrics();
+// Compress
+//app.UseWhen(
+//    c => c.Request.Path.StartsWithSegments("/api", StringComparison.OrdinalIgnoreCase),
+//    b =>
+//    {
+//        b.UseResponseCompression();
+//        b.UseRequestDecompression();
+//    });
 
 // Blazor
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
+
+// API
+app.MapControllers();
+
+// TODO SignalR
+
+// Metrics
+app.MapMetrics();
+
+// Health
+app.MapHealthChecks("/health");
 
 // Run
 app.Run();
