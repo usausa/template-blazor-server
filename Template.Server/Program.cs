@@ -272,13 +272,6 @@ app.UseHttpsRedirection();
 // Static files
 app.UseStaticFiles();
 
-// Swagger
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
 // Routing
 app.UseRouting();
 
