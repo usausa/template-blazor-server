@@ -29,8 +29,6 @@ using Template.Components.Storage;
 using Smart.Data.Accessor;
 
 using Template.Accessor;
-using Template.Services;
-using Template.Server.Application.Validation;
 
 #pragma warning disable CA1852
 
