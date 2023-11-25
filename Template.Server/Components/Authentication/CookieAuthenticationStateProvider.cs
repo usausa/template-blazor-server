@@ -75,16 +75,16 @@ public sealed class CookieAuthenticationStateProvider : AuthenticationStateProvi
         return TokenHelper.ParseToken(value, secretKey, setting.Issuer);
     }
 
-    public async Task UpdateToken()
+    public Task UpdateToken()
     {
         if (cachedPrincipal is null)
         {
-            return;
+            return Task.CompletedTask;
         }
 
         var identity = cachedPrincipal.Identities.First();
         var value = TokenHelper.BuildToken(identity, secretKey, setting.Issuer, setting.Expire);
-        await UpdateCookie(value, DateTime.Now.AddMinutes(setting.Expire)).ConfigureAwait(false);
+        return UpdateCookie(value, DateTime.Now.AddMinutes(setting.Expire));
     }
 
     private async Task UpdateCookie(string value, DateTime expire)
