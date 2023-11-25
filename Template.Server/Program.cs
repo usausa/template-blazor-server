@@ -16,20 +16,15 @@ using Serilog;
 
 using Smart.AspNetCore;
 using Smart.AspNetCore.ApplicationModels;
-using Smart.Data.Accessor.Extensions.DependencyInjection;
+using Smart.AspNetCore.Filters;
 using Smart.Data;
-
-using Template.Components.Reports;
-using Template.Components.Security;
-using Template.Components.Storage;
-using Template.Server.Application;
-
+using Smart.Data.Accessor.Extensions.DependencyInjection;
 using Smart.Data.Accessor;
 
 using Template.Accessor;
-using Template.Services;
-
-using Smart.AspNetCore.Filters;
+using Template.Components.Reports;
+using Template.Components.Security;
+using Template.Components.Storage;
 
 #pragma warning disable CA1852
 
