@@ -45,6 +45,10 @@ builder.Host
     .UseWindowsService()
     .UseSystemd();
 
+// Configuration
+//var serverSetting = builder.Configuration.GetSection("Server").Get<ServerSetting>()!;
+//builder.Services.AddSingleton(serverSetting);
+
 // Add framework Services.
 builder.Services.AddHttpContextAccessor();
 
@@ -237,5 +241,8 @@ app.MapMetrics();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
+// Initialize
+await app.InitializeAsync();
+
 // Run
-app.Run();
+await app.RunAsync();
