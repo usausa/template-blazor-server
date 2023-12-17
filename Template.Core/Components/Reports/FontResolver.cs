@@ -2,7 +2,7 @@ namespace Template.Components.Reports;
 
 using PdfSharpCore.Fonts;
 
-public class FontResolver : IFontResolver
+public sealed class FontResolver : IFontResolver
 {
     private readonly string path;
 

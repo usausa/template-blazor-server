@@ -8,7 +8,6 @@ global using System.ComponentModel;
 global using System.ComponentModel.DataAnnotations;
 global using System.Data;
 global using System.Data.Common;
-global using System.Diagnostics.CodeAnalysis;
 global using System.Globalization;
 global using System.IO;
 global using System.Linq;
@@ -29,7 +28,4 @@ global using Smart.Collections.Generic;
 global using Smart.Text;
 
 global using Template.Domain;
-//global using Template.Models.Connector;
 global using Template.Models.Entity;
-//global using Template.Models.Paging;
-//global using Template.Models.View;

@@ -11,7 +11,7 @@ public sealed partial class LoginPage
     [Inject]
     public LoginManager LoginManager { get; set; } = default!;
 
-    public class Form
+    public sealed class Form
     {
         [DisplayName("ID")]
         public string Id { get; set; } = default!;

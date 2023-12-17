@@ -1,6 +1,6 @@
 namespace Template.Server.Components.Authentication;
 
-public class CookieAuthenticationSetting
+public sealed class CookieAuthenticationSetting
 {
     public string AccountKey { get; set; } = "__account";
 

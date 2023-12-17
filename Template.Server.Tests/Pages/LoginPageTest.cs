@@ -1,6 +1,6 @@
 namespace Template.Server.Pages;
 
-public class LoginPageTest
+public sealed class LoginPageTest
 {
     [Fact]
     public void Test()

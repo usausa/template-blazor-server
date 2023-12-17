@@ -6,8 +6,7 @@
 
 @code {
     [CascadingParameter]
-    [AllowNull]
-    public ProgressState Progress { get; set; }
+    public ProgressState Progress { get; set; } = default!;
 
     private async Task OnExecuteClick()
     {

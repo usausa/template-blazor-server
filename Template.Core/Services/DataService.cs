@@ -5,7 +5,7 @@ using Smart.Data.Accessor;
 
 using Template.Accessor;
 
-public class DataService
+public sealed class DataService
 {
     private readonly IDialect dialect;
 
