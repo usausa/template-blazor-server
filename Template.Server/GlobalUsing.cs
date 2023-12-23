@@ -43,6 +43,10 @@ global using Smart;
 global using Smart.Collections.Generic;
 global using Smart.Text;
 
+global using StringConvertHelper;
+
+global using StringValuesBinder;
+
 // TODO
 global using Template;
 global using Template.Domain;
@@ -56,7 +60,6 @@ global using Template.Server.Application.Validation;
 global using Template.Server.Components;
 global using Template.Server.Components.Authentication;
 global using Template.Server.Infrastructure;
-global using Template.Server.Infrastructure.Bindings;
 //global using Template.Server.Pages.Dialogs;
 //global using Template.Server.Settings;
 global using Template.Server.Shared.Progress;
