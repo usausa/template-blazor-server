@@ -4,13 +4,11 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 public sealed class AccountModelBinderProvider : IModelBinderProvider
 {
-    private static readonly Type AccountType = typeof(Account);
-
     private static readonly AccountModelBinder Binder = new();
 
     public IModelBinder? GetBinder(ModelBinderProviderContext context)
     {
-        return context.Metadata.ModelType == AccountType ? Binder : null;
+        return context.Metadata.ModelType == typeof(Account) ? Binder : null;
     }
 
     public sealed class AccountModelBinder : IModelBinder
