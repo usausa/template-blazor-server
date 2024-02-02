@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Components;
 public sealed class MenuSection : ComponentBase, IDisposable
 {
     [CascadingParameter]
-    public IMenuSectionCallback Callback { get; set; } = default!;
+    public required IMenuSectionCallback Callback { get; set; }
 
     [Parameter]
-    public RenderFragment ChildContent { get; set; } = default!;
+    public required RenderFragment ChildContent { get; set; }
 
     protected override void OnInitialized()
     {

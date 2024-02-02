@@ -38,10 +38,10 @@ public sealed class ExtendedAuthorizeRouteView : RouteView
     public object? Resource { get; set; }
 
     [Parameter]
-    public Type NotAuthorizedLayout { get; set; } = default!;
+    public required Type NotAuthorizedLayout { get; set; }
 
     [CascadingParameter]
-    private Task<AuthenticationState>? ExistingCascadedAuthenticationState { get; set; }
+    public Task<AuthenticationState>? ExistingCascadedAuthenticationState { get; set; }
 
     protected override void Render(RenderTreeBuilder builder)
     {

@@ -2,9 +2,7 @@ namespace Template.Server.Shared;
 
 public sealed partial class MainLayout : IMenuSectionCallback, IDisposable
 {
-#pragma warning disable CA2213
     private readonly System.Timers.Timer updateTimer = new(3600_000);
-#pragma warning restore CA2213
 
     private ErrorBoundary? errorBoundary;
 
@@ -15,16 +13,16 @@ public sealed partial class MainLayout : IMenuSectionCallback, IDisposable
     private Account account = Account.Empty;
 
     [Inject]
-    public IDialogService DialogService { get; set; } = default!;
+    public required IDialogService DialogService { get; set; }
 
     [Inject]
-    public NavigationManager NavigationManager { get; set; } = default!;
+    public required NavigationManager NavigationManager { get; set; }
 
     [Inject]
-    public LoginManager LoginManager { get; set; } = default!;
+    public required LoginManager LoginManager { get; set; } = default!;
 
     [CascadingParameter]
-    private Task<AuthenticationState> AuthenticationState { get; set; } = default!;
+    public required Task<AuthenticationState> AuthenticationState { get; set; }
 
     public void Dispose() => updateTimer.Dispose();
 

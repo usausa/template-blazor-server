@@ -6,10 +6,10 @@ using Smart.AspNetCore.Components;
 public sealed partial class LoginPage
 {
     [Inject]
-    public NavigationManager NavigationManager { get; set; } = default!;
+    public required NavigationManager NavigationManager { get; set; }
 
     [Inject]
-    public LoginManager LoginManager { get; set; } = default!;
+    public required LoginManager LoginManager { get; set; }
 
     public sealed class Form
     {
@@ -20,13 +20,11 @@ public sealed partial class LoginPage
         public string Password { get; set; } = default!;
     }
 
-#pragma warning disable CA1823
     private static readonly IValidator Validator = new InlineValidator<Form>
     {
         v => v.RuleFor(x => x.Id).NotEmpty().MaximumLength(Length.Id),
         v => v.RuleFor(x => x.Password).NotEmpty().MaximumLength(Length.Password)
     };
-#pragma warning restore CA1823
 
     private readonly Form form = new();
 
