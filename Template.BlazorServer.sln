@@ -20,6 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENSE = LICENSE
 		README.md = README.md
 		Template.BlazorServer.sln.DotSettings = Template.BlazorServer.sln.DotSettings
+		test.runsettings = test.runsettings
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Template.Server.Tests", "Template.Server.Tests\Template.Server.Tests.csproj", "{92576821-EC5A-42A0-A998-DD19DBB0D5F6}"
