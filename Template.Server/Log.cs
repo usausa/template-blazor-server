@@ -1,6 +1,6 @@
 namespace Template.Server;
 
-public static partial class Log
+internal static partial class Log
 {
     // Startup
 
