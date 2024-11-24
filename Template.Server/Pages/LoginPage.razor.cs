@@ -20,11 +20,13 @@ public sealed partial class LoginPage
         public string Password { get; set; } = default!;
     }
 
+#pragma warning disable IDE0320
     private static readonly IValidator Validator = new InlineValidator<Form>
     {
         v => v.RuleFor(x => x.Id).NotEmpty().MaximumLength(Length.Id),
         v => v.RuleFor(x => x.Password).NotEmpty().MaximumLength(Length.Password)
     };
+#pragma warning restore IDE0320
 
     private readonly Form form = new();
 

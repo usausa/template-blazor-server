@@ -10,7 +10,7 @@ public static class ValidatorConfigurationExtensions
 {
     public static ValidatorConfiguration UseDisplayName(this ValidatorConfiguration config)
     {
-        config.DisplayNameResolver = (_, memberInfo, _) =>
+        config.DisplayNameResolver = static (_, memberInfo, _) =>
         {
             var displayName = memberInfo.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
             return displayName ?? memberInfo.Name;
