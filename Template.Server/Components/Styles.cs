@@ -6,7 +6,7 @@ public static class Styles
 {
     public static MudTheme Theme => new()
     {
-        Palette = new PaletteLight
+        PaletteLight = new PaletteLight
         {
             Primary = Colors.Blue.Default,
             Secondary = Colors.Cyan.Accent4,
@@ -18,7 +18,7 @@ public static class Styles
 
     public static MudTheme NoMenuTheme => new()
     {
-        Palette = new PaletteLight
+        PaletteLight = new PaletteLight
         {
             Primary = Colors.Blue.Default,
             Secondary = Colors.Green.Accent4,

@@ -8,21 +8,17 @@ using Microsoft.Extensions.Hosting.WindowsServices;
 
 using MudBlazor.Services;
 
-using PdfSharpCore.Fonts;
-
 using Prometheus;
 
 using Serilog;
 
 using Smart.AspNetCore;
 using Smart.AspNetCore.ApplicationModels;
-using Smart.AspNetCore.Filters;
 using Smart.Data;
 using Smart.Data.Accessor.Extensions.DependencyInjection;
 using Smart.Data.Accessor;
 
 using Template.Accessor;
-using Template.Components.Reports;
 using Template.Components.Security;
 using Template.Components.Storage;
 using Template.Server;
@@ -86,19 +82,15 @@ builder.Services.AddMudServices(config =>
 builder.Services.AddSingleton<IErrorBoundaryLogger, ErrorBoundaryLogger>();
 
 // API
-builder.Services.AddExceptionLogging();
 builder.Services.AddTimeLogging(static options =>
 {
     options.Threshold = 10_000;
 });
-builder.Services.AddSingleton<ExceptionStatusFilter>();
 
 builder.Services
     .AddControllers(static options =>
     {
-        options.Filters.AddExceptionLogging();
         options.Filters.AddTimeLogging();
-        options.Filters.AddService<ExceptionStatusFilter>();
         options.Conventions.Add(new LowercaseControllerModelConvention());
         options.ModelBinderProviders.Insert(0, new AccountModelBinderProvider());
     })
@@ -123,12 +115,6 @@ ValidatorOptions.Global
     .UseCustomLocalizeMessage();
 ValidatorOptions.Global.DefaultClassLevelCascadeMode = CascadeMode.Continue;
 ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Stop;
-
-// PDF
-GlobalFontSettings.FontResolver = new FontResolver(Directory.GetCurrentDirectory(), FontNames.Gothic, new Dictionary<string, string>
-{
-    { FontNames.Gothic, "ipaexg.ttf" }
-});
 
 // HTTP
 builder.Services.AddHttpClient();

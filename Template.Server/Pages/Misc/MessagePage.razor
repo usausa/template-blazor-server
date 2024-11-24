@@ -4,17 +4,17 @@
 <PageTitle>Message</PageTitle>
 
 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OnTestButtonClicked" >Test</MudButton>
-<MudChip>@result1</MudChip>
+<MudChip T="bool">@result1</MudChip>
 
 <MudDivider />
 
 <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="OnMarkupButtonClicked">Markup</MudButton>
-<MudChip>@result2</MudChip>
+<MudChip T="bool">@result2</MudChip>
 
 <MudDivider />
 
 <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="OnCustomButtonClicked" >Custom</MudButton>
-<MudChip>@result3</MudChip>
+<MudChip T="bool">@result3</MudChip>
 <MudMessageBox @ref="customMessageBox" Title="Warning" CancelText="Cancel">
     <MessageContent>
         test <b><i>test</i></b> test
@@ -33,7 +33,7 @@
 
     private MudMessageBox customMessageBox = default!;
 
-    private async void OnTestButtonClicked()
+    private async Task OnTestButtonClicked()
     {
         result1 = await DialogService.ShowMessageBox(
             "Title",
@@ -48,7 +48,7 @@
         StateHasChanged();
     }
 
-    private async void OnMarkupButtonClicked()
+    private async Task OnMarkupButtonClicked()
     {
         result2 = await DialogService.ShowMessageBox(
             "Secure The Ring",
@@ -58,9 +58,9 @@
         StateHasChanged();
     }
 
-    private async void OnCustomButtonClicked()
+    private async Task OnCustomButtonClicked()
     {
-        result3 = await customMessageBox.Show();
+        result3 = await customMessageBox.ShowAsync();
         StateHasChanged();
     }
 }
