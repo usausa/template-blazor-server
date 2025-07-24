@@ -12,7 +12,7 @@ public sealed partial class AppMessageBox
     public required string Message { get; set; }
 
     [CascadingParameter]
-    public required MudDialogInstance MudDialog { get; set; }
+    public required IMudDialogInstance MudDialog { get; set; }
 
     private void OnCloseClick() => MudDialog.Close();
 
