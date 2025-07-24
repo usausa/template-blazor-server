@@ -45,7 +45,7 @@
     {
         Snackbar.Add("Message", Severity.Normal, config =>
         {
-            config.Onclick = _ =>
+            config.OnClick = _ =>
             {
                 Snackbar.Add("Hello World!");
                 return Task.CompletedTask;
@@ -59,7 +59,7 @@
         {
             config.Action = "Help";
             config.ActionColor = Color.Primary;
-            config.Onclick = _ =>
+            config.OnClick = _ =>
             {
                 Snackbar.Add("Help");
                 return Task.CompletedTask;
