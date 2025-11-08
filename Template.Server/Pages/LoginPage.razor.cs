@@ -54,11 +54,8 @@ public sealed partial class LoginPage
         else
         {
             errorMessage = "Id or Password is invalid.";
-            customValidator.DisplayErrors(new Dictionary<string, List<string>>
-            {
-                { nameof(form.Id), [string.Empty] },
-                { nameof(form.Password), [string.Empty] }
-            });
+            customValidator.DisplayError(() => form.Id, string.Empty);
+            customValidator.DisplayError(() => form.Password, string.Empty);
         }
     }
 
