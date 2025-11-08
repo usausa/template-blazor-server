@@ -14,6 +14,6 @@
     <File Path="test.runsettings" />
   </Folder>
   <Project Path="Template.Core/Template.Core.csproj" />
-  <Project Path="Template.Server/Template.Server.csproj" />
+  <Project Path="Template.Server/Template.Server.csproj" DefaultStartup="true" />
   <Project Path="Template.Server.Tests/Template.Server.Tests.csproj" />
 </Solution>
