@@ -38,9 +38,9 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 });
 
 // Service
-builder.Host
-    .UseWindowsService()
-    .UseSystemd();
+builder.Services
+    .AddWindowsService()
+    .AddSystemd();
 
 // Configuration
 //var serverSetting = builder.Configuration.GetSection("Server").Get<ServerSetting>()!;
