@@ -15,8 +15,8 @@ using Serilog;
 using Smart.AspNetCore;
 using Smart.AspNetCore.ApplicationModels;
 using Smart.Data;
-using Smart.Data.Accessor.Extensions.DependencyInjection;
 using Smart.Data.Accessor;
+using Smart.Data.Accessor.Extensions.DependencyInjection;
 
 using Template.Accessor;
 using Template.Components.Security;

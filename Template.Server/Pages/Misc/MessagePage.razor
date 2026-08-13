@@ -35,7 +35,7 @@
 
     private async Task OnTestButtonClicked()
     {
-        result1 = await DialogService.ShowMessageBox(
+        result1 = await DialogService.ShowMessageBoxAsync(
             "Title",
             "Message",
             yesText: "OK",
@@ -50,7 +50,7 @@
 
     private async Task OnMarkupButtonClicked()
     {
-        result2 = await DialogService.ShowMessageBox(
+        result2 = await DialogService.ShowMessageBoxAsync(
             "Secure The Ring",
             (MarkupString)"123<br />456<br />789<br /><b>test<b/>",
             yesText: "Yes",
