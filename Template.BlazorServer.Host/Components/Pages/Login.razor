@@ -12,6 +12,7 @@
         <MudAlert Severity="Severity.Error" Class="mb-4">IDまたはパスワードが違います。</MudAlert>
     }
 
+    @* ReSharper disable Html.PathError *@
     <form method="post" action="auth/login">
         <AntiforgeryToken />
         <input type="hidden" name="returnUrl" value="@ReturnUrl" />
@@ -27,6 +28,7 @@
             ログイン
         </MudButton>
     </form>
+    @* ReSharper restore Html.PathError *@
 </MudPaper>
 
 @code {

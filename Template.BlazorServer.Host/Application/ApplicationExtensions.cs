@@ -274,7 +274,7 @@ public static class ApplicationExtensions
     {
         builder.Services.AddOpenApi(static options =>
         {
-            options.AddDocumentTransformer(static (document, context, cancellationToken) =>
+            options.AddDocumentTransformer(static (document, _, _) =>
             {
                 document.Info.Title = "Template API";
                 document.Info.Version = "v1";
@@ -562,7 +562,7 @@ public static class ApplicationExtensions
     // Startup
     //--------------------------------------------------------------------------------
 
-    public static async ValueTask InitializeApplicationAsync(this WebApplication app)
+    public static ValueTask InitializeApplicationAsync(this WebApplication app)
     {
         // Prepare instrument
         app.Services.GetRequiredService<ApplicationInstrument>();
@@ -574,7 +574,7 @@ public static class ApplicationExtensions
         app.Services.GetRequiredService<DataService>().CreateTable();
 
         var setting = app.Services.GetRequiredService<AuthSetting>();
-        await app.Services.GetRequiredService<AccountService>().InitializeAsync(setting.InitialId, setting.InitialPassword, Roles.Administrator);
+        return app.Services.GetRequiredService<AccountService>().InitializeAsync(setting.InitialId, setting.InitialPassword, Roles.Administrator);
     }
 
     //--------------------------------------------------------------------------------

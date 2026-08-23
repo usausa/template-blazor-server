@@ -28,10 +28,8 @@ public sealed partial class FilesPage
     [Inject]
     public required ISnackbar Snackbar { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        await LoadAsync();
-    }
+    protected override Task OnInitializedAsync() =>
+        LoadAsync();
 
     private async Task LoadAsync()
     {

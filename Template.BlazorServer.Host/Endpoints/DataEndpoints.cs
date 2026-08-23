@@ -1,6 +1,7 @@
 namespace Template.BlazorServer.Host.Endpoints;
 
 using Template.BlazorServer.Host.Application;
+using Template.BlazorServer.Host.Mappers;
 using Template.BlazorServer.Host.Models.Data;
 
 public static class DataEndpoints
@@ -37,7 +38,7 @@ public static class DataEndpoints
             result.Total,
             result.Page,
             result.Size,
-            result.Items.Select(MapToResponse).ToList()));
+            result.Items.Select(DataMapper.ToResponse).ToList()));
     }
 
     private static async ValueTask<IResult> HandleExportCsvAsync(DataService dataService)
@@ -60,7 +61,7 @@ public static class DataEndpoints
     {
         var entity = await dataService.QueryAsync(id);
         return entity is not null
-            ? TypedResults.Ok(MapToResponse(entity))
+            ? TypedResults.Ok(DataMapper.ToResponse(entity))
             : TypedResults.NotFound();
     }
 
@@ -95,11 +96,4 @@ public static class DataEndpoints
         var deleted = await dataService.DeleteAsync(id);
         return deleted ? TypedResults.NoContent() : TypedResults.NotFound();
     }
-
-    //--------------------------------------------------------------------------------
-    // Mapper
-    //--------------------------------------------------------------------------------
-
-    private static DataResponse MapToResponse(DataEntity entity) =>
-        new(entity.Id, entity.Name, entity.Value, entity.CreatedAt);
 }

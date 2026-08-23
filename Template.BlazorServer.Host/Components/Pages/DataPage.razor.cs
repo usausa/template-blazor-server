@@ -53,20 +53,15 @@ public sealed partial class DataPage
         };
     }
 
-    private async Task SearchAsync()
+    private Task SearchAsync()
     {
         // Sync search condition to URL
         Navigation.NavigateTo(Navigation.GetUriWithQueryParameter("name", String.IsNullOrEmpty(searchName) ? null : searchName));
-        await grid.ReloadServerData();
+        return grid.ReloadServerData();
     }
 
-    private async Task OnSearchKeyDown(KeyboardEventArgs args)
-    {
-        if (args.Key == "Enter")
-        {
-            await SearchAsync();
-        }
-    }
+    private Task OnSearchKeyDown(KeyboardEventArgs args) =>
+        args.Key == "Enter" ? SearchAsync() : Task.CompletedTask;
 
     //--------------------------------------------------------------------------------
     // Operation

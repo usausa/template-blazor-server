@@ -13,10 +13,12 @@
         <AuthorizeView>
             <Authorized>
                 <MudText Class="mr-4">@context.User.Identity?.Name</MudText>
+                @* ReSharper disable Html.PathError *@
                 <form method="post" action="auth/logout">
                     <AntiforgeryToken />
                     <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" ButtonType="ButtonType.Submit" />
                 </form>
+                @* ReSharper restore Html.PathError *@
             </Authorized>
         </AuthorizeView>
     </MudAppBar>
