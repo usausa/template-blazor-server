@@ -1,21 +1,29 @@
 <Solution>
+  <Folder Name="/Aspire/">
+    <Project Path="Template.BlazorServer.AppHost/Template.BlazorServer.AppHost.csproj" />
+  </Folder>
+  <Folder Name="/Application/">
+    <Project Path="Template.BlazorServer.Core/Template.BlazorServer.Core.csproj" />
+    <Project Path="Template.BlazorServer.Host/Template.BlazorServer.Host.csproj" />
+  </Folder>
+  <Folder Name="/Test/">
+    <Project Path="Template.BlazorServer.UnitTests/Template.BlazorServer.UnitTests.csproj" />
+    <Project Path="Template.BlazorServer.IntegrationTests/Template.BlazorServer.IntegrationTests.csproj" />
+    <Project Path="Template.BlazorServer.E2ETests/Template.BlazorServer.E2ETests.csproj" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path=".gitattributes" />
     <File Path=".gitignore" />
     <File Path="AGENTS.md" />
     <File Path="Analyzers.ruleset" />
-    <File Path="CLAUDE.md" />
     <File Path="CodeCoverage.runsettings" />
-    <File Path="Database.Sample.sql" />
     <File Path="Database.sql" />
+    <File Path="Database.Sample.sql" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Build.targets" />
     <File Path="LICENSE" />
     <File Path="README.md" />
     <File Path="Template.BlazorServer.sln.DotSettings" />
   </Folder>
-  <Project Path="Template.Core/Template.Core.csproj" />
-  <Project Path="Template.Server/Template.Server.csproj" DefaultStartup="true" />
-  <Project Path="Template.Server.Tests/Template.Server.Tests.csproj" />
 </Solution>
