@@ -33,6 +33,9 @@ public sealed class DataService
     public ValueTask<List<DataEntity>> QueryAllAsync() =>
         dataAccessor.QueryAllAsync();
 
+    public IAsyncEnumerable<DataEntity> QueryExportEnumerable() =>
+        dataAccessor.QueryExportEnumerable();
+
     public ValueTask<DataEntity?> QueryAsync(long id) =>
         dataAccessor.QueryAsync(id);
 

@@ -19,6 +19,9 @@ public static class FileEndpoints
 
         group.MapGet("/list/{**path}", HandleListAsync);
         group.MapGet("/download/{**path}", HandleDownloadAsync);
+        group.MapPost("/upload/{**path}", HandleUploadAsync)
+            .DisableAntiforgery()
+            .WithRequestTimeout(TimeSpan.FromMinutes(10));
         group.MapDelete("/{**path}", HandleDeleteAsync).RequireAuthorization(Policies.Administrator);
     }
 
@@ -54,6 +57,32 @@ public static class FileEndpoints
 
         var stream = await storage.ReadAsync(path, cancellationToken);
         return TypedResults.Stream(stream, "application/octet-stream", Path.GetFileName(path));
+    }
+
+    private static async ValueTask<IResult> HandleUploadAsync(
+        HttpContext context,
+        IStorage storage,
+        string? path)
+    {
+        var form = await context.Request.ReadFormAsync(context.RequestAborted);
+        if (form.Files.Count == 0)
+        {
+            return TypedResults.Problem(statusCode: StatusCodes.Status400BadRequest, title: "No files uploaded.");
+        }
+
+        var uploaded = new List<FileUploadEntry>();
+        foreach (var file in form.Files)
+        {
+            var fileName = Path.GetFileName(file.FileName);
+            var targetPath = String.IsNullOrEmpty(path) ? fileName : $"{path}/{fileName}";
+
+            await using var stream = file.OpenReadStream();
+            await storage.WriteAsync(targetPath, stream, context.RequestAborted);
+
+            uploaded.Add(new FileUploadEntry(fileName, file.Length, targetPath));
+        }
+
+        return TypedResults.Ok(new FileUploadResponse(uploaded.Count, uploaded));
     }
 
     private static async ValueTask<IResult> HandleDeleteAsync(

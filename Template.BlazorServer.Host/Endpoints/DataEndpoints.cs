@@ -1,5 +1,7 @@
 namespace Template.BlazorServer.Host.Endpoints;
 
+using Microsoft.AspNetCore.Http.HttpResults;
+
 using Template.BlazorServer.Host.Application;
 using Template.BlazorServer.Host.Mappers;
 using Template.BlazorServer.Host.Models.Data;
@@ -16,7 +18,7 @@ public static class DataEndpoints
             .RequireAuthorization();
 
         group.MapGet("/", HandleListAsync);
-        group.MapGet("/csv", HandleExportCsvAsync);
+        group.MapGet("/csv", HandleExportCsv);
         group.MapGet("/{id:long}", HandleGetAsync);
         group.MapPost("/", HandleCreateAsync);
         group.MapPut("/{id:long}", HandleUpdateAsync);
@@ -41,19 +43,16 @@ public static class DataEndpoints
             result.Items.Select(DataMapper.ToResponse).ToList()));
     }
 
-    private static async ValueTask<IResult> HandleExportCsvAsync(DataService dataService)
-    {
-        var entities = await dataService.QueryAllAsync();
-
-        using var buffer = new MemoryStream();
-        await using (var writer = new StreamWriter(buffer, new UTF8Encoding(true), leaveOpen: true))
-        await using (var csv = new CsvHelper.CsvWriter(writer, CultureInfo.InvariantCulture))
-        {
-            await csv.WriteRecordsAsync(entities);
-        }
-
-        return TypedResults.File(buffer.ToArray(), "text/csv", "data.csv");
-    }
+    private static PushStreamHttpResult HandleExportCsv(DataService dataService) =>
+        TypedResults.Stream(
+            async stream =>
+            {
+                await using var writer = new StreamWriter(stream, new UTF8Encoding(true));
+                await using var csv = new CsvHelper.CsvWriter(writer, CultureInfo.InvariantCulture);
+                await csv.WriteRecordsAsync(dataService.QueryExportEnumerable(cancellationToken));
+            },
+            "text/csv",
+            "data.csv");
 
     private static async ValueTask<IResult> HandleGetAsync(
         DataService dataService,

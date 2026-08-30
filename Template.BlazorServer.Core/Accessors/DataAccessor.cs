@@ -15,6 +15,9 @@ public sealed partial class DataAccessor
     [Query]
     public partial ValueTask<List<DataEntity>> QueryAllAsync();
 
+    [Query]
+    public partial IAsyncEnumerable<DataEntity> QueryExportEnumerable();
+
     [QueryFirst]
     public partial ValueTask<DataEntity?> QueryAsync(long id);
 
