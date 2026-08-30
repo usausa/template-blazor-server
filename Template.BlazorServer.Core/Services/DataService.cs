@@ -33,8 +33,8 @@ public sealed class DataService
     public ValueTask<List<DataEntity>> QueryAllAsync() =>
         dataAccessor.QueryAllAsync();
 
-    public IAsyncEnumerable<DataEntity> QueryExportEnumerable() =>
-        dataAccessor.QueryExportEnumerable();
+    public IAsyncEnumerable<DataEntity> QueryExportEnumerable(CancellationToken cancellationToken) =>
+        dataAccessor.QueryExportEnumerable(cancellationToken);
 
     public ValueTask<DataEntity?> QueryAsync(long id) =>
         dataAccessor.QueryAsync(id);

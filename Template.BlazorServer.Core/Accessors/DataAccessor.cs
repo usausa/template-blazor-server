@@ -15,8 +15,9 @@ public sealed partial class DataAccessor
     [Query]
     public partial ValueTask<List<DataEntity>> QueryAllAsync();
 
+    // ReSharper disable once CSharpWarnings::CS8424 (SDA0305がEnumeratorCancellation注釈を要求するため。実装はジェネレータ側で処理される)
     [Query]
-    public partial IAsyncEnumerable<DataEntity> QueryExportEnumerable();
+    public partial IAsyncEnumerable<DataEntity> QueryExportEnumerable([EnumeratorCancellation] CancellationToken cancellationToken);
 
     [QueryFirst]
     public partial ValueTask<DataEntity?> QueryAsync(long id);

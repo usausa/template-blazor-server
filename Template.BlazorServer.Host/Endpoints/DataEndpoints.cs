@@ -43,13 +43,13 @@ public static class DataEndpoints
             result.Items.Select(DataMapper.ToResponse).ToList()));
     }
 
-    private static PushStreamHttpResult HandleExportCsv(DataService dataService) =>
+    private static PushStreamHttpResult HandleExportCsv(DataService dataService, CancellationToken cancellationToken) =>
         TypedResults.Stream(
             async stream =>
             {
                 await using var writer = new StreamWriter(stream, new UTF8Encoding(true));
                 await using var csv = new CsvHelper.CsvWriter(writer, CultureInfo.InvariantCulture);
-                await csv.WriteRecordsAsync(dataService.QueryExportEnumerable(cancellationToken));
+                await csv.WriteRecordsAsync(dataService.QueryExportEnumerable(cancellationToken), cancellationToken);
             },
             "text/csv",
             "data.csv");
