@@ -3,7 +3,7 @@ namespace Template.BlazorServer.Models.Forms;
 using Template.BlazorServer.Domain;
 using Template.BlazorServer.Host.Models.Forms;
 
-public sealed class DataFormValidatorTest
+public sealed class DataFormValidatorTests
 {
     [Fact]
     public void ValidateValidFormReturnsValid()
