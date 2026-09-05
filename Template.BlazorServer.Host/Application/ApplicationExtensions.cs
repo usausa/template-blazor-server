@@ -406,9 +406,11 @@ public static class ApplicationExtensions
 
                     if (usePrometheusExporter)
                     {
+                        var prometheusEndpoint = new Uri(prometheusUri);
                         metrics.AddPrometheusHttpListener(config =>
                         {
-                            config.UriPrefixes = [prometheusUri];
+                            config.Host = prometheusEndpoint.Host;
+                            config.Port = prometheusEndpoint.Port;
                         });
                     }
                 });
@@ -635,7 +637,7 @@ public static class ApplicationExtensions
         {
             0 => null,
             1 => listeners[0],
-            _ => new ChainListener(listeners.ToArray())
+            _ => new ChainListener(listeners)
         };
     }
 
