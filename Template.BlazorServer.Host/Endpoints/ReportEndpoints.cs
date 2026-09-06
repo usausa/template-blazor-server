@@ -23,10 +23,11 @@ public static class ReportEndpoints
 
     private static async ValueTask<IResult> HandleInvoiceAsync(
         DataService dataService,
-        InvoiceReportBuilder reportBuilder)
+        InvoiceReportBuilder reportBuilder,
+        CancellationToken cancellationToken)
     {
         // Check data before generating (avoid empty report)
-        var entities = await dataService.QueryAllAsync();
+        var entities = await dataService.QueryAllAsync(cancellationToken);
         if (entities.Count == 0)
         {
             return TypedResults.Problem(statusCode: StatusCodes.Status400BadRequest, title: "No data.");
