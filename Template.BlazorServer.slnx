@@ -1,15 +1,15 @@
 <Solution>
   <Folder Name="/Aspire/">
-    <Project Path="Template.BlazorServer.AppHost/Template.BlazorServer.AppHost.csproj" DefaultStartup="true" />
+    <Project Path="src/Template.BlazorServer.AppHost/Template.BlazorServer.AppHost.csproj" DefaultStartup="true" />
   </Folder>
   <Folder Name="/Application/">
-    <Project Path="Template.BlazorServer.Core/Template.BlazorServer.Core.csproj" />
-    <Project Path="Template.BlazorServer.Host/Template.BlazorServer.Host.csproj" />
+    <Project Path="src/Template.BlazorServer.Core/Template.BlazorServer.Core.csproj" />
+    <Project Path="src/Template.BlazorServer.Host/Template.BlazorServer.Host.csproj" />
   </Folder>
   <Folder Name="/Test/">
-    <Project Path="Template.BlazorServer.UnitTests/Template.BlazorServer.UnitTests.csproj" />
-    <Project Path="Template.BlazorServer.IntegrationTests/Template.BlazorServer.IntegrationTests.csproj" />
-    <Project Path="Template.BlazorServer.E2ETests/Template.BlazorServer.E2ETests.csproj" />
+    <Project Path="tests/Template.BlazorServer.UnitTests/Template.BlazorServer.UnitTests.csproj" />
+    <Project Path="tests/Template.BlazorServer.IntegrationTests/Template.BlazorServer.IntegrationTests.csproj" />
+    <Project Path="tests/Template.BlazorServer.E2ETests/Template.BlazorServer.E2ETests.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />

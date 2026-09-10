@@ -4,7 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <RootNamespace>Template.BlazorServer</RootNamespace>
-    <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\Analyzers.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -20,12 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Template.BlazorServer.Host\Template.BlazorServer.Host.csproj" />
+    <ProjectReference Include="..\..\src\Template.BlazorServer.Host\Template.BlazorServer.Host.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\Template.BlazorServer.Host\appsettings.json" Link="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
-    <None Include="..\Template.BlazorServer.Host\appsettings.Development.json" Link="appsettings.Development.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\src\Template.BlazorServer.Host\appsettings.json" Link="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\src\Template.BlazorServer.Host\appsettings.Development.json" Link="appsettings.Development.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
