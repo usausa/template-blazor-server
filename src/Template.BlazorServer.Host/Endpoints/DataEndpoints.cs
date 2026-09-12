@@ -30,7 +30,7 @@ public static class DataEndpoints
     //--------------------------------------------------------------------------------
 
     private static async ValueTask<IResult> HandleListAsync(
-        DataUsecase dataUsecase,
+        DataService dataService,
         string? name,
         string? sort,
         CancellationToken cancellationToken,
@@ -38,7 +38,7 @@ public static class DataEndpoints
         [Range(0, Int32.MaxValue)] int page = 0,
         [Range(1, 100)] int size = 20)
     {
-        var result = await dataUsecase.QueryPageAsync(name, sort, desc, page, size, cancellationToken);
+        var result = await dataService.QueryPageAsync(name, sort, desc, page, size, cancellationToken);
         return TypedResults.Ok(new DataListResponse(
             result.Total,
             result.Page,
