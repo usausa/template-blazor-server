@@ -21,6 +21,31 @@ html, body {
     border-radius: 4px;
 }
 
+/* Page layout */
+.page-card {
+    max-width: 400px;
+}
+
+.search-field {
+    max-width: 240px;
+}
+
+.upload-progress {
+    max-width: 400px;
+}
+
+.notification-alert {
+    max-width: 400px;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.files-table {
+    max-width: 640px;
+}
+
 /* Blazor error UI */
 #blazor-error-ui {
     color-scheme: light only;
