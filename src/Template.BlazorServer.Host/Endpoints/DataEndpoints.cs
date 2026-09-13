@@ -2,10 +2,12 @@ namespace Template.BlazorServer.Host.Endpoints;
 
 using Microsoft.AspNetCore.Http.HttpResults;
 
+using Smart.Mapper;
+
 using Template.BlazorServer.Host.Application;
 using Template.BlazorServer.Host.Models.Data;
 
-public static class DataEndpoints
+public static partial class DataEndpoints
 {
     //--------------------------------------------------------------------------------
     // Mapping
@@ -28,6 +30,9 @@ public static class DataEndpoints
     // Handler
     //--------------------------------------------------------------------------------
 
+    [Mapper]
+    private static partial DataResponse ToResponse(DataEntity entity);
+
     private static async ValueTask<IResult> HandleListAsync(
         DataService dataService,
         string? name,
@@ -42,7 +47,7 @@ public static class DataEndpoints
             result.Total,
             result.Page,
             result.Size,
-            result.Items.Select(DataMapper.ToResponse).ToList()));
+            result.Items.Select(ToResponse).ToList()));
     }
 
     private static PushStreamHttpResult HandleExportCsv(DataService dataService, CancellationToken cancellationToken) =>
@@ -62,7 +67,7 @@ public static class DataEndpoints
     {
         var entity = await dataService.QueryAsync(id);
         return entity is not null
-            ? TypedResults.Ok(entity.ToResponse())
+            ? TypedResults.Ok(ToResponse(entity))
             : TypedResults.NotFound();
     }
 
