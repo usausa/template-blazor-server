@@ -7,7 +7,6 @@ using MudBlazor;
 
 using Template.BlazorServer.Host.Components.Dialogs;
 using Template.BlazorServer.Host.Infrastructure.Components;
-using Template.BlazorServer.Host.Mappers;
 using Template.BlazorServer.Host.Models.Forms;
 
 public sealed partial class DataPage
@@ -88,7 +87,7 @@ public sealed partial class DataPage
 
     private async Task EditAsync(DataEntity entity)
     {
-        var form = await ShowEditDialog("データ編集", DataMapper.ToForm(entity));
+        var form = await ShowEditDialog("データ編集", entity.ToForm());
         if (form is null)
         {
             return;
