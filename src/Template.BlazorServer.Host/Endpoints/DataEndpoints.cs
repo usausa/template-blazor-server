@@ -15,7 +15,7 @@ public static partial class DataEndpoints
 
     public static void MapDataEndpoints(this WebApplication app)
     {
-        var group = app.MapGroup(ApiRoutes.Data)
+        var group = app.MapApiGroup(ApiRoutes.Data)
             .RequireAuthorization();
 
         group.MapGet("/", HandleListAsync);

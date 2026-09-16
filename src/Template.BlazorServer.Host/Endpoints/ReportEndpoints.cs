@@ -11,7 +11,7 @@ public static class ReportEndpoints
 
     public static void MapReportEndpoints(this WebApplication app)
     {
-        var group = app.MapGroup(ApiRoutes.Reports)
+        var group = app.MapApiGroup(ApiRoutes.Reports)
             .RequireAuthorization();
 
         group.MapGet("/invoice", HandleInvoiceAsync);
