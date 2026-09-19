@@ -25,7 +25,7 @@
         <PropertyColumn Property="x => x.Name" Title="名前" />
         <PropertyColumn Property="x => x.Value" Title="値" />
         <PropertyColumn Property="x => x.CreatedAt" Title="作成日時" Format="yyyy/MM/dd HH:mm:ss" />
-        <TemplateColumn Title="操作" CellStyle="width: 120px;" Sortable="false">
+        <TemplateColumn Title="操作" CellClass="w-120" Sortable="false">
             <CellTemplate>
                 <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="() => EditAsync(context.Item)" />
                 <AuthorizeView Roles="@Roles.Administrator" Context="auth">
