@@ -33,7 +33,9 @@
     [CascadingParameter]
     public HttpContext HttpContext { get; set; } = default!;
 
+    private static readonly IComponentRenderMode InteractiveServerWithoutPrerender = new InteractiveServerRenderMode(prerender: false);
+
     // Static SSR for pages with [ExcludeFromInteractiveRouting] (login etc.)
     private IComponentRenderMode? PageRenderMode =>
-        HttpContext.AcceptsInteractiveRouting() ? InteractiveServer : null;
+        HttpContext.AcceptsInteractiveRouting() ? InteractiveServerWithoutPrerender : null;
 }
