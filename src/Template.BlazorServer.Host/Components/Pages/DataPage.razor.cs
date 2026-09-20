@@ -5,11 +5,8 @@ using Microsoft.AspNetCore.Components.Web;
 
 using MudBlazor;
 
-using Smart.Mapper;
-
 using Template.BlazorServer.Host.Components.Dialogs;
 using Template.BlazorServer.Host.Infrastructure.Components;
-using Template.BlazorServer.Host.Models.Forms;
 
 public sealed partial class DataPage
 {
@@ -69,13 +66,13 @@ public sealed partial class DataPage
 
     private async Task AddAsync()
     {
-        var form = await ShowEditDialog("データ追加", new DataForm());
-        if (form is null)
+        var entity = await DialogService.ShowEditDialog("データ追加", null);
+        if (entity is null)
         {
             return;
         }
 
-        var id = await DataService.InsertAsync(form.Name, form.Value);
+        var id = await DataService.InsertAsync(entity.Name, entity.Value);
         if (id.HasValue)
         {
             Snackbar.AddSuccess("追加しました。");
@@ -87,18 +84,15 @@ public sealed partial class DataPage
         }
     }
 
-    [Mapper]
-    private static partial DataForm ToForm(DataEntity entity);
-
     private async Task EditAsync(DataEntity entity)
     {
-        var form = await ShowEditDialog("データ編集", ToForm(entity));
-        if (form is null)
+        var edited = await DialogService.ShowEditDialog("データ編集", entity);
+        if (edited is null)
         {
             return;
         }
 
-        var result = await DataService.UpdateAsync(form.Id, form.Name, form.Value);
+        var result = await DataService.UpdateAsync(edited.Id, edited.Name, edited.Value);
         switch (result)
         {
             case DataWriteStatus.Success:
@@ -132,18 +126,5 @@ public sealed partial class DataPage
         }
 
         await grid.ReloadServerData();
-    }
-
-    private async Task<DataForm?> ShowEditDialog(string title, DataForm form)
-    {
-        var reference = await DialogService.ShowAsync<DataEditDialog>(
-            string.Empty,
-            new DialogParameters
-            {
-                { nameof(DataEditDialog.Title), title },
-                { nameof(DataEditDialog.Form), form }
-            });
-        var result = await reference.Result;
-        return (result is { Canceled: false }) ? (DataForm)result.Data! : null;
     }
 }
