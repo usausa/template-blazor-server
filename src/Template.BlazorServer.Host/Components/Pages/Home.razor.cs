@@ -6,17 +6,23 @@ using Microsoft.FeatureManagement;
 using MudBlazor;
 
 using Template.BlazorServer.Host.Application;
+using Template.BlazorServer.Host.Infrastructure.Circuits;
 using Template.BlazorServer.Host.Infrastructure.Components;
 using Template.BlazorServer.Host.Infrastructure.Notifications;
 
 public sealed partial class Home
 {
+    private int circuitCount;
+
     private string? lastNotification;
 
     private bool featureEnabled;
 
     [Inject]
     public required NotificationBus NotificationBus { get; set; }
+
+    [Inject]
+    public required CircuitTracker CircuitTracker { get; set; }
 
     [Inject]
     public required IFeatureManager FeatureManager { get; set; }
@@ -28,6 +34,8 @@ public sealed partial class Home
     {
         // Subscribe server notification (unsubscribed on dispose)
         NotificationBus.Received += OnNotificationReceived;
+        CircuitTracker.Changed += OnCircuitChanged;
+        circuitCount = CircuitTracker.Count;
 
         // Feature flag example
         featureEnabled = await FeatureManager.IsEnabledAsync(FeatureFlags.CustomOption);
@@ -38,9 +46,19 @@ public sealed partial class Home
         if (disposing)
         {
             NotificationBus.Received -= OnNotificationReceived;
+            CircuitTracker.Changed -= OnCircuitChanged;
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnCircuitChanged(object? sender, EventArgs e)
+    {
+        _ = InvokeAsync(() =>
+        {
+            circuitCount = CircuitTracker.Count;
+            StateHasChanged();
+        });
     }
 
     private void OnNotificationReceived(object? sender, NotificationEventArgs e)

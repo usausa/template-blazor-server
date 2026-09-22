@@ -33,6 +33,14 @@ internal static partial class Log
     [LoggerMessage(Level = LogLevel.Information, Message = "Worker stop. worker=[{worker}]")]
     public static partial void InfoWorkerStop(this ILogger logger, string worker);
 
+    // Circuit
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Circuit opened. id=[{id}], user=[{user}], count=[{count}]")]
+    public static partial void InfoCircuitOpened(this ILogger logger, string id, string? user, int count);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Circuit closed. id=[{id}], count=[{count}]")]
+    public static partial void InfoCircuitClosed(this ILogger logger, string id, int count);
+
     // Request
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Long execution. method=[{method}], route=[{route}], elapsed=[{elapsed}]")]

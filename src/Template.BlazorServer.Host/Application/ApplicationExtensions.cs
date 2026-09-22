@@ -167,7 +167,7 @@ public static class ApplicationExtensions
 
     public static IHostApplicationBuilder ConfigureHttp(this IHostApplicationBuilder builder)
     {
-        // Add services to the container.
+        // Add services to the container
         builder.Services.AddHttpContextAccessor();
 
         // CSP nonce
@@ -389,6 +389,10 @@ public static class ApplicationExtensions
 
         // Error boundary logging
         builder.Services.AddScoped<Microsoft.AspNetCore.Components.Web.IErrorBoundaryLogger, Infrastructure.Components.ErrorBoundaryLogger>();
+
+        // Circuit tracking
+        builder.Services.AddSingleton<Infrastructure.Circuits.CircuitTracker>();
+        builder.Services.AddScoped<Microsoft.AspNetCore.Components.Server.Circuits.CircuitHandler, Infrastructure.Circuits.AppCircuitHandler>();
 
         // MudBlazor
         builder.Services.AddMudServices(static options =>
@@ -679,17 +683,9 @@ public static class ApplicationExtensions
     }
 
     //--------------------------------------------------------------------------------
-    // Configuration
-    //--------------------------------------------------------------------------------
-
-    private static bool IsOtelExporterEnabled(this IConfiguration configuration) =>
-        !String.IsNullOrWhiteSpace(configuration.GetOtelExporterEndpoint());
-
-    //--------------------------------------------------------------------------------
     // Profiler
     //--------------------------------------------------------------------------------
 
-    // SQLトレースをログ/テレメトリそれぞれの設定で有効化する
     private static IProfileListener? CreateProfileListener(IServiceProvider provider, ProfilerSetting setting)
     {
         var listeners = new List<IProfileListener>();
@@ -715,6 +711,13 @@ public static class ApplicationExtensions
             _ => new ChainListener(listeners)
         };
     }
+
+    //--------------------------------------------------------------------------------
+    // Configuration
+    //--------------------------------------------------------------------------------
+
+    private static bool IsOtelExporterEnabled(this IConfiguration configuration) =>
+        !String.IsNullOrWhiteSpace(configuration.GetOtelExporterEndpoint());
 
     private static string GetOtelExporterEndpoint(this IConfiguration configuration) =>
         configuration["OTEL_EXPORTER_OTLP_ENDPOINT"] ?? string.Empty;
