@@ -13,10 +13,9 @@
     </MudFileUpload>
 </MudStack>
 
-@if (uploading)
-{
+<Condition Value="uploading">
     <MudProgressLinear Value="progress" Color="Color.Primary" Class="upload-progress mb-4" />
-}
+</Condition>
 
 <MudSimpleTable Dense="true" Class="files-table">
     <thead>
@@ -26,17 +25,18 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var entry in entries)
-        {
-            <tr>
-                <td>@entry</td>
-                <td>
-                    <MudIconButton Icon="@Icons.Material.Filled.Download" Size="Size.Small" Href="@($"api/files/download/{Uri.EscapeDataString(entry)}")" />
-                    <AuthorizeView Roles="@Roles.Administrator" Context="auth">
-                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" OnClick="() => DeleteAsync(entry)" />
-                    </AuthorizeView>
-                </td>
-            </tr>
-        }
+        <ListItem Items="entries" Context="entry">
+            <ItemTemplate>
+                <tr>
+                    <td>@entry</td>
+                    <td>
+                        <MudIconButton Icon="@Icons.Material.Filled.Download" Size="Size.Small" Href="@MakeDownloadUrl(entry)" />
+                        <AuthorizeView Roles="@Roles.Administrator" Context="auth">
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" OnClick="() => DeleteAsync(entry)" />
+                        </AuthorizeView>
+                    </td>
+                </tr>
+            </ItemTemplate>
+        </ListItem>
     </tbody>
 </MudSimpleTable>

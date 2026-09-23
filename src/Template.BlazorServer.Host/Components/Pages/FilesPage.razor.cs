@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Forms;
 
 using MudBlazor;
 
-using Template.BlazorServer.Host.Infrastructure.Components;
+using Template.BlazorServer.Host.Components.Shared;
 using Template.BlazorServer.Host.Infrastructure.IO;
 using Template.BlazorServer.Infrastructure.Storage;
 
@@ -19,6 +19,10 @@ public sealed partial class FilesPage
 
     private int progress;
 
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
+
     [Inject]
     public required IStorage Storage { get; set; }
 
@@ -28,8 +32,36 @@ public sealed partial class FilesPage
     [Inject]
     public required ISnackbar Snackbar { get; set; }
 
+    //--------------------------------------------------------------------------------
+    // Initialize
+    //--------------------------------------------------------------------------------
+
     protected override Task OnInitializedAsync() =>
         LoadAsync();
+
+    //--------------------------------------------------------------------------------
+    // Event
+    //--------------------------------------------------------------------------------
+
+    private void OnProgress(int percent)
+    {
+        _ = InvokeAsync(() =>
+        {
+            progress = percent;
+            StateHasChanged();
+        });
+    }
+
+    //--------------------------------------------------------------------------------
+    // Helper
+    //--------------------------------------------------------------------------------
+
+    private static string MakeDownloadUrl(string entry) =>
+        "api/files/download/" + Uri.EscapeDataString(entry);
+
+    //--------------------------------------------------------------------------------
+    // Action
+    //--------------------------------------------------------------------------------
 
     private async Task LoadAsync()
     {
@@ -64,15 +96,6 @@ public sealed partial class FilesPage
         }
 
         await LoadAsync();
-    }
-
-    private void OnProgress(int percent)
-    {
-        _ = InvokeAsync(() =>
-        {
-            progress = percent;
-            StateHasChanged();
-        });
     }
 
     private async Task DeleteAsync(string entry)

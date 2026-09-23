@@ -6,8 +6,7 @@ using Microsoft.FeatureManagement;
 using MudBlazor;
 
 using Template.BlazorServer.Host.Application;
-using Template.BlazorServer.Host.Infrastructure.Circuits;
-using Template.BlazorServer.Host.Infrastructure.Components;
+using Template.BlazorServer.Host.Application.Circuits;
 using Template.BlazorServer.Host.Infrastructure.Notifications;
 
 public sealed partial class Home
@@ -16,7 +15,13 @@ public sealed partial class Home
 
     private string? lastNotification;
 
+    private bool HasNotification => !String.IsNullOrEmpty(lastNotification);
+
     private bool featureEnabled;
+
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
 
     [Inject]
     public required NotificationBus NotificationBus { get; set; }
@@ -30,14 +35,16 @@ public sealed partial class Home
     [Inject]
     public required ISnackbar Snackbar { get; set; }
 
+    //--------------------------------------------------------------------------------
+    // Initialize
+    //--------------------------------------------------------------------------------
+
     protected override async Task OnInitializedAsync()
     {
-        // Subscribe server notification (unsubscribed on dispose)
         NotificationBus.Received += OnNotificationReceived;
         CircuitTracker.Changed += OnCircuitChanged;
         circuitCount = CircuitTracker.Count;
 
-        // Feature flag example
         featureEnabled = await FeatureManager.IsEnabledAsync(FeatureFlags.CustomOption);
     }
 
@@ -51,6 +58,10 @@ public sealed partial class Home
 
         base.Dispose(disposing);
     }
+
+    //--------------------------------------------------------------------------------
+    // Event
+    //--------------------------------------------------------------------------------
 
     private void OnCircuitChanged(object? sender, EventArgs e)
     {

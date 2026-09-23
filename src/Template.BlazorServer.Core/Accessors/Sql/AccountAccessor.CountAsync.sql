@@ -1,1 +1,4 @@
-SELECT COUNT(*) FROM Account
+SELECT
+    COUNT(*)
+FROM
+    Account

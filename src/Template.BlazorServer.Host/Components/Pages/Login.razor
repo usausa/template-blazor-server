@@ -1,16 +1,15 @@
 @page "/login"
 @attribute [ExcludeFromInteractiveRouting]
-@layout LoginLayout
+@layout PlainLayout
 
 <PageTitle>Login</PageTitle>
 
 <MudPaper Class="page-card pa-8 mx-auto mt-16">
     <MudText Typo="Typo.h5" Class="mb-4">Login</MudText>
 
-    @if (!String.IsNullOrEmpty(Error))
-    {
+    <Condition Value="HasError">
         <MudAlert Severity="Severity.Error" Class="mb-4">IDまたはパスワードが違います。</MudAlert>
-    }
+    </Condition>
 
     @* ReSharper disable Html.PathError *@
     <form method="post" action="auth/login">
@@ -32,6 +31,8 @@
 </MudPaper>
 
 @code {
+    private bool HasError => !String.IsNullOrEmpty(Error);
+
     [SupplyParameterFromQuery(Name = "error")]
     public string? Error { get; set; }
 

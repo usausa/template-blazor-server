@@ -6,13 +6,19 @@ using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 
 using Template.BlazorServer.Host.Components.Dialogs;
-using Template.BlazorServer.Host.Infrastructure.Components;
+using Template.BlazorServer.Host.Components.Shared;
 
 public sealed partial class DataPage
 {
+#pragma warning disable CA2213
     private MudDataGrid<DataEntity> grid = default!;
+#pragma warning restore CA2213
 
     private string? searchName;
+
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
 
     [Inject]
     public required DataService DataService { get; set; }
@@ -29,10 +35,21 @@ public sealed partial class DataPage
     [SupplyParameterFromQuery(Name = "name")]
     public string? Name { get; set; }
 
+    //--------------------------------------------------------------------------------
+    // Initialize
+    //--------------------------------------------------------------------------------
+
     protected override void OnInitialized()
     {
         searchName = Name;
     }
+
+    //--------------------------------------------------------------------------------
+    // Event
+    //--------------------------------------------------------------------------------
+
+    private Task OnSearchKeyDown(KeyboardEventArgs args) =>
+        args.Key == "Enter" ? SearchAsync() : Task.CompletedTask;
 
     //--------------------------------------------------------------------------------
     // Grid
@@ -40,9 +57,8 @@ public sealed partial class DataPage
 
     private async Task<GridData<DataEntity>> LoadServerData(GridState<DataEntity> state, CancellationToken cancellationToken)
     {
-        // 並べ替えはサーバー側で行うため、グリッドが選んだ列と昇降をそのまま渡す
         var sort = state.SortDefinitions.FirstOrDefault();
-        var result = await DataService.QueryPageAsync(searchName, sort?.SortBy, sort?.Descending ?? false, state.Page, state.PageSize, cancellationToken);
+        var result = await DataService.QueryPageAsync(searchName, RequestHelper.Parse(sort?.SortBy, DataSort.Id), sort?.Descending ?? false, state.Page, state.PageSize, cancellationToken);
         return new GridData<DataEntity>
         {
             TotalItems = result.Total,
@@ -57,11 +73,8 @@ public sealed partial class DataPage
         return grid.ReloadServerData();
     }
 
-    private Task OnSearchKeyDown(KeyboardEventArgs args) =>
-        args.Key == "Enter" ? SearchAsync() : Task.CompletedTask;
-
     //--------------------------------------------------------------------------------
-    // Operation
+    // Action
     //--------------------------------------------------------------------------------
 
     private async Task AddAsync()
@@ -72,8 +85,7 @@ public sealed partial class DataPage
             return;
         }
 
-        var id = await DataService.InsertAsync(entity.Name, entity.Value);
-        if (id.HasValue)
+        if (await DataService.InsertAsync(entity) == DataWriteStatus.Success)
         {
             Snackbar.AddSuccess("追加しました。");
             await grid.ReloadServerData();
@@ -116,7 +128,7 @@ public sealed partial class DataPage
             return;
         }
 
-        if (await DataService.DeleteAsync(entity.Id))
+        if (await DataService.DeleteAsync(entity.Id) == DataWriteStatus.Success)
         {
             Snackbar.AddSuccess("削除しました。");
         }

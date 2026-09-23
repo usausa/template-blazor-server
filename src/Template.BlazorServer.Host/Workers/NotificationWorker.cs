@@ -1,13 +1,12 @@
 namespace Template.BlazorServer.Host.Workers;
 
-using Template.BlazorServer.Host.Application;
 using Template.BlazorServer.Host.Infrastructure.Notifications;
 
 public sealed class NotificationWorker : BackgroundService
 {
     private readonly ILogger<NotificationWorker> log;
 
-    private readonly WorkerSetting setting;
+    private readonly NotificationWorkerOption options;
 
     private readonly NotificationBus bus;
 
@@ -15,19 +14,19 @@ public sealed class NotificationWorker : BackgroundService
 
     public NotificationWorker(
         ILogger<NotificationWorker> log,
-        WorkerSetting setting,
+        NotificationWorkerOption options,
         NotificationBus bus,
         TimeProvider timeProvider)
     {
         this.log = log;
-        this.setting = setting;
+        this.options = options;
         this.bus = bus;
         this.timeProvider = timeProvider;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        if (!setting.Enable)
+        if (!options.Enable)
         {
             log.InfoWorkerDisabled(nameof(NotificationWorker));
             return;
@@ -36,7 +35,7 @@ public sealed class NotificationWorker : BackgroundService
         log.InfoWorkerStart(nameof(NotificationWorker));
         try
         {
-            using var timer = new PeriodicTimer(TimeSpan.FromSeconds(setting.IntervalSeconds));
+            using var timer = new PeriodicTimer(TimeSpan.FromSeconds(options.IntervalSeconds));
             while (await timer.WaitForNextTickAsync(stoppingToken))
             {
                 try
@@ -45,7 +44,7 @@ public sealed class NotificationWorker : BackgroundService
                 }
                 catch (Exception ex) when (ex is not OperationCanceledException)
                 {
-                    log.ErrorUnhandledException(ex);
+                    log.ErrorWorkerException(nameof(NotificationWorker), ex);
                 }
             }
         }

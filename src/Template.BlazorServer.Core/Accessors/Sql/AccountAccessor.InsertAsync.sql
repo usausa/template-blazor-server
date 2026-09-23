@@ -1,2 +1,6 @@
-INSERT INTO Account (Name, Password, Role, CreatedAt) VALUES (/*@ name */'', /*@ password */NULL, /*@ role */'', /*@ createdAt */'');
-SELECT last_insert_rowid();
+INSERT INTO
+    Account (Name, Password, Role, CreatedAt)
+VALUES
+    (/*@ name */'', /*@ password */NULL, /*@ role */'', /*@ createdAt */'')
+RETURNING
+    Id

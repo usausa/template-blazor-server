@@ -33,11 +33,12 @@ using Serilog;
 using Smart.Data;
 
 using Template.BlazorServer.Accessors;
+using Template.BlazorServer.Host.Application.Context;
+using Template.BlazorServer.Host.Application.ExceptionHandling;
+using Template.BlazorServer.Host.Application.HealthChecks;
 using Template.BlazorServer.Host.Application.Telemetry;
 using Template.BlazorServer.Host.Components;
 using Template.BlazorServer.Host.Endpoints;
-using Template.BlazorServer.Host.Infrastructure.ExceptionHandling;
-using Template.BlazorServer.Host.Infrastructure.HealthChecks;
 using Template.BlazorServer.Host.Infrastructure.Logging;
 using Template.BlazorServer.Host.Infrastructure.Security;
 using Template.BlazorServer.Infrastructure.Security;
@@ -47,7 +48,8 @@ public static class ApplicationExtensions
 {
     private const string HealthEndpointPath = "/health";
     private const string AlivenessEndpointPath = "/alive";
-    private const string ApiPathPrefix = "/api";
+    private const string SchemaPath = "Assets/Data/Schema.sql";
+    private const string SystemUserId = "system";
 
     //--------------------------------------------------------------------------------
     // System
@@ -154,7 +156,7 @@ public static class ApplicationExtensions
         if (setting.HttpLog)
         {
             app.UseWhen(
-                static context => context.Request.Path.StartsWithSegments(ApiPathPrefix, StringComparison.OrdinalIgnoreCase),
+                static context => context.Request.Path.StartsWithSegments(ApiRoutes.Prefix, StringComparison.OrdinalIgnoreCase),
                 static b => b.UseHttpLogging());
         }
 
@@ -194,8 +196,16 @@ public static class ApplicationExtensions
             app.UseHsts();
         }
 
-        // Headers
-        app.UseMiddleware<SecurityHeadersMiddleware>();
+        // Headers. The nonce admits the import map that Blazor renders inline, MudBlazor needs inline styles,
+        // dotnet watch / Browser Link load their script from another localhost port and connect back to it
+        var development = app.Environment.IsDevelopment();
+        var scriptSources = development ? "'self' http://localhost:*" : "'self'";
+        var connectSources = development ? "'self' http://localhost:* ws://localhost:* wss://localhost:*" : "'self'";
+        app.UseMiddleware<SecurityHeadersMiddleware>(new SecurityHeadersOption
+        {
+            ReportOnly = app.Services.GetRequiredService<CspSetting>().ReportOnly,
+            ContentSecurityPolicy = $"default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src {scriptSources} 'nonce-{{nonce}}'; connect-src {connectSources}"
+        });
 
         return app;
     }
@@ -235,12 +245,12 @@ public static class ApplicationExtensions
     {
         // API: ProblemDetails
         app.UseWhen(
-            static context => context.Request.Path.StartsWithSegments(ApiPathPrefix, StringComparison.OrdinalIgnoreCase),
+            static context => context.Request.Path.StartsWithSegments(ApiRoutes.Prefix, StringComparison.OrdinalIgnoreCase),
             static b => b.UseExceptionHandler());
 
         // Page: error page
         app.UseWhen(
-            static context => !context.Request.Path.StartsWithSegments(ApiPathPrefix, StringComparison.OrdinalIgnoreCase),
+            static context => !context.Request.Path.StartsWithSegments(ApiRoutes.Prefix, StringComparison.OrdinalIgnoreCase),
             static b =>
             {
                 b.UseExceptionHandler("/error", createScopeForErrors: true);
@@ -274,7 +284,7 @@ public static class ApplicationExtensions
                 {
                     OnRedirectToLogin = static context =>
                     {
-                        if (context.Request.Path.StartsWithSegments(ApiPathPrefix, StringComparison.OrdinalIgnoreCase))
+                        if (context.Request.Path.StartsWithSegments(ApiRoutes.Prefix, StringComparison.OrdinalIgnoreCase))
                         {
                             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                         }
@@ -287,7 +297,7 @@ public static class ApplicationExtensions
                     },
                     OnRedirectToAccessDenied = static context =>
                     {
-                        if (context.Request.Path.StartsWithSegments(ApiPathPrefix, StringComparison.OrdinalIgnoreCase))
+                        if (context.Request.Path.StartsWithSegments(ApiRoutes.Prefix, StringComparison.OrdinalIgnoreCase))
                         {
                             context.Response.StatusCode = StatusCodes.Status403Forbidden;
                         }
@@ -335,7 +345,7 @@ public static class ApplicationExtensions
         if (setting.Response || setting.Request)
         {
             app.UseWhen(
-                static context => context.Request.Path.StartsWithSegments(ApiPathPrefix, StringComparison.OrdinalIgnoreCase),
+                static context => context.Request.Path.StartsWithSegments(ApiRoutes.Prefix, StringComparison.OrdinalIgnoreCase),
                 b =>
                 {
                     if (setting.Response)
@@ -388,11 +398,11 @@ public static class ApplicationExtensions
             });
 
         // Error boundary logging
-        builder.Services.AddScoped<Microsoft.AspNetCore.Components.Web.IErrorBoundaryLogger, Infrastructure.Components.ErrorBoundaryLogger>();
+        builder.Services.AddScoped<Microsoft.AspNetCore.Components.Web.IErrorBoundaryLogger, ErrorBoundaryLogger>();
 
         // Circuit tracking
-        builder.Services.AddSingleton<Infrastructure.Circuits.CircuitTracker>();
-        builder.Services.AddScoped<Microsoft.AspNetCore.Components.Server.Circuits.CircuitHandler, Infrastructure.Circuits.AppCircuitHandler>();
+        builder.Services.AddSingleton<Circuits.CircuitTracker>();
+        builder.Services.AddScoped<Microsoft.AspNetCore.Components.Server.Circuits.CircuitHandler, Circuits.AppCircuitHandler>();
 
         // MudBlazor
         builder.Services.AddMudServices(static options =>
@@ -554,8 +564,8 @@ public static class ApplicationExtensions
         builder.Services.AddMemoryCache();
 
         // Storage
-        builder.Services.AddOptions<FileStorageOptions>().BindConfiguration("Storage").ValidateDataAnnotations().ValidateOnStart();
-        builder.Services.AddSingleton(static p => p.GetRequiredService<IOptions<FileStorageOptions>>().Value);
+        builder.Services.AddOptions<FileStorageOption>().BindConfiguration("Storage").ValidateDataAnnotations().ValidateOnStart();
+        builder.Services.AddSingleton(static p => p.GetRequiredService<IOptions<FileStorageOption>>().Value);
         builder.Services.AddSingleton<IStorage, FileStorage>();
 
         // Security
@@ -563,14 +573,20 @@ public static class ApplicationExtensions
         builder.Services.AddSingleton<IPasswordProvider, DefaultPasswordProvider>();
 
         // Service
+        builder.Services.AddSingleton<ApplicationServiceContextProvider>();
+        builder.Services.AddSingleton<ServiceContextProvider>(static p => p.GetRequiredService<ApplicationServiceContextProvider>());
+        builder.Services.AddScoped<BlazorServiceScope>();
+
         builder.Services.AddCoreServices();
 
         // Notification
         builder.Services.AddSingleton<Infrastructure.Notifications.NotificationBus>();
+        builder.Services.AddOptions<Workers.NotificationWorkerOption>().BindConfiguration("Notification").ValidateDataAnnotations().ValidateOnStart();
+        builder.Services.AddSingleton(static p => p.GetRequiredService<IOptions<Workers.NotificationWorkerOption>>().Value);
         builder.Services.AddHostedService<Workers.NotificationWorker>();
 
         // Report
-        builder.Services.AddSingleton<Infrastructure.Reports.InvoiceReportBuilder>();
+        builder.Services.AddSingleton<Reports.InvoiceReportBuilder>();
 
         // Setting
         builder.Services.AddOptions<ProfilerSetting>().BindConfiguration("Profiler").ValidateDataAnnotations().ValidateOnStart();
@@ -585,8 +601,6 @@ public static class ApplicationExtensions
         builder.Services.AddSingleton(static p => p.GetRequiredService<IOptions<AuthSetting>>().Value);
         builder.Services.AddOptions<TelemetrySetting>().BindConfiguration("Telemetry").ValidateDataAnnotations().ValidateOnStart();
         builder.Services.AddSingleton(static p => p.GetRequiredService<IOptions<TelemetrySetting>>().Value);
-        builder.Services.AddOptions<WorkerSetting>().BindConfiguration("Worker").ValidateDataAnnotations().ValidateOnStart();
-        builder.Services.AddSingleton(static p => p.GetRequiredService<IOptions<WorkerSetting>>().Value);
 
         return builder;
     }
@@ -667,19 +681,24 @@ public static class ApplicationExtensions
     // Startup
     //--------------------------------------------------------------------------------
 
-    public static ValueTask InitializeApplicationAsync(this WebApplication app)
+    public static async ValueTask InitializeApplicationAsync(this WebApplication app)
     {
         // Prepare instrument
         app.Services.GetRequiredService<ApplicationInstrument>();
 
         // Prepare storage
-        Directory.CreateDirectory(app.Services.GetRequiredService<FileStorageOptions>().Root);
+        Directory.CreateDirectory(app.Services.GetRequiredService<FileStorageOption>().Root);
 
-        // Prepare database
-        app.Services.GetRequiredService<DataService>().CreateTable();
+        // Prepare database (schema from the SQL file)
+        await app.Services.GetRequiredService<DatabaseService>().InitializeAsync(SchemaPath, CancellationToken.None);
 
-        var setting = app.Services.GetRequiredService<AuthSetting>();
-        return app.Services.GetRequiredService<AccountService>().InitializeAsync(setting.InitialId, setting.InitialPassword, Roles.Administrator);
+        // Seed initial account (startup has no boundary, so the service context is started here)
+        var timeProvider = app.Services.GetRequiredService<TimeProvider>();
+        using (app.Services.GetRequiredService<ApplicationServiceContextProvider>().Begin(() => new ServiceContext(timeProvider.GetLocalNow(), SystemUserId)))
+        {
+            var setting = app.Services.GetRequiredService<AuthSetting>();
+            await app.Services.GetRequiredService<AccountService>().InitializeAsync(setting.InitialAccount, Roles.Administrator);
+        }
     }
 
     //--------------------------------------------------------------------------------

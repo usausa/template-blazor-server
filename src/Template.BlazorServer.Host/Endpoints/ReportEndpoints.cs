@@ -1,7 +1,7 @@
 namespace Template.BlazorServer.Host.Endpoints;
 
 using Template.BlazorServer.Host.Application;
-using Template.BlazorServer.Host.Infrastructure.Reports;
+using Template.BlazorServer.Host.Reports;
 
 public static class ReportEndpoints
 {

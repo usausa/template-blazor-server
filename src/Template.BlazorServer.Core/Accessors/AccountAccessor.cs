@@ -3,9 +3,6 @@ namespace Template.BlazorServer.Accessors;
 [DataAccessor]
 public sealed partial class AccountAccessor
 {
-    [Execute]
-    public partial void Create();
-
     [ExecuteScalar]
     public partial ValueTask<int> CountAsync();
 

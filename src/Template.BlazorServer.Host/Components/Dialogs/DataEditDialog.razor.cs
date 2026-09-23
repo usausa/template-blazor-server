@@ -12,9 +12,15 @@ public sealed partial class DataEditDialog
 {
     private static readonly DataFormValidator Validator = new();
 
+#pragma warning disable CA2213
     private MudForm form = default!;
+#pragma warning restore CA2213
 
     private DataForm model = default!;
+
+    //--------------------------------------------------------------------------------
+    // Parameter
+    //--------------------------------------------------------------------------------
 
     [Parameter]
     public required string Title { get; set; }
@@ -24,6 +30,10 @@ public sealed partial class DataEditDialog
 
     [CascadingParameter]
     public required IMudDialogInstance MudDialog { get; set; }
+
+    //--------------------------------------------------------------------------------
+    // Events
+    //--------------------------------------------------------------------------------
 
     protected override void OnInitialized()
     {
@@ -40,6 +50,10 @@ public sealed partial class DataEditDialog
     }
 
     private void OnCancelClick() => MudDialog.Cancel();
+
+    //--------------------------------------------------------------------------------
+    // Mapping
+    //--------------------------------------------------------------------------------
 
     [Mapper]
     private static partial DataForm ToForm(DataEntity entity);

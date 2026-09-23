@@ -1,1 +1,6 @@
-SELECT * FROM Account WHERE Name = /*@ name */'admin'
+SELECT
+    *
+FROM
+    Account
+WHERE
+    Name = /*@ name */'admin'
