@@ -26,6 +26,7 @@
   <ItemGroup>
     <None Include="..\..\src\Template.BlazorServer.Host\appsettings.json" Link="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\src\Template.BlazorServer.Host\appsettings.Development.json" Link="appsettings.Development.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
