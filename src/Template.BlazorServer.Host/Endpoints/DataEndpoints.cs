@@ -32,7 +32,7 @@ public sealed class DataListResponse
     public IReadOnlyList<DataListEntry> Items { get; set; } = default!;
 }
 
-public sealed class DataResponse
+public sealed class DataGetResponse
 {
     public long Id { get; set; }
 
@@ -78,7 +78,7 @@ public static partial class DataMapper
     public static partial DataListEntry ToListEntry(this DataEntity entity);
 
     [Mapper]
-    public static partial DataResponse ToResponse(this DataEntity entity);
+    public static partial DataGetResponse ToGetResponse(this DataEntity entity);
 }
 
 //--------------------------------------------------------------------------------
@@ -94,14 +94,37 @@ public static class DataEndpoints
     public static void MapDataEndpoints(this WebApplication app)
     {
         var group = app.MapApiGroup(ApiRoutes.Data)
-            .RequireAuthorization();
+            .RequireAuthorization()
+            .WithMetadata(new ProducesResponseTypeMetadata(StatusCodes.Status401Unauthorized, typeof(void)));
 
-        group.MapGet("/", HandleListAsync);
-        group.MapGet("/csv", HandleExportCsv);
-        group.MapGet("/{id:long}", HandleGetAsync);
-        group.MapPost("/", HandleCreateAsync);
-        group.MapPut("/{id:long}", HandleUpdateAsync);
-        group.MapDelete("/{id:long}", HandleDeleteAsync).RequireAuthorization(Policies.Administrator);
+        group.MapGet("/", HandleListAsync)
+            .WithName("DataList")
+            .Produces<DataListResponse>()
+            .ProducesValidationProblem();
+        group.MapGet("/csv", HandleExportCsv)
+            .WithName("DataExport")
+            .Produces<Stream>(StatusCodes.Status200OK, "text/csv");
+        group.MapGet("/{id:long}", HandleGetAsync)
+            .WithName("DataGet")
+            .Produces<DataGetResponse>()
+            .Produces(StatusCodes.Status404NotFound);
+        group.MapPost("/", HandleCreateAsync)
+            .WithName("DataCreate")
+            .Produces<DataCreateResponse>(StatusCodes.Status201Created)
+            .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status409Conflict);
+        group.MapPut("/{id:long}", HandleUpdateAsync)
+            .WithName("DataUpdate")
+            .Produces(StatusCodes.Status204NoContent)
+            .ProducesValidationProblem()
+            .Produces(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status409Conflict);
+        group.MapDelete("/{id:long}", HandleDeleteAsync)
+            .RequireAuthorization(Policies.Administrator)
+            .WithName("DataDelete")
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound);
     }
 
     //--------------------------------------------------------------------------------
@@ -152,7 +175,7 @@ public static class DataEndpoints
     {
         var entity = await dataService.QueryAsync(id);
         return entity is not null
-            ? TypedResults.Ok(entity.ToResponse())
+            ? TypedResults.Ok(entity.ToGetResponse())
             : TypedResults.NotFound();
     }
 

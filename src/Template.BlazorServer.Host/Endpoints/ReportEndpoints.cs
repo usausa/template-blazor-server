@@ -12,9 +12,13 @@ public static class ReportEndpoints
     public static void MapReportEndpoints(this WebApplication app)
     {
         var group = app.MapApiGroup(ApiRoutes.Reports)
-            .RequireAuthorization();
+            .RequireAuthorization()
+            .WithMetadata(new ProducesResponseTypeMetadata(StatusCodes.Status401Unauthorized, typeof(void)));
 
-        group.MapGet("/invoice", HandleInvoiceAsync);
+        group.MapGet("/invoice", HandleInvoiceAsync)
+            .WithName("ReportInvoice")
+            .Produces<Stream>(StatusCodes.Status200OK, "application/pdf")
+            .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
     //--------------------------------------------------------------------------------

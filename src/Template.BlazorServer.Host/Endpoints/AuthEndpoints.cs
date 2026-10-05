@@ -12,8 +12,14 @@ public static class AuthEndpoints
     {
         var group = app.MapGroup("/auth");
 
-        group.MapPost("/login", HandleLoginAsync).AllowAnonymous();
-        group.MapPost("/logout", HandleLogoutAsync).RequireAuthorization();
+        group.MapPost("/login", HandleLoginAsync)
+            .AllowAnonymous()
+            .WithName("AuthLogin")
+            .Produces(StatusCodes.Status302Found);
+        group.MapPost("/logout", HandleLogoutAsync)
+            .RequireAuthorization()
+            .WithName("AuthLogout")
+            .Produces(StatusCodes.Status302Found);
     }
 
     //--------------------------------------------------------------------------------
