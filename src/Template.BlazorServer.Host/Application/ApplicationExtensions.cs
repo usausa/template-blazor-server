@@ -249,7 +249,11 @@ public static class ApplicationExtensions
         // API: ProblemDetails
         app.UseWhen(
             static context => context.Request.Path.StartsWithSegments(ApiRoutes.Prefix, StringComparison.OrdinalIgnoreCase),
-            static b => b.UseExceptionHandler());
+            static b =>
+            {
+                b.UseExceptionHandler();
+                b.UseStatusCodePages();
+            });
 
         // Page: error page
         app.UseWhen(

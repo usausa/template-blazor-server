@@ -95,7 +95,7 @@ public static class DataEndpoints
     {
         var group = app.MapApiGroup(ApiRoutes.Data)
             .RequireAuthorization()
-            .WithMetadata(new ProducesResponseTypeMetadata(StatusCodes.Status401Unauthorized, typeof(void)));
+            .ProducesProblem(StatusCodes.Status401Unauthorized);
 
         group.MapGet("/", HandleListAsync)
             .WithName("DataList")
@@ -107,7 +107,7 @@ public static class DataEndpoints
         group.MapGet("/{id:long}", HandleGetAsync)
             .WithName("DataGet")
             .Produces<DataGetResponse>()
-            .Produces(StatusCodes.Status404NotFound);
+            .ProducesProblem(StatusCodes.Status404NotFound);
         group.MapPost("/", HandleCreateAsync)
             .WithName("DataCreate")
             .Produces<DataCreateResponse>(StatusCodes.Status201Created)
@@ -117,14 +117,14 @@ public static class DataEndpoints
             .WithName("DataUpdate")
             .Produces(StatusCodes.Status204NoContent)
             .ProducesValidationProblem()
-            .Produces(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status409Conflict);
         group.MapDelete("/{id:long}", HandleDeleteAsync)
             .RequireAuthorization(Policies.Administrator)
             .WithName("DataDelete")
             .Produces(StatusCodes.Status204NoContent)
-            .Produces(StatusCodes.Status403Forbidden)
-            .Produces(StatusCodes.Status404NotFound);
+            .ProducesProblem(StatusCodes.Status403Forbidden)
+            .ProducesProblem(StatusCodes.Status404NotFound);
     }
 
     //--------------------------------------------------------------------------------

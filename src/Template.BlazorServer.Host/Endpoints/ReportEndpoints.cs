@@ -13,7 +13,7 @@ public static class ReportEndpoints
     {
         var group = app.MapApiGroup(ApiRoutes.Reports)
             .RequireAuthorization()
-            .WithMetadata(new ProducesResponseTypeMetadata(StatusCodes.Status401Unauthorized, typeof(void)));
+            .ProducesProblem(StatusCodes.Status401Unauthorized);
 
         group.MapGet("/invoice", HandleInvoiceAsync)
             .WithName("ReportInvoice")
