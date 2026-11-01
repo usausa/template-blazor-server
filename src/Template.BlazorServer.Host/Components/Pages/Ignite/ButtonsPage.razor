@@ -1,0 +1,33 @@
+@page "/ignite/buttons"
+@attribute [Authorize]
+
+<PageTitle>Buttons - Ignite UI</PageTitle>
+
+<IgniteIcons />
+
+<MudText Typo="Typo.h4">Buttons</MudText>
+<MudText Class="mb-4">Ignite UI for Blazor Lite</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="Button" Result="@($"Clicked: {clickCount}")">
+        <div class="sample-row">
+            <IgbButton Variant="ButtonVariant.Contained" @onclick="OnButtonClick">Contained</IgbButton>
+            <IgbButton Variant="ButtonVariant.Outlined" @onclick="OnButtonClick">Outlined</IgbButton>
+            <IgbButton Variant="ButtonVariant.Flat" @onclick="OnButtonClick">Flat</IgbButton>
+            <IgbButton Variant="ButtonVariant.Contained" Disabled="true">Disabled</IgbButton>
+        </div>
+    </SampleCard>
+    <SampleCard Title="Icon Button" Result="@($"Favorite: {favorite}")">
+        <div class="sample-row">
+            <IgbIconButton IconName="favorite" Variant="IconButtonVariant.Contained" @onclick="OnFavoriteClick" />
+            <IgbIconButton IconName="settings" Variant="IconButtonVariant.Outlined" />
+            <IgbIconButton IconName="delete" Variant="IconButtonVariant.Flat" />
+        </div>
+    </SampleCard>
+    <SampleCard Title="Ripple">
+        <div class="sample-ripple">
+            Click this area
+            <IgbRipple />
+        </div>
+    </SampleCard>
+</div>

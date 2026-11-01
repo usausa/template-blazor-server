@@ -1,5 +1,13 @@
 # Template project for Blazor Server
 
+## 機能
+
+| 分類 | 画面 |
+| --- | --- |
+| 基本 | Login / Home / Data / Files |
+| Ignite UI | Buttons / Inputs / Selection / Scheduling / Layout / Navigation / Display / Notifications / Chat / Grid Lite |
+| Syncfusion | Buttons / Inputs / Calendars / Popups / Chart |
+
 ## E2E テスト
 
 E2E(`tests/Template.BlazorServer.E2ETests`)は Playwright で動かす。日常の実行には含めず、必要なときとリリース前に流す。コマンドはリポジトリ直下の PowerShell で実行する。

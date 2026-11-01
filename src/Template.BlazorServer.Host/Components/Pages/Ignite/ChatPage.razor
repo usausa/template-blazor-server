@@ -1,0 +1,13 @@
+@page "/ignite/chat"
+@attribute [Authorize]
+
+<PageTitle>Chat - Ignite UI</PageTitle>
+
+<MudText Typo="Typo.h4">Chat</MudText>
+<MudText Class="mb-4">Ignite UI for Blazor Lite (preview)</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="Chat" Result="@($"Messages: {messages.Length}")" Wide="true">
+        <IgbChat Class="sample-chat" Messages="messages" Options="options" MessageCreated="OnMessageCreatedAsync" />
+    </SampleCard>
+</div>

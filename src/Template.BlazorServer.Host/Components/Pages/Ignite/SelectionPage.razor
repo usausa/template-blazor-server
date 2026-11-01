@@ -1,0 +1,54 @@
+@page "/ignite/selection"
+@attribute [Authorize]
+
+<PageTitle>Selection - Ignite UI</PageTitle>
+
+<MudText Typo="Typo.h4">Selection</MudText>
+<MudText Class="mb-4">Ignite UI for Blazor Lite</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="Combo" Result="@($"Value: {string.Join(", ", cities)}")">
+        <IgbCombo Data="CityItems" ValueKey="Id" DisplayKey="Name" GroupKey="Country" Label="Cities" Placeholder="Pick cities" @bind-Value="cities" />
+    </SampleCard>
+    <SampleCard Title="Select" Result="@($"Value: {country}")">
+        <IgbSelect Label="Country" Placeholder="Choose a country" @bind-Value="country">
+            @foreach (var item in CountryItems)
+            {
+                <IgbSelectItem Value="@item.Code">@item.Name</IgbSelectItem>
+            }
+        </IgbSelect>
+    </SampleCard>
+    <SampleCard Title="Drop Down" Result="@($"Action: {action}")">
+        <IgbDropdown Change="OnDropdownChange">
+            <IgbButton slot="target" Variant="ButtonVariant.Outlined">Actions</IgbButton>
+            <IgbDropdownHeader>Edit</IgbDropdownHeader>
+            <IgbDropdownItem Value="cut">Cut</IgbDropdownItem>
+            <IgbDropdownItem Value="copy">Copy</IgbDropdownItem>
+            <IgbDropdownItem Value="paste">Paste</IgbDropdownItem>
+            <IgbDropdownItem Value="delete" Disabled="true">Delete</IgbDropdownItem>
+        </IgbDropdown>
+    </SampleCard>
+    <SampleCard Title="Button Group / Toggle Button" Result="@($"Alignment: {alignment}")">
+        <IgbButtonGroup Selection="ButtonGroupSelection.SingleRequired" Select="OnAlignmentSelect">
+            <IgbToggleButton Value="left" Selected="true">Left</IgbToggleButton>
+            <IgbToggleButton Value="center">Center</IgbToggleButton>
+            <IgbToggleButton Value="right">Right</IgbToggleButton>
+        </IgbButtonGroup>
+    </SampleCard>
+    <SampleCard Title="Chip" Result="@($"Tags: {string.Join(", ", tags)}")" Wide="true">
+        <div class="sample-row">
+            @foreach (var tag in tags)
+            {
+                <IgbChip Removable="true" Remove="() => OnTagRemove(tag)">@tag</IgbChip>
+            }
+        </div>
+        <div class="sample-row">
+            <IgbChip Variant="StyleVariant.Primary">Primary</IgbChip>
+            <IgbChip Variant="StyleVariant.Info">Info</IgbChip>
+            <IgbChip Variant="StyleVariant.Success">Success</IgbChip>
+            <IgbChip Variant="StyleVariant.Warning">Warning</IgbChip>
+            <IgbChip Variant="StyleVariant.Danger">Danger</IgbChip>
+            <IgbChip Selectable="true" @bind-Selected="selected">Selectable</IgbChip>
+        </div>
+    </SampleCard>
+</div>

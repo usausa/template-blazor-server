@@ -1,0 +1,19 @@
+@page "/ignite/grid"
+@attribute [Authorize]
+
+<PageTitle>Grid Lite - Ignite UI</PageTitle>
+
+<MudText Typo="Typo.h4">Grid Lite</MudText>
+<MudText Class="mb-4">Ignite UI for Blazor Grid Lite</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="Grid Lite" Result="@($"Sorted: {sorted}")" Wide="true">
+        <IgbGridLite TItem="Employee" Data="Employees" Sorted="OnSorted" class="sample-grid-lite">
+            <IgbGridLiteColumn Field="@nameof(Employee.Id)" Header="ID" DataType="GridLiteColumnDataType.Number" Width="80px" Sortable />
+            <IgbGridLiteColumn Field="@nameof(Employee.Name)" Header="Name" Sortable Resizable />
+            <IgbGridLiteColumn Field="@nameof(Employee.Department)" Header="Department" Sortable Resizable />
+            <IgbGridLiteColumn Field="@nameof(Employee.Salary)" Header="Salary" DataType="GridLiteColumnDataType.Number" Sortable Resizable />
+            <IgbGridLiteColumn Field="@nameof(Employee.Remote)" Header="Remote" DataType="GridLiteColumnDataType.Boolean" Sortable />
+        </IgbGridLite>
+    </SampleCard>
+</div>

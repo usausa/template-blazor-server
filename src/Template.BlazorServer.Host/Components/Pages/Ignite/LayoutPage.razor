@@ -1,0 +1,115 @@
+@page "/ignite/layout"
+@attribute [Authorize]
+@using DividerType = IgniteUI.Blazor.Controls.DividerType
+
+<PageTitle>Layout - Ignite UI</PageTitle>
+
+<IgniteIcons />
+
+<MudText Typo="Typo.h4">Layout</MudText>
+<MudText Class="mb-4">Ignite UI for Blazor Lite</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="Card">
+        <IgbCard Class="sample-ig-card">
+            <IgbCardHeader>
+                <IgbAvatar slot="thumbnail" Initials="IG" Shape="AvatarShape.Circle" />
+                <h3 slot="title">Ignite UI</h3>
+                <h5 slot="subtitle">Card header</h5>
+            </IgbCardHeader>
+            <IgbCardContent>
+                <p>A card groups a header, content and actions.</p>
+            </IgbCardContent>
+            <IgbCardActions>
+                <IgbButton slot="start" Variant="ButtonVariant.Flat">Like</IgbButton>
+                <IgbButton slot="start" Variant="ButtonVariant.Flat">Share</IgbButton>
+                <IgbIconButton slot="end" IconName="favorite" Variant="IconButtonVariant.Flat" />
+            </IgbCardActions>
+        </IgbCard>
+    </SampleCard>
+    <SampleCard Title="Accordion / Expansion Panel">
+        <IgbAccordion SingleExpand="true">
+            <IgbExpansionPanel Open="true">
+                <span slot="title">Shipping</span>
+                <span>Orders ship within two business days.</span>
+            </IgbExpansionPanel>
+            <IgbExpansionPanel>
+                <span slot="title">Returns</span>
+                <span>Items can be returned within 30 days.</span>
+            </IgbExpansionPanel>
+            <IgbExpansionPanel>
+                <span slot="title">Warranty</span>
+                <span>Products have a one-year warranty.</span>
+            </IgbExpansionPanel>
+        </IgbAccordion>
+    </SampleCard>
+    <SampleCard Title="Tabs">
+        <IgbTabs>
+            <IgbTab Label="Overview" Selected="true">
+                <p>Tabs organize content into separate views.</p>
+            </IgbTab>
+            <IgbTab Label="Specs">
+                <p>Only one tab is visible at a time.</p>
+            </IgbTab>
+            <IgbTab Label="Reviews">
+                <p>Select a tab header to switch the view.</p>
+            </IgbTab>
+        </IgbTabs>
+    </SampleCard>
+    <SampleCard Title="Splitter">
+        <IgbSplitter Class="sample-splitter" StartSize="40%">
+            <div slot="start" class="sample-pane">Start pane</div>
+            <div slot="end" class="sample-pane">End pane</div>
+        </IgbSplitter>
+    </SampleCard>
+    <SampleCard Title="Divider">
+        <span>Solid</span>
+        <IgbDivider />
+        <span>Dashed</span>
+        <IgbDivider LineType="DividerType.Dashed" />
+        <div class="sample-row">
+            <span>Left</span>
+            <IgbDivider Vertical="true" Class="sample-vertical-divider" />
+            <span>Right</span>
+        </div>
+    </SampleCard>
+    <SampleCard Title="Carousel">
+        <IgbCarousel>
+            <IgbCarouselSlide>
+                <div class="sample-slide sample-slide-1">Slide 1</div>
+            </IgbCarouselSlide>
+            <IgbCarouselSlide>
+                <div class="sample-slide sample-slide-2">Slide 2</div>
+            </IgbCarouselSlide>
+            <IgbCarouselSlide>
+                <div class="sample-slide sample-slide-3">Slide 3</div>
+            </IgbCarouselSlide>
+        </IgbCarousel>
+    </SampleCard>
+    <SampleCard Title="Tile Manager" Wide="true">
+        <Condition Value="tileManagerVisible">
+            <IgbTileManager ColumnCount="4" Gap="8px" MinRowHeight="120px" ResizeMode="TileManagerResizeMode.Hover" DragMode="TileManagerDragMode.TileHeader">
+                <IgbTile ColSpan="2">
+                    <span slot="title">Sales</span>
+                    <div class="sample-tile">Drag the header to move a tile.</div>
+                </IgbTile>
+                <IgbTile>
+                    <span slot="title">Orders</span>
+                    <div class="sample-tile">128</div>
+                </IgbTile>
+                <IgbTile>
+                    <span slot="title">Customers</span>
+                    <div class="sample-tile">56</div>
+                </IgbTile>
+                <IgbTile ColSpan="2">
+                    <span slot="title">Inventory</span>
+                    <div class="sample-tile">Resize a tile from its corner.</div>
+                </IgbTile>
+                <IgbTile ColSpan="2">
+                    <span slot="title">Returns</span>
+                    <div class="sample-tile">3</div>
+                </IgbTile>
+            </IgbTileManager>
+        </Condition>
+    </SampleCard>
+</div>

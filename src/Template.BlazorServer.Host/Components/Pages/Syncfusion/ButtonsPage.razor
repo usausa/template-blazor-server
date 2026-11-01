@@ -1,0 +1,55 @@
+@page "/syncfusion/buttons"
+@attribute [Authorize]
+@using SelectionMode = global::Syncfusion.Blazor.Toolkit.SelectionMode
+
+<PageTitle>Buttons - Syncfusion</PageTitle>
+
+<MudText Typo="Typo.h4">Buttons</MudText>
+<MudText Class="mb-4">Syncfusion Toolkit for Blazor</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="Button" Result="@($"Clicked: {clickCount}")">
+        <div class="sample-row">
+            <SfButton IsPrimary="true" OnClick="OnButtonClick">Primary</SfButton>
+            <SfButton OnClick="OnButtonClick">Normal</SfButton>
+            <SfButton CssClass="e-outline" OnClick="OnButtonClick">Outline</SfButton>
+            <SfButton CssClass="e-flat" OnClick="OnButtonClick">Flat</SfButton>
+            <SfButton Disabled="true">Disabled</SfButton>
+        </div>
+        <div class="sample-row">
+            <SfButton CssClass="e-success" OnClick="OnButtonClick">Success</SfButton>
+            <SfButton CssClass="e-info" OnClick="OnButtonClick">Info</SfButton>
+            <SfButton CssClass="e-warning" OnClick="OnButtonClick">Warning</SfButton>
+            <SfButton CssClass="e-danger" OnClick="OnButtonClick">Danger</SfButton>
+        </div>
+    </SampleCard>
+    <SampleCard Title="Button Group" Result="@($"Alignment: {alignment}")">
+        <SfButtonGroup Mode="SelectionMode.Single">
+            @foreach (var item in Alignments)
+            {
+                <Button Selected="@(item == alignment)" SelectedChanged="@(value => OnAlignmentChanged(value, item))">@item</Button>
+            }
+        </SfButtonGroup>
+    </SampleCard>
+    <SampleCard Title="CheckBox" Result="@($"Checked: {agreed}")">
+        <SfCheckBox @bind-Checked="agreed" Label="I agree to the terms" />
+        <SfCheckBox TChecked="bool?" Checked="null" EnableTriState="true" Label="Indeterminate" />
+    </SampleCard>
+    <SampleCard Title="Radio Button" Result="@($"Value: {plan}")">
+        <div class="sample-row">
+            <SfRadioButton Name="syncfusion-plan" Label="Basic" Value="basic" @bind-Checked="plan" />
+            <SfRadioButton Name="syncfusion-plan" Label="Pro" Value="pro" @bind-Checked="plan" />
+            <SfRadioButton Name="syncfusion-plan" Label="Enterprise" Value="enterprise" @bind-Checked="plan" />
+        </div>
+    </SampleCard>
+    <SampleCard Title="Switch" Result="@($"Notifications: {notifications} / Wi-Fi: {wifi}")">
+        <div class="sample-row">
+            <SfSwitch @bind-Checked="notifications" />
+            <span>Notifications</span>
+        </div>
+        <div class="sample-row">
+            <SfSwitch @bind-Checked="wifi" OnLabel="ON" OffLabel="OFF" />
+            <span>Wi-Fi</span>
+        </div>
+    </SampleCard>
+</div>

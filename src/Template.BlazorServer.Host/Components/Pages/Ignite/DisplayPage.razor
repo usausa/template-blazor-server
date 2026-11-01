@@ -1,0 +1,57 @@
+@page "/ignite/display"
+@attribute [Authorize]
+
+<PageTitle>Display - Ignite UI</PageTitle>
+
+<IgniteIcons />
+
+<MudText Typo="Typo.h4">Display</MudText>
+<MudText Class="mb-4">Ignite UI for Blazor Lite</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="Avatar">
+        <div class="sample-row">
+            <IgbAvatar Initials="AB" Shape="AvatarShape.Circle" />
+            <IgbAvatar Initials="CD" Shape="AvatarShape.Rounded" />
+            <IgbAvatar Shape="AvatarShape.Square">
+                <IgbIcon IconName="person" />
+            </IgbAvatar>
+        </div>
+    </SampleCard>
+    <SampleCard Title="Badge">
+        <div class="sample-row">
+            <IgbBadge Variant="StyleVariant.Primary">5</IgbBadge>
+            <IgbBadge Variant="StyleVariant.Info">12</IgbBadge>
+            <IgbBadge Variant="StyleVariant.Success">OK</IgbBadge>
+            <IgbBadge Variant="StyleVariant.Warning">!</IgbBadge>
+            <IgbBadge Variant="StyleVariant.Danger" Dot="true" />
+        </div>
+    </SampleCard>
+    <SampleCard Title="Icon">
+        <div class="sample-row">
+            @foreach (var name in IconNames)
+            {
+                <IgbIcon IconName="@name" />
+            }
+        </div>
+    </SampleCard>
+    <SampleCard Title="Linear Progress / Circular Progress" Result="@($"Value: {progress}")">
+        <IgbSlider TValue="double" Min="0" Max="100" Step="5" @bind-Value="progress" />
+        <IgbLinearProgress Value="progress" Max="100" />
+        <IgbLinearProgress Indeterminate="true" />
+        <div class="sample-row">
+            <IgbCircularProgress Value="progress" Max="100" />
+            <IgbCircularProgress Indeterminate="true" />
+        </div>
+    </SampleCard>
+    <SampleCard Title="QR Code">
+        <IgbInput Label="Text" @bind-Value="qrText" />
+        <IgbQrCode Value="@qrText" Size="160" />
+    </SampleCard>
+    <SampleCard Title="Highlight">
+        <IgbInput Label="Search" @bind-Value="searchText" />
+        <IgbHighlight SearchText="@searchText">
+            <p>Ignite UI for Blazor Lite is a library of UI components built on web components. The components are free to use under the MIT license.</p>
+        </IgbHighlight>
+    </SampleCard>
+</div>

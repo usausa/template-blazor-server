@@ -1,0 +1,43 @@
+@page "/syncfusion/popups"
+@attribute [Authorize]
+@using Position = global::Syncfusion.Blazor.Toolkit.Position
+
+<PageTitle>Popups - Syncfusion</PageTitle>
+
+<MudText Typo="Typo.h4">Popups</MudText>
+<MudText Class="mb-4">Syncfusion Toolkit for Blazor</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="Dialog" Result="@($"Result: {dialogResult}")">
+        <div class="sample-row">
+            <SfButton OnClick="OnDialogOpen">Open dialog</SfButton>
+        </div>
+        <SfDialog Width="360px" IsModal="true" ShowCloseIcon="true" Header="Confirm" Content="Do you want to save the changes?" @bind-Visible="dialogVisible">
+            <DialogButtons>
+                <DialogButton Content="Cancel" OnClick="OnDialogCancel" />
+                <DialogButton Content="Save" IsPrimary="true" OnClick="OnDialogSave" />
+            </DialogButtons>
+        </SfDialog>
+    </SampleCard>
+    <SampleCard Title="Tooltip">
+        <div class="sample-row">
+            <SfTooltip Content="Tooltip on the top" Position="Position.TopCenter">
+                <SfButton>Top</SfButton>
+            </SfTooltip>
+            <SfTooltip Content="Tooltip on the bottom" Position="Position.BottomCenter">
+                <SfButton>Bottom</SfButton>
+            </SfTooltip>
+            <SfTooltip Content="Tooltip on the right" Position="Position.RightCenter">
+                <SfButton>Right</SfButton>
+            </SfTooltip>
+        </div>
+    </SampleCard>
+    <SampleCard Title="Spinner" Result="@($"Loading: {loading}")" Wide="true">
+        <div class="sample-row">
+            <SfButton OnClick="OnLoadAsync" Disabled="loading">Load for 2 seconds</SfButton>
+        </div>
+        <div class="sample-spinner">
+            <SfSpinner @bind-Visible="loading" Label="Loading..." />
+        </div>
+    </SampleCard>
+</div>

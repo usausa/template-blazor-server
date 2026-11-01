@@ -1,0 +1,22 @@
+@page "/syncfusion/calendars"
+@attribute [Authorize]
+
+<PageTitle>Calendars - Syncfusion</PageTitle>
+
+<MudText Typo="Typo.h4">Calendars</MudText>
+<MudText Class="mb-4">Syncfusion Toolkit for Blazor</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="Calendar" Result="@($"Value: {Format(calendarValue, "yyyy/MM/dd")}")">
+        <SfCalendar TValue="DateTime" @bind-Value="calendarValue" />
+    </SampleCard>
+    <SampleCard Title="DatePicker" Result="@($"Value: {Format(date, "yyyy/MM/dd")}")">
+        <SfDatePicker TValue="DateTime?" Placeholder="Date" FloatLabelType="FloatLabelType.Auto" @bind-Value="date" />
+    </SampleCard>
+    <SampleCard Title="DateTimePicker" Result="@($"Value: {Format(dateTime, "yyyy/MM/dd HH:mm")}")">
+        <SfDateTimePicker TValue="DateTime?" Placeholder="Date and time" FloatLabelType="FloatLabelType.Auto" @bind-Value="dateTime" />
+    </SampleCard>
+    <SampleCard Title="TimePicker" Result="@($"Value: {Format(time, "HH:mm")}")">
+        <SfTimePicker TValue="DateTime?" Placeholder="Time" FloatLabelType="FloatLabelType.Auto" Step="15" @bind-Value="time" />
+    </SampleCard>
+</div>

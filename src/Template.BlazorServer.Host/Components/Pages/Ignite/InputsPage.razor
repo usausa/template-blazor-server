@@ -1,0 +1,52 @@
+@page "/ignite/inputs"
+@attribute [Authorize]
+
+<PageTitle>Inputs - Ignite UI</PageTitle>
+
+<IgniteIcons />
+
+<MudText Typo="Typo.h4">Inputs</MudText>
+<MudText Class="mb-4">Ignite UI for Blazor Lite</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="Input" Result="@($"Value: {name}")">
+        <IgbInput Label="Name" Placeholder="Jane Doe" @bind-Value="name">
+            <IgbIcon slot="prefix" IconName="person" />
+        </IgbInput>
+    </SampleCard>
+    <SampleCard Title="Mask Input" Result="@($"Value: {phone}")">
+        <IgbMaskInput Label="Phone" Mask="000-0000-0000" @bind-Value="phone" />
+    </SampleCard>
+    <SampleCard Title="Textarea" Result="@($"Length: {notes.Length}")">
+        <IgbTextarea Label="Notes" Rows="3" @bind-Value="notes" />
+    </SampleCard>
+    <SampleCard Title="Date Time Input" Result="@($"Value: {FormatDateTime(dateTime)}")">
+        <IgbDateTimeInput TValue="DateTime?" Label="Date and time" InputFormat="yyyy/MM/dd HH:mm" @bind-Value="dateTime" />
+    </SampleCard>
+    <SampleCard Title="Checkbox" Result="@($"Checked: {agreed}")">
+        <IgbCheckbox @bind-Checked="agreed">I agree to the terms</IgbCheckbox>
+        <IgbCheckbox Indeterminate="true">Indeterminate</IgbCheckbox>
+    </SampleCard>
+    <SampleCard Title="Radio Group" Result="@($"Value: {plan}")">
+        <IgbRadioGroup Name="plan" Alignment="ContentOrientation.Horizontal" @bind-Value="plan">
+            <IgbRadio Value="@("basic")">Basic</IgbRadio>
+            <IgbRadio Value="@("pro")">Pro</IgbRadio>
+            <IgbRadio Value="@("enterprise")">Enterprise</IgbRadio>
+        </IgbRadioGroup>
+    </SampleCard>
+    <SampleCard Title="Switch" Result="@($"Checked: {notifications}")">
+        <IgbSwitch @bind-Checked="notifications">Notifications</IgbSwitch>
+    </SampleCard>
+    <SampleCard Title="Slider" Result="@($"Value: {volume}")">
+        <IgbSlider TValue="double" Min="0" Max="100" Step="5" @bind-Value="volume" />
+    </SampleCard>
+    <SampleCard Title="Range Slider" Result="@($"Range: {lower} - {upper}")">
+        <IgbRangeSlider Min="0" Max="100" Step="5" Lower="lower" Upper="upper" Change="OnRangeChange" />
+    </SampleCard>
+    <SampleCard Title="Rating" Result="@($"Value: {rating}")">
+        <IgbRating TValue="double" Max="5" @bind-Value="rating" />
+    </SampleCard>
+    <SampleCard Title="Color Picker" Result="@($"Value: {color}")">
+        <IgbColorPicker TValue="string" Label="Color" @bind-Value="color" />
+    </SampleCard>
+</div>

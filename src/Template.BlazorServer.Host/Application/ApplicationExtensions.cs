@@ -32,6 +32,8 @@ using Serilog;
 
 using Smart.Data;
 
+using Syncfusion.Blazor.Toolkit;
+
 using Template.BlazorServer.Accessors;
 using Template.BlazorServer.Host.Application.Context;
 using Template.BlazorServer.Host.Application.ExceptionHandling;
@@ -196,7 +198,7 @@ public static class ApplicationExtensions
             app.UseHsts();
         }
 
-        // Headers. The nonce admits the import map that Blazor renders inline, MudBlazor needs inline styles,
+        // Headers. The nonce admits the import map that Blazor renders inline, MudBlazor needs inline styles, Syncfusion embeds its icon font as a data URL,
         // dotnet watch / Browser Link load their script from another localhost port and connect back to it
         var development = app.Environment.IsDevelopment();
         var scriptSources = development ? "'self' http://localhost:*" : "'self'";
@@ -204,7 +206,7 @@ public static class ApplicationExtensions
         app.UseMiddleware<SecurityHeadersMiddleware>(new SecurityHeadersOption
         {
             ReportOnly = app.Services.GetRequiredService<CspSetting>().ReportOnly,
-            ContentSecurityPolicy = $"default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src {scriptSources} 'nonce-{{nonce}}'; connect-src {connectSources}"
+            ContentSecurityPolicy = $"default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src {scriptSources} 'nonce-{{nonce}}'; connect-src {connectSources}"
         });
 
         return app;
@@ -421,6 +423,12 @@ public static class ApplicationExtensions
             options.SnackbarConfiguration.VisibleStateDuration = 5000;
             options.SnackbarConfiguration.SnackbarVariant = MudBlazor.Variant.Filled;
         });
+
+        // Ignite UI
+        builder.Services.AddIgniteUIBlazor();
+
+        // Syncfusion
+        builder.Services.AddSyncfusionBlazorToolkit();
 
         return builder;
     }

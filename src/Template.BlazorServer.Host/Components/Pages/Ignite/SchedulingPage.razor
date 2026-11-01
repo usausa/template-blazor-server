@@ -1,0 +1,19 @@
+@page "/ignite/scheduling"
+@attribute [Authorize]
+
+<PageTitle>Scheduling - Ignite UI</PageTitle>
+
+<MudText Typo="Typo.h4">Scheduling</MudText>
+<MudText Class="mb-4">Ignite UI for Blazor Lite</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="Calendar" Result="@($"Value: {FormatDate(calendarValue)}")">
+        <IgbCalendar TValue="DateTime" ShowWeekNumbers="true" @bind-Value="calendarValue" />
+    </SampleCard>
+    <SampleCard Title="Date Picker" Result="@($"Value: {FormatDate(date)}")">
+        <IgbDatePicker TValue="DateTime?" Label="Date" @bind-Value="date" />
+    </SampleCard>
+    <SampleCard Title="Date Range Picker" Result="@($"Range: {FormatDate(range?.Start)} - {FormatDate(range?.End)}")">
+        <IgbDateRangePicker TValue="DateTime?" Label="Period" @bind-Value="range" />
+    </SampleCard>
+</div>

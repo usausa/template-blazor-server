@@ -1,0 +1,23 @@
+@page "/syncfusion/inputs"
+@attribute [Authorize]
+
+<PageTitle>Inputs - Syncfusion</PageTitle>
+
+<MudText Typo="Typo.h4">Inputs</MudText>
+<MudText Class="mb-4">Syncfusion Toolkit for Blazor</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="TextBox" Result="@($"Value: {name}")">
+        <SfTextBox Placeholder="Name" FloatLabelType="FloatLabelType.Auto" ShowClearButton="true" @bind-Value="name" />
+    </SampleCard>
+    <SampleCard Title="TextArea" Result="@($"Length: {notes?.Length ?? 0}")">
+        <SfTextArea Placeholder="Notes" FloatLabelType="FloatLabelType.Auto" RowCount="3" Width="100%" @bind-Value="notes" />
+    </SampleCard>
+    <SampleCard Title="Numeric TextBox" Result="@($"Quantity: {quantity} / Price: {price}")">
+        <SfNumericTextBox TValue="int" Placeholder="Quantity" FloatLabelType="FloatLabelType.Auto" Min="0" Max="100" @bind-Value="quantity" />
+        <SfNumericTextBox TValue="decimal" Placeholder="Price" FloatLabelType="FloatLabelType.Auto" Format="n2" Step="0.5m" @bind-Value="price" />
+    </SampleCard>
+    <SampleCard Title="File Upload" Result="@($"Files: {string.Join(", ", files)}")">
+        <SfUploader AllowMultiple="true" OnValueChange="OnFileValueChange" OnClear="OnFileClear" />
+    </SampleCard>
+</div>

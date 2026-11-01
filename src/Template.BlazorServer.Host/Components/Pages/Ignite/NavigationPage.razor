@@ -1,0 +1,98 @@
+@page "/ignite/navigation"
+@attribute [Authorize]
+
+<PageTitle>Navigation - Ignite UI</PageTitle>
+
+<IgniteIcons />
+
+<MudText Typo="Typo.h4">Navigation</MudText>
+<MudText Class="mb-4">Ignite UI for Blazor Lite</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="Navbar">
+        <IgbNavbar>
+            <IgbIconButton slot="start" IconName="menu" Variant="IconButtonVariant.Flat" />
+            <span>Application</span>
+            <IgbIconButton slot="end" IconName="search" Variant="IconButtonVariant.Flat" />
+            <IgbIconButton slot="end" IconName="settings" Variant="IconButtonVariant.Flat" />
+        </IgbNavbar>
+    </SampleCard>
+    <SampleCard Title="Breadcrumbs">
+        @* ReSharper disable Html.PathError *@
+        <nav aria-label="Breadcrumb">
+            <IgbBreadcrumbs>
+                <IgbBreadcrumb><a href="">Home</a></IgbBreadcrumb>
+                <IgbBreadcrumb><a href="ignite/buttons">Ignite UI</a></IgbBreadcrumb>
+                <IgbBreadcrumb Current="true"><a href="ignite/navigation">Navigation</a></IgbBreadcrumb>
+            </IgbBreadcrumbs>
+        </nav>
+        @* ReSharper restore Html.PathError *@
+    </SampleCard>
+    <SampleCard Title="Navigation Drawer" Result="@($"Selected: {drawerItem}")">
+        <div class="sample-row">
+            <IgbButton Variant="ButtonVariant.Outlined" @onclick="OnDrawerToggleAsync">Toggle</IgbButton>
+        </div>
+        <div class="sample-drawer">
+            <IgbNavDrawer @ref="drawer" Open="true" Position="NavDrawerPosition.Relative">
+                <IgbNavDrawerHeaderItem>Menu</IgbNavDrawerHeaderItem>
+                @foreach (var item in DrawerItems)
+                {
+                    <IgbNavDrawerItem Active="@(item.Name == drawerItem)" @onclick="() => OnDrawerItemClick(item.Name)">
+                        <IgbIcon slot="icon" IconName="@item.Icon" />
+                        <span slot="content">@item.Name</span>
+                    </IgbNavDrawerItem>
+                }
+            </IgbNavDrawer>
+            <div class="sample-drawer-content">@drawerItem</div>
+        </div>
+    </SampleCard>
+    <SampleCard Title="List">
+        <IgbList>
+            <IgbListHeader>Contacts</IgbListHeader>
+            @foreach (var contact in Contacts)
+            {
+                <IgbListItem>
+                    <IgbAvatar slot="start" Initials="@contact.Initials" Shape="AvatarShape.Circle" />
+                    <span slot="title">@contact.Name</span>
+                    <span slot="subtitle">@contact.Phone</span>
+                    <IgbIconButton slot="end" IconName="phone" Variant="IconButtonVariant.Flat" />
+                </IgbListItem>
+            }
+        </IgbList>
+    </SampleCard>
+    <SampleCard Title="Tree" Result="@($"Selected: {string.Join(", ", treeSelection)}")">
+        <IgbTree Selection="TreeSelection.Cascade" SelectionChanged="OnTreeSelectionChanged">
+            <IgbTreeItem Label="Documents" Expanded="true">
+                <IgbTreeItem Label="Report.docx" />
+                <IgbTreeItem Label="Budget.xlsx" />
+            </IgbTreeItem>
+            <IgbTreeItem Label="Pictures" Expanded="true">
+                <IgbTreeItem Label="Photo.png" />
+            </IgbTreeItem>
+        </IgbTree>
+    </SampleCard>
+    <SampleCard Title="Stepper" Result="@($"Step: {stepIndex + 1}")" Wide="true">
+        <IgbStepper @ref="stepper" ActiveStepChanged="OnActiveStepChanged">
+            <IgbStep>
+                <span slot="title">Cart</span>
+                <p>Review the items in the cart.</p>
+            </IgbStep>
+            <IgbStep>
+                <span slot="title">Shipping</span>
+                <p>Enter the shipping address.</p>
+            </IgbStep>
+            <IgbStep>
+                <span slot="title">Payment</span>
+                <p>Choose a payment method.</p>
+            </IgbStep>
+            <IgbStep>
+                <span slot="title">Confirm</span>
+                <p>Place the order.</p>
+            </IgbStep>
+        </IgbStepper>
+        <div class="sample-row">
+            <IgbButton Variant="ButtonVariant.Outlined" @onclick="OnPreviousStepAsync">Previous</IgbButton>
+            <IgbButton Variant="ButtonVariant.Contained" @onclick="OnNextStepAsync">Next</IgbButton>
+        </div>
+    </SampleCard>
+</div>

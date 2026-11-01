@@ -1,0 +1,52 @@
+@page "/ignite/notifications"
+@attribute [Authorize]
+
+<PageTitle>Notifications - Ignite UI</PageTitle>
+
+<IgniteIcons />
+
+<MudText Typo="Typo.h4">Notifications</MudText>
+<MudText Class="mb-4">Ignite UI for Blazor Lite</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="Banner" Wide="true">
+        <div class="sample-row">
+            <IgbButton Variant="ButtonVariant.Outlined" @onclick="OnBannerShowAsync">Show banner</IgbButton>
+        </div>
+        <div>
+            <IgbBanner @ref="banner">
+                <IgbIcon slot="prefix" IconName="info" />
+                A new version is available.
+                <IgbButton slot="actions" Variant="ButtonVariant.Flat" @onclick="OnBannerHideAsync">Dismiss</IgbButton>
+            </IgbBanner>
+        </div>
+    </SampleCard>
+    <SampleCard Title="Dialog" Result="@($"Result: {dialogResult}")">
+        <div class="sample-row">
+            <IgbButton Variant="ButtonVariant.Outlined" @onclick="OnDialogShowAsync">Open dialog</IgbButton>
+        </div>
+        <IgbDialog @ref="dialog" Title="Confirm" HideDefaultAction="true">
+            <p>Do you want to save the changes?</p>
+            <IgbButton slot="footer" Variant="ButtonVariant.Flat" @onclick="OnDialogCancelAsync">Cancel</IgbButton>
+            <IgbButton slot="footer" Variant="ButtonVariant.Contained" @onclick="OnDialogSaveAsync">Save</IgbButton>
+        </IgbDialog>
+    </SampleCard>
+    <SampleCard Title="Snackbar" Result="@($"Undo: {undoCount}")">
+        <div class="sample-row">
+            <IgbButton Variant="ButtonVariant.Outlined" @onclick="OnSnackbarShowAsync">Show snackbar</IgbButton>
+        </div>
+        <IgbSnackbar @ref="snackbar" DisplayTime="3000" ActionText="Undo" Action="OnSnackbarAction">Item deleted.</IgbSnackbar>
+    </SampleCard>
+    <SampleCard Title="Toast">
+        <div class="sample-row">
+            <IgbButton Variant="ButtonVariant.Outlined" @onclick="OnToastShowAsync">Show toast</IgbButton>
+        </div>
+        <IgbToast @ref="toast" DisplayTime="3000">Changes saved.</IgbToast>
+    </SampleCard>
+    <SampleCard Title="Tooltip">
+        <div class="sample-row">
+            <IgbButton id="ignite-tooltip-target" Variant="ButtonVariant.Outlined">Hover me</IgbButton>
+        </div>
+        <IgbTooltip Anchor="ignite-tooltip-target" Placement="PopoverPlacement.Top" WithArrow="true">Tooltip text</IgbTooltip>
+    </SampleCard>
+</div>

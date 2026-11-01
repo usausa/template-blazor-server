@@ -1,0 +1,7 @@
+<div class="@CssClass">
+    <MudText Typo="Typo.subtitle1">@Title</MudText>
+    @ChildContent
+    <Condition Value="@(Result is not null)">
+        <MudText Typo="Typo.body2" Class="sample-result">@Result</MudText>
+    </Condition>
+</div>

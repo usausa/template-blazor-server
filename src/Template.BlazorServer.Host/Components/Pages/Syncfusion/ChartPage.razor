@@ -1,0 +1,69 @@
+@page "/syncfusion/chart"
+@attribute [Authorize]
+@using ValueType = global::Syncfusion.Blazor.Toolkit.ValueType
+
+<PageTitle>Chart - Syncfusion</PageTitle>
+
+<MudText Typo="Typo.h4">Chart</MudText>
+<MudText Class="mb-4">Syncfusion Toolkit for Blazor</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="Line">
+        <SfChart Title="Monthly sales" Height="300px" Palettes="Palette">
+            <ChartPrimaryXAxis ValueType="ValueType.Category" />
+            <ChartSeries DataSource="Sales" XName="@nameof(Sale.Month)" YName="@nameof(Sale.Online)" Type="ChartSeriesType.Line" Name="Online">
+                <ChartMarker Visible="true" />
+            </ChartSeries>
+            <ChartSeries DataSource="Sales" XName="@nameof(Sale.Month)" YName="@nameof(Sale.Retail)" Type="ChartSeriesType.Line" Name="Retail">
+                <ChartMarker Visible="true" />
+            </ChartSeries>
+            <ChartLegendSettings Visible="true" />
+            <ChartTooltipSettings Enable="true" />
+        </SfChart>
+    </SampleCard>
+    <SampleCard Title="Column">
+        <SfChart Title="Monthly sales" Height="300px" Palettes="Palette">
+            <ChartPrimaryXAxis ValueType="ValueType.Category" />
+            <ChartSeries DataSource="Sales" XName="@nameof(Sale.Month)" YName="@nameof(Sale.Online)" Type="ChartSeriesType.Column" Name="Online" />
+            <ChartSeries DataSource="Sales" XName="@nameof(Sale.Month)" YName="@nameof(Sale.Retail)" Type="ChartSeriesType.Column" Name="Retail" />
+            <ChartLegendSettings Visible="true" />
+            <ChartTooltipSettings Enable="true" />
+        </SfChart>
+    </SampleCard>
+    <SampleCard Title="Area">
+        <SfChart Title="Monthly sales" Height="300px" Palettes="Palette">
+            <ChartPrimaryXAxis ValueType="ValueType.Category" />
+            <ChartSeries DataSource="Sales" XName="@nameof(Sale.Month)" YName="@nameof(Sale.Retail)" Type="ChartSeriesType.Area" Name="Retail" Opacity="0.6" />
+            <ChartSeries DataSource="Sales" XName="@nameof(Sale.Month)" YName="@nameof(Sale.Online)" Type="ChartSeriesType.Area" Name="Online" Opacity="0.6" />
+            <ChartLegendSettings Visible="true" />
+            <ChartTooltipSettings Enable="true" />
+        </SfChart>
+    </SampleCard>
+    <SampleCard Title="Spline">
+        <SfChart Title="Monthly sales" Height="300px" Palettes="Palette">
+            <ChartPrimaryXAxis ValueType="ValueType.Category" />
+            <ChartSeries DataSource="Sales" XName="@nameof(Sale.Month)" YName="@nameof(Sale.Online)" Type="ChartSeriesType.Spline" Name="Online" />
+            <ChartSeries DataSource="Sales" XName="@nameof(Sale.Month)" YName="@nameof(Sale.Retail)" Type="ChartSeriesType.Spline" Name="Retail" />
+            <ChartLegendSettings Visible="true" />
+            <ChartTooltipSettings Enable="true" />
+        </SfChart>
+    </SampleCard>
+    <SampleCard Title="Stacking Column">
+        <SfChart Title="Sales by channel" Height="300px" Palettes="Palette">
+            <ChartPrimaryXAxis ValueType="ValueType.Category" />
+            <ChartSeries DataSource="Sales" XName="@nameof(Sale.Month)" YName="@nameof(Sale.Online)" Type="ChartSeriesType.StackingColumn" Name="Online" />
+            <ChartSeries DataSource="Sales" XName="@nameof(Sale.Month)" YName="@nameof(Sale.Retail)" Type="ChartSeriesType.StackingColumn" Name="Retail" />
+            <ChartSeries DataSource="Sales" XName="@nameof(Sale.Month)" YName="@nameof(Sale.Wholesale)" Type="ChartSeriesType.StackingColumn" Name="Wholesale" />
+            <ChartLegendSettings Visible="true" />
+            <ChartTooltipSettings Enable="true" />
+        </SfChart>
+    </SampleCard>
+    <SampleCard Title="Scatter">
+        <SfChart Title="Height and weight" Height="300px" Palettes="Palette">
+            <ChartPrimaryXAxis Title="Height (cm)" Minimum="150" Maximum="190" />
+            <ChartPrimaryYAxis Title="Weight (kg)" Minimum="40" Maximum="90" />
+            <ChartSeries DataSource="Measurements" XName="@nameof(Measurement.Height)" YName="@nameof(Measurement.Weight)" Type="ChartSeriesType.Scatter" Name="People" />
+            <ChartTooltipSettings Enable="true" />
+        </SfChart>
+    </SampleCard>
+</div>
