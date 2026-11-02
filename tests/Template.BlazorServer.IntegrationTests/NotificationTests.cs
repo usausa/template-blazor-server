@@ -137,7 +137,8 @@ public sealed class NotificationTests
         Assert.Equal(3, count);
         Assert.Equal(0, after.Total);
         Assert.Equal(3, all.Total);
-        Assert.All(all.Items, static x => Assert.NotNull(x.ReadAt));
+        Assert.All(all.Items, static x => Assert.Equal(DateTimeKind.Utc, x.CreatedAt.Kind));
+        Assert.All(all.Items, static x => Assert.Equal(DateTimeKind.Utc, x.ReadAt?.Kind));
     }
 
     [Fact]

@@ -1,5 +1,6 @@
 namespace Template.BlazorServer;
 
+using System.Globalization;
 using System.Net.Http.Json;
 
 using Template.BlazorServer.Host.Endpoints;
@@ -49,5 +50,25 @@ public sealed class DataTests : IClassFixture<TestApplicationFactory>
         Assert.NotNull(latest);
         Assert.Equal(3, latest.Version);
         Assert.Equal(4, latest.Value);
+        Assert.Equal(DateTimeKind.Utc, latest.CreatedAt.Kind);
+    }
+
+    [Fact]
+    public async Task ExportWritesLocalCreatedAt()
+    {
+        // Arrange
+        var client = await factory.CreateAuthenticatedClientAsync();
+        var create = await client.PostAsJsonAsync(new Uri("/api/data/", UriKind.Relative), new DataCreateRequest { Name = "ExportItem", Value = 5 }, TestContext.Current.CancellationToken);
+        var id = (await create.Content.ReadFromJsonAsync<DataCreateResponse>(TestContext.Current.CancellationToken))!.Id;
+        var entity = await client.GetFromJsonAsync<DataGetResponse>(new Uri($"/api/data/{id}", UriKind.Relative), TestContext.Current.CancellationToken);
+
+        // Act
+        var csv = await client.GetStringAsync(new Uri("/api/data/csv", UriKind.Relative), TestContext.Current.CancellationToken);
+        var lines = csv.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries);
+
+        // Assert
+        Assert.NotNull(entity);
+        Assert.Equal("Id,Name,Value,Version,CreatedAt", lines[0]);
+        Assert.Contains($"{id},ExportItem,5,1,{entity.CreatedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture)}", lines);
     }
 }

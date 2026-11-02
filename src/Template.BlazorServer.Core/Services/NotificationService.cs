@@ -37,7 +37,7 @@ public sealed class NotificationService
     {
         var context = contextProvider.Current;
 
-        var count = await notificationAccessor.InsertAsync(userName, title, body, link, context.Now.DateTime);
+        var count = await notificationAccessor.InsertAsync(userName, title, body, link, context.Now.UtcDateTime);
         if (count > 0)
         {
             changeNotifier.Notify(userName);
@@ -50,7 +50,7 @@ public sealed class NotificationService
     {
         var context = contextProvider.Current;
 
-        if (await notificationAccessor.UpdateReadAsync(id, context.UserId, context.Now.DateTime) == 0)
+        if (await notificationAccessor.UpdateReadAsync(id, context.UserId, context.Now.UtcDateTime) == 0)
         {
             return false;
         }
@@ -63,7 +63,7 @@ public sealed class NotificationService
     {
         var context = contextProvider.Current;
 
-        var count = await notificationAccessor.UpdateReadAllAsync(context.UserId, context.Now.DateTime);
+        var count = await notificationAccessor.UpdateReadAllAsync(context.UserId, context.Now.UtcDateTime);
         if (count > 0)
         {
             changeNotifier.Notify(context.UserId);

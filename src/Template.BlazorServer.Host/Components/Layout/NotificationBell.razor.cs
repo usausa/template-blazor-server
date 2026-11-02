@@ -146,5 +146,5 @@ public sealed partial class NotificationBell
     private static string RowClass(NotificationEntity notification) =>
         notification.ReadAt is null ? "notification-row unread" : "notification-row";
 
-    private static string FormatTime(NotificationEntity notification) => $"{notification.CreatedAt:MM/dd HH:mm}";
+    private static string FormatTime(NotificationEntity notification) => $"{notification.CreatedAt.ToLocalTime():MM/dd HH:mm}";
 }

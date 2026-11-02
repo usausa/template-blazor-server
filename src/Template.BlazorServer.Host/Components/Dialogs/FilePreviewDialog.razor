@@ -1,0 +1,28 @@
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6" Class="file-preview-title">@Entry.Name</MudText>
+    </TitleContent>
+    <DialogContent>
+        <div class="file-preview-body">
+            <Condition Value="IsImage">
+                <img src="@PreviewUrl" alt="@Entry.Name" class="file-preview-image" />
+            </Condition>
+            <Condition Value="IsVideo">
+                <video src="@PreviewUrl" controls autoplay class="file-preview-media"></video>
+            </Condition>
+            <Condition Value="IsAudio">
+                <audio src="@PreviewUrl" controls autoplay class="file-preview-audio"></audio>
+            </Condition>
+            <Condition Value="IsText">
+                <pre class="file-preview-text">@text</pre>
+                <Condition Value="truncated">
+                    <MudText Typo="Typo.caption" Class="mud-text-secondary">先頭の @(TextLimit / 1024) KB を表示しています。</MudText>
+                </Condition>
+            </Condition>
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.Download" Href="@DownloadUrl">ダウンロード</MudButton>
+        <MudButton Color="Color.Default" OnClick="OnCloseClick">閉じる</MudButton>
+    </DialogActions>
+</MudDialog>

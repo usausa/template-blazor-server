@@ -96,6 +96,8 @@ public sealed partial class DataPage
         };
     }
 
+    private static string FormatCreatedAt(DataEntity entity) => $"{entity.CreatedAt.ToLocalTime():yyyy/MM/dd HH:mm:ss}";
+
     private Task SearchAsync()
     {
         appliedName = searchName;

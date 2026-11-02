@@ -53,14 +53,30 @@ public sealed class FileStorage : IStorage
         return ValueTask.FromResult(Directory.Exists(path));
     }
 
-    public ValueTask<string[]> ListAsync(string path, CancellationToken cancellationToken = default)
+    public ValueTask<StorageEntry[]> ListAsync(string path, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var directory = new DirectoryInfo(NormalizePath(path));
+        var entries = directory.EnumerateDirectories().Select(static x => new StorageEntry(x.Name, true, 0, x.LastWriteTimeUtc))
+            .Concat(directory.EnumerateFiles().Select(static x => new StorageEntry(x.Name, false, x.Length, x.LastWriteTimeUtc)))
+            .ToArray();
+        return ValueTask.FromResult(entries);
+    }
+
+    public ValueTask<StorageEntry?> GetEntryAsync(string path, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
         path = NormalizePath(path);
-#pragma warning disable CS8619
-        return ValueTask.FromResult(Directory.GetDirectories(path).Concat(Directory.GetFiles(path)).Select(Path.GetFileName).ToArray());
-#pragma warning restore CS8619
+        var file = new FileInfo(path);
+        if (file.Exists)
+        {
+            return ValueTask.FromResult<StorageEntry?>(new StorageEntry(file.Name, false, file.Length, file.LastWriteTimeUtc));
+        }
+
+        var directory = new DirectoryInfo(path);
+        return ValueTask.FromResult(directory.Exists ? new StorageEntry(directory.Name, true, 0, directory.LastWriteTimeUtc) : null);
     }
 
     public ValueTask DeleteAsync(string path, CancellationToken cancellationToken = default)

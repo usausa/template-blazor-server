@@ -9,6 +9,8 @@ public sealed partial class TestApplicationFactory : WebApplicationFactory<Progr
 {
     private readonly string databaseFile = $"test-{Guid.NewGuid():N}.db";
 
+    private readonly string storageRoot = Path.Combine(Path.GetTempPath(), "template-blazor-server-tests", Guid.NewGuid().ToString("N"));
+
     [GeneratedRegex("name=\"__RequestVerificationToken\"[^>]*value=\"([^\"]+)\"")]
     private static partial Regex AntiforgeryTokenRegex();
 
@@ -30,6 +32,7 @@ public sealed partial class TestApplicationFactory : WebApplicationFactory<Progr
     {
         builder.UseSetting("http_ports", string.Empty);
         builder.UseSetting("ConnectionStrings:Default", $"Data Source={databaseFile};Pooling=False;Foreign Keys=True");
+        builder.UseSetting("Storage:Root", storageRoot);
         builder.UseSetting("Prometheus:Uri", string.Empty);
         builder.UseSetting("Notification:Enable", "false");
         builder.UseSetting("NotificationRetention:Enable", "false");
@@ -47,6 +50,18 @@ public sealed partial class TestApplicationFactory : WebApplicationFactory<Progr
             try
             {
                 File.Delete(databaseFile);
+            }
+            catch (IOException)
+            {
+                // Ignore
+            }
+        }
+
+        if (disposing && Directory.Exists(storageRoot))
+        {
+            try
+            {
+                Directory.Delete(storageRoot, true);
             }
             catch (IOException)
             {

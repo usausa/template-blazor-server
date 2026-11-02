@@ -114,6 +114,8 @@ public sealed partial class NotificationsPage
         };
     }
 
+    private static string FormatCreatedAt(NotificationEntity notification) => $"{notification.CreatedAt.ToLocalTime():yyyy/MM/dd HH:mm}";
+
     private static string RowClass(NotificationEntity notification, int index) =>
         notification.ReadAt is null ? "notification-grid-row unread" : "notification-grid-row";
 

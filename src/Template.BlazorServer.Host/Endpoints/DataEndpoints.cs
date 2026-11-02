@@ -1,5 +1,7 @@
 namespace Template.BlazorServer.Host.Endpoints;
 
+using CsvHelper.Configuration;
+
 using Microsoft.AspNetCore.Http.HttpResults;
 
 using Smart.Mapper;
@@ -87,6 +89,19 @@ public static partial class DataMapper
 }
 
 //--------------------------------------------------------------------------------
+// Csv
+//--------------------------------------------------------------------------------
+
+public sealed class DataExportMap : ClassMap<DataEntity>
+{
+    public DataExportMap()
+    {
+        AutoMap(CultureInfo.InvariantCulture);
+        Map(static x => x.CreatedAt).Convert(static args => args.Value.CreatedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture));
+    }
+}
+
+//--------------------------------------------------------------------------------
 // Endpoints
 //--------------------------------------------------------------------------------
 
@@ -166,6 +181,7 @@ public static class DataEndpoints
             {
                 await using var writer = new StreamWriter(stream, new UTF8Encoding(true));
                 await using var csv = new CsvHelper.CsvWriter(writer, CultureInfo.InvariantCulture);
+                csv.Context.RegisterClassMap<DataExportMap>();
                 await csv.WriteRecordsAsync(dataService.QueryExportEnumerable(cancellationToken), cancellationToken);
             },
             "text/csv",

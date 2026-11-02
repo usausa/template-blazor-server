@@ -33,6 +33,39 @@ public sealed class FileStorageTests : IDisposable
     }
 
     [Fact]
+    public async Task ListReturnsDirectoriesAndFiles()
+    {
+        // Arrange
+        var storage = new FileStorage(new FileStorageOption { Root = root });
+        Directory.CreateDirectory(Path.Combine(root, "folder"));
+        await File.WriteAllTextAsync(Path.Combine(root, "file.txt"), "data", TestContext.Current.CancellationToken);
+
+        // Act
+        var entries = await storage.ListAsync(string.Empty, TestContext.Current.CancellationToken);
+
+        // Assert
+        var folder = Assert.Single(entries, static x => x.Name == "folder");
+        var file = Assert.Single(entries, static x => x.Name == "file.txt");
+        Assert.True(folder.IsDirectory);
+        Assert.False(file.IsDirectory);
+        Assert.Equal(4, file.Size);
+        Assert.Equal(TimeSpan.Zero, file.LastModified.Offset);
+    }
+
+    [Fact]
+    public async Task GetEntryReturnsNullWhenMissing()
+    {
+        // Arrange
+        var storage = new FileStorage(new FileStorageOption { Root = root });
+
+        // Act
+        var entry = await storage.GetEntryAsync("missing.txt", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Null(entry);
+    }
+
+    [Fact]
     public async Task RejectsPathOutsideRoot()
     {
         // Arrange

@@ -1,5 +1,6 @@
 @page "/files"
 @attribute [Authorize]
+@using Template.BlazorServer.Infrastructure.Storage
 
 <PageTitle>Files</PageTitle>
 
@@ -11,32 +12,87 @@
             <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Upload" OnClick="@context.OpenFilePickerAsync">アップロード</MudButton>
         </CustomContent>
     </MudFileUpload>
+    <MudSpacer />
+    <MudToggleGroup T="ViewMode" @bind-Value="view" Outlined="true" Size="Size.Small" Color="Color.Primary" Class="files-view">
+        <MudToggleItem Value="ViewMode.List">
+            <MudIcon Icon="@Icons.Material.Filled.ViewList" Size="Size.Small" />
+        </MudToggleItem>
+        <MudToggleItem Value="ViewMode.Card">
+            <MudIcon Icon="@Icons.Material.Filled.ViewModule" Size="Size.Small" />
+        </MudToggleItem>
+    </MudToggleGroup>
 </MudStack>
 
 <Condition Value="uploading">
     <MudProgressLinear Value="progress" Color="Color.Primary" Class="upload-progress mb-4" />
 </Condition>
 
-<MudSimpleTable Dense="true" Class="files-table">
-    <thead>
-        <tr>
-            <th>ファイル名</th>
-            <th class="w-120">操作</th>
-        </tr>
-    </thead>
-    <tbody>
-        <ListItem Items="entries" Context="entry">
-            <ItemTemplate>
-                <tr>
-                    <td>@entry</td>
-                    <td>
-                        <MudIconButton Icon="@Icons.Material.Filled.Download" Size="Size.Small" Href="@MakeDownloadUrl(entry)" />
-                        <AuthorizeView Roles="@Roles.Administrator" Context="auth">
-                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" OnClick="() => DeleteAsync(entry)" />
-                        </AuthorizeView>
-                    </td>
-                </tr>
-            </ItemTemplate>
-        </ListItem>
-    </tbody>
-</MudSimpleTable>
+<Condition Value="IsListView">
+    <ChildContent>
+        <MudDataGrid T="StorageEntry" Items="entries" Dense="true" Hover="true" SortMode="SortMode.Single" RowClick="OnRowClickAsync" RowClassFunc="RowClass">
+            <Columns>
+                <TemplateColumn Title="" CellClass="file-thumb-cell" Sortable="false">
+                    <CellTemplate>
+                        <Condition Value="HasThumbnail(context.Item)">
+                            <ChildContent>
+                                <img src="@PreviewUrl(context.Item)" alt="" loading="lazy" class="file-thumb" />
+                            </ChildContent>
+                            <ElseContent>
+                                <MudIcon Icon="@KindIcon(context.Item)" Class="file-kind-icon" />
+                            </ElseContent>
+                        </Condition>
+                    </CellTemplate>
+                </TemplateColumn>
+                <PropertyColumn Property="x => x.Name" Title="名前" />
+                <PropertyColumn Property="x => x.Size" Title="大きさ">
+                    <CellTemplate>@FormatSize(context.Item)</CellTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.LastModified" Title="更新日時">
+                    <CellTemplate>@FormatLastModified(context.Item)</CellTemplate>
+                </PropertyColumn>
+                <TemplateColumn Title="操作" CellClass="w-160" Sortable="false">
+                    <CellTemplate>
+                        <Condition Value="!context.Item.IsDirectory">
+                            <Condition Value="CanOpenInTab(context.Item)">
+                                <ChildContent>
+                                    <MudIconButton Icon="@Icons.Material.Filled.OpenInNew" Size="Size.Small" Href="@PreviewUrl(context.Item)" Target="_blank" />
+                                </ChildContent>
+                                <ElseContent>
+                                    <MudIconButton Icon="@Icons.Material.Filled.Visibility" Size="Size.Small" Disabled="@(!CanPreview(context.Item))" OnClick="() => PreviewAsync(context.Item)" />
+                                </ElseContent>
+                            </Condition>
+                            <MudIconButton Icon="@Icons.Material.Filled.Download" Size="Size.Small" Href="@DownloadUrl(context.Item)" />
+                            <AuthorizeView Roles="@Roles.Administrator" Context="auth">
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" OnClick="() => DeleteAsync(context.Item)" />
+                            </AuthorizeView>
+                        </Condition>
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+        </MudDataGrid>
+    </ChildContent>
+    <ElseContent>
+        <div class="file-cards">
+            <ListItem Items="entries" Context="entry">
+                <ItemTemplate>
+                    <a class="file-card" href="@CardHref(entry)" target="@CardTarget(entry)" @onclick="() => OpenAsync(entry)">
+                        <div class="file-card-preview">
+                            <Condition Value="HasThumbnail(entry)">
+                                <ChildContent>
+                                    <img src="@PreviewUrl(entry)" alt="@entry.Name" loading="lazy" />
+                                </ChildContent>
+                                <ElseContent>
+                                    <MudIcon Icon="@KindIcon(entry)" Class="file-card-icon" />
+                                </ElseContent>
+                            </Condition>
+                        </div>
+                        <div class="file-card-info">
+                            <div class="file-card-name" title="@entry.Name">@entry.Name</div>
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@FormatSize(entry)</MudText>
+                        </div>
+                    </a>
+                </ItemTemplate>
+            </ListItem>
+        </div>
+    </ElseContent>
+</Condition>

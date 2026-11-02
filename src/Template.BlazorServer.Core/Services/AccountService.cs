@@ -29,7 +29,7 @@ public sealed class AccountService
         if (count == 0)
         {
             var context = contextProvider.Current;
-            await accountAccessor.InsertAsync(option.Id, passwordProvider.Generate(option.Password), role, context.Now.DateTime);
+            await accountAccessor.InsertAsync(option.Id, passwordProvider.Generate(option.Password), role, context.Now.UtcDateTime);
         }
     }
 

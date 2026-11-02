@@ -52,7 +52,7 @@ public sealed class DataService
 
         try
         {
-            entity.CreatedAt = context.Now.DateTime;
+            entity.CreatedAt = context.Now.UtcDateTime;
             entity.Version = 1;
             entity.Id = await dataAccessor.InsertAsync(entity.Name, entity.Value, entity.CreatedAt);
         }

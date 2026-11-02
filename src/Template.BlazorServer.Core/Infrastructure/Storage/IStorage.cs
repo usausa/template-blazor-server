@@ -6,7 +6,9 @@ public interface IStorage
 
     ValueTask<bool> DirectoryExistsAsync(string path, CancellationToken cancellationToken = default);
 
-    ValueTask<string[]> ListAsync(string path, CancellationToken cancellationToken = default);
+    ValueTask<StorageEntry[]> ListAsync(string path, CancellationToken cancellationToken = default);
+
+    ValueTask<StorageEntry?> GetEntryAsync(string path, CancellationToken cancellationToken = default);
 
     ValueTask DeleteAsync(string path, CancellationToken cancellationToken = default);
 

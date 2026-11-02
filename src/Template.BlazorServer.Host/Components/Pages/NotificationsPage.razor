@@ -24,7 +24,9 @@
             </TemplateColumn>
             <PropertyColumn Property="x => x.Title" Title="題" Sortable="false" CellClass="notification-title-cell" />
             <PropertyColumn Property="x => x.Body" Title="本文" Sortable="false" />
-            <PropertyColumn Property="x => x.CreatedAt" Title="日時" Sortable="false" Format="yyyy/MM/dd HH:mm" />
+            <PropertyColumn Property="x => x.CreatedAt" Title="日時" Sortable="false">
+                <CellTemplate>@FormatCreatedAt(context.Item)</CellTemplate>
+            </PropertyColumn>
         </Columns>
         <PagerContent>
             <MudDataGridPager T="NotificationEntity" />

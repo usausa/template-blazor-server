@@ -1,5 +1,7 @@
 namespace Template.BlazorServer.Host.Endpoints;
 
+using Microsoft.Net.Http.Headers;
+
 using Template.BlazorServer.Host.Application;
 using Template.BlazorServer.Infrastructure.Storage;
 
@@ -7,9 +9,20 @@ using Template.BlazorServer.Infrastructure.Storage;
 // Models
 //--------------------------------------------------------------------------------
 
+public sealed class FileListEntry
+{
+    public string Name { get; set; } = default!;
+
+    public bool IsDirectory { get; set; }
+
+    public long Size { get; set; }
+
+    public DateTimeOffset LastModified { get; set; }
+}
+
 public sealed class FileListResponse
 {
-    public IReadOnlyList<string> Entries { get; set; } = default!;
+    public IReadOnlyList<FileListEntry> Entries { get; set; } = default!;
 }
 
 public sealed class FileUploadEntry
@@ -66,6 +79,10 @@ public static class FileEndpoints
             .WithName("FileDownload")
             .Produces<Stream>(StatusCodes.Status200OK, "application/octet-stream")
             .ProducesProblem(StatusCodes.Status404NotFound);
+        group.MapGet("/preview/{**path}", HandlePreviewAsync)
+            .WithName("FilePreview")
+            .Produces<Stream>(StatusCodes.Status200OK, "image/jpeg", "image/png", "image/gif", "image/bmp", "image/webp", "video/mp4", "video/webm", "audio/mpeg", "audio/wav", "audio/ogg", "text/plain", "application/pdf")
+            .ProducesProblem(StatusCodes.Status404NotFound);
         group.MapPost("/upload/{**path}", HandleUploadAsync)
             .DisableAntiforgery()
             .WithName("FileUpload")
@@ -96,7 +113,16 @@ public static class FileEndpoints
         }
 
         var entries = await storage.ListAsync(path, cancellationToken);
-        return TypedResults.Ok(new FileListResponse { Entries = entries });
+        return TypedResults.Ok(new FileListResponse
+        {
+            Entries = entries.Select(static x => new FileListEntry
+            {
+                Name = x.Name,
+                IsDirectory = x.IsDirectory,
+                Size = x.Size,
+                LastModified = x.LastModified
+            }).ToList()
+        });
     }
 
     //--------------------------------------------------------------------------------
@@ -115,6 +141,27 @@ public static class FileEndpoints
 
         var stream = await storage.ReadAsync(path, cancellationToken);
         return TypedResults.Stream(stream, "application/octet-stream", Path.GetFileName(path));
+    }
+
+    //--------------------------------------------------------------------------------
+    // Preview
+    //--------------------------------------------------------------------------------
+
+    private static async ValueTask<IResult> HandlePreviewAsync(
+        IStorage storage,
+        string path,
+        CancellationToken cancellationToken)
+    {
+        var contentType = FileMedia.GetContentType(path);
+        var entry = await storage.GetEntryAsync(path, cancellationToken);
+        if ((contentType is null) || (entry is null) || entry.IsDirectory)
+        {
+            return TypedResults.NotFound();
+        }
+
+        var stream = await storage.ReadAsync(path, cancellationToken);
+        var entityTag = new EntityTagHeaderValue($"\"{entry.LastModified.UtcTicks:x}-{entry.Size:x}\"");
+        return TypedResults.Stream(stream, contentType, lastModified: entry.LastModified, entityTag: entityTag, enableRangeProcessing: true);
     }
 
     //--------------------------------------------------------------------------------

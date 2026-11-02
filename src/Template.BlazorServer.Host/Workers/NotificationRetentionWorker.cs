@@ -54,7 +54,7 @@ public sealed class NotificationRetentionWorker : BackgroundService
     {
         try
         {
-            var before = timeProvider.GetLocalNow().AddDays(-options.Days).DateTime;
+            var before = timeProvider.GetUtcNow().AddDays(-options.Days).UtcDateTime;
             var total = 0;
             int rows;
             do

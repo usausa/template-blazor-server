@@ -10,6 +10,8 @@ public sealed class E2EApplicationFactory : WebApplicationFactory<Program>
 {
     private readonly string databaseFile = $"e2e-{Guid.NewGuid():N}.db";
 
+    private readonly string storageRoot = Path.Combine(Path.GetTempPath(), "template-blazor-server-e2e", Guid.NewGuid().ToString("N"));
+
     public string ServerAddress
     {
         get
@@ -23,6 +25,7 @@ public sealed class E2EApplicationFactory : WebApplicationFactory<Program>
     {
         builder.UseSetting("http_ports", string.Empty);
         builder.UseSetting("ConnectionStrings:Default", $"Data Source={databaseFile};Pooling=False;Foreign Keys=True");
+        builder.UseSetting("Storage:Root", storageRoot);
         builder.UseSetting("Prometheus:Uri", string.Empty);
         builder.UseSetting("Notification:Enable", "false");
         builder.UseSetting("Profiler:SqlLog:Enable", "false");
@@ -39,6 +42,18 @@ public sealed class E2EApplicationFactory : WebApplicationFactory<Program>
             try
             {
                 File.Delete(databaseFile);
+            }
+            catch (IOException)
+            {
+                // Ignore
+            }
+        }
+
+        if (disposing && Directory.Exists(storageRoot))
+        {
+            try
+            {
+                Directory.Delete(storageRoot, true);
             }
             catch (IOException)
             {
