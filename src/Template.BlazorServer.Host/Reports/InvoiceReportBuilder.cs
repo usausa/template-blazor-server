@@ -41,14 +41,12 @@ public sealed class InvoiceReportBuilder
             ["DeliveryDate"] = ReportText.Date(today),
             ["SubTotal"] = ReportText.Number(subTotal),
             ["Tax"] = ReportText.Number(tax),
-            ["TotalAmount"] = ReportText.Number(subTotal + tax),
-            ["PageCount"] = ReportText.Number(chunks.Count)
+            ["TotalAmount"] = ReportText.Number(subTotal + tax)
         });
 
         for (var i = 0; i < chunks.Count; i++)
         {
             var offset = i * RowsPerPage;
-            pages[i].ReplacePlaceholder("Page", ReportText.Number(i + 1));
             pages[i].ReplacePlaceholders(chunks[i].Select((e, j) => new Dictionary<string, string?>
             {
                 ["No"] = ReportText.Number(offset + j + 1),

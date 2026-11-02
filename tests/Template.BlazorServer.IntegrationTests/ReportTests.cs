@@ -16,6 +16,9 @@ public sealed partial class ReportTests : IClassFixture<TestApplicationFactory>
     [GeneratedRegex(@"/Type\s*/Page\b")]
     private static partial Regex PdfPageRegex();
 
+    [GeneratedRegex(@"/Subtype\s*/Image\b")]
+    private static partial Regex PdfImageRegex();
+
     [Fact]
     public async Task ProductListReturnsInlinePdfPerPage()
     {
@@ -82,6 +85,21 @@ public sealed partial class ReportTests : IClassFixture<TestApplicationFactory>
     }
 
     [Fact]
+    public async Task SlipHasQrCodeImage()
+    {
+        // Arrange
+        var client = await factory.CreateAuthenticatedClientAsync();
+
+        // Act
+        var slip = await client.GetByteArrayAsync(new Uri("/api/reports/slip?sheets=receipt", UriKind.Relative), TestContext.Current.CancellationToken);
+        var productList = await client.GetByteArrayAsync(new Uri("/api/reports/product-list?rows=5", UriKind.Relative), TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(1, CountImages(slip));
+        Assert.Equal(0, CountImages(productList));
+    }
+
+    [Fact]
     public async Task SlipWithUnknownSheetReturnsBadRequest()
     {
         // Arrange
@@ -131,4 +149,6 @@ public sealed partial class ReportTests : IClassFixture<TestApplicationFactory>
     }
 
     private static int CountPages(byte[] pdf) => PdfPageRegex().Count(Encoding.Latin1.GetString(pdf));
+
+    private static int CountImages(byte[] pdf) => PdfImageRegex().Count(Encoding.Latin1.GetString(pdf));
 }

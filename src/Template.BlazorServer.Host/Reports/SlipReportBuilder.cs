@@ -26,6 +26,7 @@ public sealed class SlipReportBuilder
     public byte[] Build(IReadOnlyCollection<SlipSheet> sheets, IReadOnlyList<ProductItem> items, string? note)
     {
         var today = timeProvider.GetLocalNow();
+        var slipNo = $"{today:yyyyMMdd}-0001";
         var subTotal = items.Sum(static x => x.Amount);
         var tax = (long)(subTotal * 0.1);
 
@@ -41,12 +42,13 @@ public sealed class SlipReportBuilder
         workbook.ReplacePlaceholders(new Dictionary<string, string?>
         {
             ["CustomerName"] = "サンプル株式会社",
-            ["SlipNo"] = $"{today:yyyyMMdd}-0001",
+            ["SlipNo"] = slipNo,
             ["IssueDate"] = ReportText.Date(today),
             ["SubTotal"] = ReportText.Number(subTotal),
             ["Tax"] = ReportText.Number(tax),
             ["Total"] = ReportText.Number(subTotal + tax)
         });
+        workbook.ReplacePlaceholderWithQrCode("QR", slipNo);
 
         var rows = items.Select((x, i) => new Dictionary<string, string?>
         {

@@ -76,6 +76,22 @@ public sealed class ReportExtensionsTests
     }
 
     [Fact]
+    public void ReplacePlaceholderWithQrCodeReplacesMarkerOnEverySheet()
+    {
+        // Arrange
+        using var workbook = new TemplateWorkbook(SlipPath);
+        var (row, column) = workbook.GetSheet("納品書").FindMarkerPosition("QR");
+
+        // Act
+        var count = workbook.ReplacePlaceholderWithQrCode("QR", "20261102-0001");
+
+        // Assert
+        Assert.Equal(3, count);
+        Assert.False(workbook.GetSheet("受領書").TryFindMarkerPosition("QR", out _));
+        Assert.Equal(string.Empty, workbook.GetSheet("納品書").GetCellText(row, column));
+    }
+
+    [Fact]
     public void CopyPagesReplacesTemplateSheetWithPages()
     {
         // Arrange

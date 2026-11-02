@@ -27,7 +27,6 @@ public sealed class ProductListReportBuilder
         for (var i = 0; i < chunks.Count; i++)
         {
             var offset = i * RowsPerPage;
-            pages[i].ReplacePlaceholder("Page", ReportText.Number(i + 1));
             pages[i].FillRows("No", chunks[i].Select((x, j) => new Dictionary<string, string?>
             {
                 ["No"] = ReportText.Number(offset + j + 1),
@@ -49,7 +48,6 @@ public sealed class ProductListReportBuilder
         {
             ["PrintedAt"] = ReportText.DateTime(timeProvider.GetLocalNow()),
             ["ItemCount"] = ReportText.Number(items.Count),
-            ["PageCount"] = ReportText.Number(chunks.Count),
             ["TotalQuantity"] = ReportText.Number(items.Sum(static x => (long)x.Quantity)),
             ["TotalAmount"] = ReportText.Number(items.Sum(static x => x.Amount))
         });
