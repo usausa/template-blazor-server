@@ -14,8 +14,8 @@
                   Class="search-field" />
     <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Search" OnClick="SearchAsync">検索</MudButton>
     <MudSpacer />
-    <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.FileDownload" Href="api/data/csv">CSV</MudButton>
-    <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.PictureAsPdf" Href="api/reports/invoice">PDF</MudButton>
+    <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.FileDownload" Href="@ExportUrls.DataCsv">CSV</MudButton>
+    <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.PictureAsPdf" Href="@ExportUrls.InvoicePdf(false)" Target="_blank">PDF</MudButton>
     <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="AddAsync">追加</MudButton>
 </MudStack>
 

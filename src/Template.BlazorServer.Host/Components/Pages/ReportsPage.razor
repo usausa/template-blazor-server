@@ -1,0 +1,49 @@
+@page "/reports"
+@attribute [Authorize]
+
+<PageTitle>Reports</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Reports</MudText>
+
+<div class="report-grid">
+    <div class="report-card">
+        <MudText Typo="Typo.h6">請求書</MudText>
+        <MudText Typo="Typo.body2" Class="mud-text-secondary">Data の全件を 25 行ずつのページにして出す。</MudText>
+        <div class="report-actions">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Visibility" Href="@ExportUrls.InvoicePdf(false)" Target="_blank">プレビュー</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.FileDownload" Href="@ExportUrls.InvoicePdf(true)">ダウンロード</MudButton>
+        </div>
+    </div>
+
+    <div class="report-card">
+        <MudText Typo="Typo.h6">商品一覧表</MudText>
+        <MudText Typo="Typo.body2" Class="mud-text-secondary">見本のデータを A4 横・20 行ずつのページにして出す。</MudText>
+        <MudSelect T="int" @bind-Value="productRows" Label="行数">
+            <ListItem Items="ProductRowOptions" Context="option">
+                <ItemTemplate>
+                    <MudSelectItem T="int" Value="option">@option 行</MudSelectItem>
+                </ItemTemplate>
+            </ListItem>
+        </MudSelect>
+        <div class="report-actions">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Visibility" Href="@ExportUrls.ProductListPdf(productRows, false)" Target="_blank">プレビュー</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.FileDownload" Href="@ExportUrls.ProductListPdf(productRows, true)">ダウンロード</MudButton>
+        </div>
+    </div>
+
+    <div class="report-card">
+        <MudText Typo="Typo.h6">伝票</MudText>
+        <MudText Typo="Typo.body2" Class="mud-text-secondary">選んだ伝票を 1 つの PDF にまとめて出す。備考が空なら備考の行を消す。</MudText>
+        <MudStack Row="true" Spacing="0" Wrap="Wrap.Wrap">
+            <MudCheckBox @bind-Value="delivery" Label="納品書" Color="Color.Primary" Dense="true" />
+            <MudCheckBox @bind-Value="invoice" Label="請求書" Color="Color.Primary" Dense="true" />
+            <MudCheckBox @bind-Value="receipt" Label="受領書" Color="Color.Primary" Dense="true" />
+        </MudStack>
+        <MudNumericField T="int" @bind-Value="slipRows" Label="明細の行数" Min="1" Max="15" />
+        <MudTextField T="string" @bind-Value="note" Label="備考" MaxLength="40" Counter="40" Immediate="true" />
+        <div class="report-actions">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Visibility" Href="@ExportUrls.SlipPdf(SlipSheets, slipRows, note, false)" Target="_blank" Disabled="@(!HasSlipSheet)">プレビュー</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.FileDownload" Href="@ExportUrls.SlipPdf(SlipSheets, slipRows, note, true)" Disabled="@(!HasSlipSheet)">ダウンロード</MudButton>
+        </div>
+    </div>
+</div>

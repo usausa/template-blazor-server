@@ -14,6 +14,6 @@ public sealed class NavMenuTests : MudBlazorTestBase
 
         // Assert
         var links = cut.FindAll("a");
-        Assert.Equal(18, links.Count);
+        Assert.Equal(19, links.Count);
     }
 }

@@ -617,7 +617,10 @@ public static class ApplicationExtensions
         builder.Services.AddHostedService<Workers.NotificationWorker>();
 
         // Report
+        builder.Services.AddSingleton<Infrastructure.Reports.ReportRenderer>();
         builder.Services.AddSingleton<Reports.InvoiceReportBuilder>();
+        builder.Services.AddSingleton<Reports.ProductListReportBuilder>();
+        builder.Services.AddSingleton<Reports.SlipReportBuilder>();
 
         // Setting
         builder.Services.AddOptions<ProfilerSetting>().BindConfiguration("Profiler").ValidateDataAnnotations().ValidateOnStart();
