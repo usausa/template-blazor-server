@@ -7,6 +7,19 @@
     <AuthorizeView Roles="@Roles.Administrator">
         <MudNavLink Href="server" Icon="@Icons.Material.Filled.Dns">Server</MudNavLink>
     </AuthorizeView>
+    <MudNavGroup Title="Smart.Blazor" Icon="@Icons.Material.Filled.Code" Expanded="true">
+        <MudNavLink Href="smart/rendering">Rendering</MudNavLink>
+        <MudNavLink Href="smart/forms">Forms</MudNavLink>
+    </MudNavGroup>
+    <MudNavGroup Title="Components.Blazor" Icon="@Icons.Material.Filled.Apps" Expanded="true">
+        <MudNavLink Href="components/keyboard">Keyboard</MudNavLink>
+        <MudNavLink Href="components/display">Display</MudNavLink>
+        <MudNavLink Href="components/script">Script</MudNavLink>
+        <MudNavLink Href="components/device">Device</MudNavLink>
+        <MudNavLink Href="components/speaker">Speaker</MudNavLink>
+        <MudNavLink Href="components/tabs">Tabs</MudNavLink>
+        <MudNavLink Href="components/upload">Upload</MudNavLink>
+    </MudNavGroup>
     <MudNavGroup Title="Ignite UI" Icon="@Icons.Material.Filled.Widgets" Expanded="true">
         <MudNavLink Href="ignite/buttons">Buttons</MudNavLink>
         <MudNavLink Href="ignite/inputs">Inputs</MudNavLink>

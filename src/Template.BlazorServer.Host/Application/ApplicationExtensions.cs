@@ -7,6 +7,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Text.Unicode;
 
+using BlazorComponents;
+
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.HttpLogging;
@@ -443,6 +445,9 @@ public static class ApplicationExtensions
             options.SnackbarConfiguration.SnackbarVariant = MudBlazor.Variant.Filled;
         });
 
+        // Components.Blazor
+        builder.Services.AddBlazorComponents();
+
         // Ignite UI
         builder.Services.AddIgniteUIBlazor();
 
@@ -647,6 +652,8 @@ public static class ApplicationExtensions
         builder.Services.AddSingleton(static p => p.GetRequiredService<IOptions<CspSetting>>().Value);
         builder.Services.AddOptions<ForwardedHeadersSetting>().BindConfiguration("ForwardedHeaders").ValidateDataAnnotations().ValidateOnStart();
         builder.Services.AddSingleton(static p => p.GetRequiredService<IOptions<ForwardedHeadersSetting>>().Value);
+        builder.Services.AddOptions<SampleSetting>().BindConfiguration("Sample").ValidateDataAnnotations().ValidateOnStart();
+        builder.Services.AddSingleton(static p => p.GetRequiredService<IOptions<SampleSetting>>().Value);
         builder.Services.AddOptions<AuthSetting>().BindConfiguration("Auth").ValidateDataAnnotations().ValidateOnStart();
         builder.Services.AddSingleton(static p => p.GetRequiredService<IOptions<AuthSetting>>().Value);
         builder.Services.AddOptions<TelemetrySetting>().BindConfiguration("Telemetry").ValidateDataAnnotations().ValidateOnStart();
@@ -716,6 +723,7 @@ public static class ApplicationExtensions
         app.MapDataEndpoints();
         app.MapFileEndpoints();
         app.MapReportEndpoints();
+        app.MapSampleEndpoints();
 
         // Health
         app.MapHealthChecks(HealthEndpointPath)

@@ -9,4 +9,6 @@ public static class ApiRoutes
     public const string Files = Prefix + "/files";
 
     public const string Reports = Prefix + "/reports";
+
+    public const string Samples = Prefix + "/samples";
 }

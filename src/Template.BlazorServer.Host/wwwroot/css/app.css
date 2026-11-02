@@ -530,6 +530,135 @@ html, body {
     border: 1px dashed var(--mud-palette-lines-default);
 }
 
+.sample-loading {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+}
+
+.sample-form {
+    display: grid;
+    gap: 8px;
+    max-width: 480px;
+}
+
+.sample-keys {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 6px 12px;
+    align-items: center;
+}
+
+.sample-keys kbd {
+    justify-self: start;
+    padding: 2px 6px;
+    border: 1px solid var(--mud-palette-lines-default);
+    border-radius: 2px;
+    background-color: var(--mud-palette-background-gray);
+    font-family: Consolas, monospace;
+    font-size: 0.8125rem;
+}
+
+.sample-log {
+    color: var(--mud-palette-text-secondary);
+    font-family: Consolas, monospace;
+    font-size: 0.8125rem;
+}
+
+.sample-help {
+    width: min(480px, calc(100vw - 32px));
+    padding: 24px;
+}
+
+.sample-media {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.sample-media-narrow {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.sample-dialog {
+    min-width: 280px;
+    margin: auto;
+    padding: 24px;
+    border: 1px solid var(--mud-palette-lines-default);
+    border-radius: 2px;
+    color: var(--mud-palette-text-primary);
+    background-color: var(--mud-palette-surface);
+}
+
+.sample-dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.sample-dialog-modeless {
+    position: fixed;
+    inset: auto 24px 24px auto;
+    margin: 0;
+}
+
+.sample-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.sample-dialog button {
+    padding: 6px 16px;
+    border: 1px solid var(--mud-palette-primary);
+    border-radius: var(--mud-default-borderradius);
+    color: var(--mud-palette-primary);
+    background-color: transparent;
+    font: inherit;
+    cursor: pointer;
+}
+
+.sample-dialog .sample-dialog-primary {
+    color: #ffffff;
+    background-color: var(--mud-palette-primary);
+}
+
+.sample-measure {
+    padding: 16px;
+    border: 1px dashed var(--mud-palette-lines-default);
+}
+
+.sample-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--mud-palette-lines-default);
+    border-radius: var(--mud-default-borderradius);
+    font: inherit;
+}
+
+.sample-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 140px;
+    padding: 16px;
+    border: 2px dashed var(--mud-palette-lines-default);
+    border-radius: 2px;
+    color: var(--mud-palette-text-secondary);
+    outline: none;
+}
+
+.sample-upload-active {
+    border-color: var(--mud-palette-primary);
+    background-color: rgba(var(--mud-palette-primary-rgb), 0.08);
+    color: var(--mud-palette-primary);
+}
+
+.sample-upload-icon.mud-icon-root {
+    width: 40px;
+    height: 40px;
+}
+
 /* Blazor error UI */
 #blazor-error-ui {
     color-scheme: light only;

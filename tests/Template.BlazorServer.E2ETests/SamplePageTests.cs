@@ -8,6 +8,15 @@ public sealed class SamplePageTests : E2ETestBase
 {
     private static readonly (string Path, string Title, string Selector)[] SamplePages =
     [
+        ("smart/rendering", "Rendering - Smart.Blazor", ".sample-loading"),
+        ("smart/forms", "Forms - Smart.Blazor", ".sample-form"),
+        ("components/keyboard", "Keyboard - Components.Blazor", ".sample-keys"),
+        ("components/display", "Display - Components.Blazor", "dialog.sample-dialog"),
+        ("components/script", "Script - Components.Blazor", ".sample-measure"),
+        ("components/device", "Device - Components.Blazor", ".sample-card"),
+        ("components/speaker", "Speaker - Components.Blazor", ".mud-slider"),
+        ("components/tabs", "Tabs - Components.Blazor", ".sample-card"),
+        ("components/upload", "Upload - Components.Blazor", ".sample-upload"),
         ("ignite/buttons", "Buttons - Ignite UI", "igc-button"),
         ("ignite/inputs", "Inputs - Ignite UI", "igc-input"),
         ("ignite/selection", "Selection - Ignite UI", "igc-combo"),
