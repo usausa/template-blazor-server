@@ -1,0 +1,33 @@
+@page "/notifications"
+@attribute [Authorize]
+
+<PageTitle>Notifications</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Notifications</MudText>
+
+<MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-4">
+    <MudSwitch T="bool" Value="unreadOnly" ValueChanged="OnUnreadOnlyChanged" Label="未読だけ" Color="Color.Primary" />
+    <MudSpacer />
+    <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.DoneAll" OnClick="MarkAllReadAsync">すべて既読</MudButton>
+    <AuthorizeView Roles="@Roles.Administrator">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Send" OnClick="SendAsync">送信</MudButton>
+    </AuthorizeView>
+</MudStack>
+
+<Condition Value="HasUser">
+    <MudDataGrid @ref="grid" T="NotificationEntity" ServerData="LoadServerData" Dense="true" Hover="true" RowClassFunc="RowClass" RowClick="OnRowClickAsync">
+        <Columns>
+            <TemplateColumn Title="" CellClass="notification-state-cell" Sortable="false">
+                <CellTemplate>
+                    <span class="notification-dot"></span>
+                </CellTemplate>
+            </TemplateColumn>
+            <PropertyColumn Property="x => x.Title" Title="題" Sortable="false" CellClass="notification-title-cell" />
+            <PropertyColumn Property="x => x.Body" Title="本文" Sortable="false" />
+            <PropertyColumn Property="x => x.CreatedAt" Title="日時" Sortable="false" Format="yyyy/MM/dd HH:mm" />
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="NotificationEntity" />
+        </PagerContent>
+    </MudDataGrid>
+</Condition>

@@ -114,6 +114,84 @@ html, body {
     }
 }
 
+/* Notifications */
+.mud-badge.notification-badge {
+    background-color: #ffffff;
+    color: var(--mud-palette-primary);
+}
+
+.notification-popover {
+    width: 360px;
+}
+
+.notification-menu-header {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+}
+
+.notification-item {
+    white-space: normal;
+}
+
+.notification-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.notification-dot {
+    display: inline-block;
+    flex: none;
+    width: 8px;
+    height: 8px;
+    margin-top: 7px;
+    border-radius: 50%;
+}
+
+.unread .notification-dot {
+    background-color: var(--mud-palette-primary);
+}
+
+.notification-text {
+    min-width: 0;
+}
+
+.unread .notification-title,
+.mud-table-row.unread .notification-title-cell {
+    font-weight: 700;
+}
+
+.notification-body {
+    max-width: 290px;
+    overflow: hidden;
+    color: var(--mud-palette-text-secondary);
+    font-size: 0.875rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.notification-time {
+    color: var(--mud-palette-text-secondary);
+    font-size: 0.75rem;
+}
+
+.notification-empty {
+    padding: 12px 16px;
+}
+
+.notification-all {
+    text-align: center;
+}
+
+.notification-state-cell {
+    width: 24px;
+}
+
+.notification-grid-row {
+    cursor: pointer;
+}
+
 /* Samples */
 .sample-grid {
     display: grid;

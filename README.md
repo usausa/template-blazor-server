@@ -4,7 +4,7 @@
 
 | 分類 | 画面 |
 | --- | --- |
-| 基本 | Login / Home / Data / Files / Reports / Server |
+| 基本 | Login / Home / Data / Files / Reports / Notifications / Server |
 | Ignite UI | Buttons / Inputs / Selection / Scheduling / Layout / Navigation / Display / Notifications / Chat / Grid Lite |
 | Syncfusion | Buttons / Inputs / Calendars / Popups / Chart |
 

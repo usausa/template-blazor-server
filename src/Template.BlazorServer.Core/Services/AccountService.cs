@@ -33,6 +33,9 @@ public sealed class AccountService
         }
     }
 
+    public async ValueTask<List<string>> QueryNamesAsync(CancellationToken cancellationToken = default) =>
+        (await accountAccessor.QueryAllAsync(cancellationToken)).Select(static x => x.Name).ToList();
+
     public async ValueTask<AccountEntity?> AuthenticateAsync(string name, string password)
     {
         var account = await accountAccessor.QueryByNameAsync(name);

@@ -19,3 +19,19 @@ CREATE TABLE IF NOT EXISTS Data (
     PRIMARY KEY (Id AUTOINCREMENT),
     UNIQUE (Name)
 );
+
+CREATE TABLE IF NOT EXISTS Notification (
+    Id         INTEGER  NOT NULL,
+    UserName   TEXT     NOT NULL,
+    Title      TEXT     NOT NULL,
+    Body       TEXT     NOT NULL,
+    Link       TEXT,
+    CreatedAt  TEXT     NOT NULL,
+    ReadAt     TEXT,
+    PRIMARY KEY (Id AUTOINCREMENT),
+    FOREIGN KEY (UserName) REFERENCES Account (Name) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS IX_Notification_UserName ON Notification (UserName, Id);
+CREATE INDEX IF NOT EXISTS IX_Notification_Unread ON Notification (UserName) WHERE ReadAt IS NULL;
+CREATE INDEX IF NOT EXISTS IX_Notification_CreatedAt ON Notification (CreatedAt);

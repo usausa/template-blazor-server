@@ -1,0 +1,44 @@
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">通知の送信</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @ref="form" Model="model">
+            <MudSelect T="string" @bind-Value="model.Target" Label="宛先">
+                <MudSelectItem T="string" Value="@AllTarget">全員</MudSelectItem>
+                <ListItem Items="Names" Context="name">
+                    <ItemTemplate>
+                        <MudSelectItem T="string" Value="@name">@name</MudSelectItem>
+                    </ItemTemplate>
+                </ListItem>
+            </MudSelect>
+            <MudTextField @bind-Value="model.Title"
+                          For="@(() => model.Title)"
+                          Validation="@Validator.ValidateValue"
+                          Label="題"
+                          MaxLength="@Length.NotificationTitle"
+                          Immediate="true"
+                          Class="mt-4" />
+            <MudTextField @bind-Value="model.Body"
+                          For="@(() => model.Body)"
+                          Validation="@Validator.ValidateValue"
+                          Label="本文"
+                          Lines="3"
+                          MaxLength="@Length.NotificationBody"
+                          Immediate="true"
+                          Class="mt-4" />
+            <MudTextField @bind-Value="model.Link"
+                          For="@(() => model.Link)"
+                          Validation="@Validator.ValidateValue"
+                          Label="リンク"
+                          HelperText="アプリの中のパス(例: data)"
+                          MaxLength="@Length.NotificationLink"
+                          Immediate="true"
+                          Class="mt-4" />
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="OnOkClick">OK</MudButton>
+        <MudButton Color="Color.Default" OnClick="OnCancelClick">CANCEL</MudButton>
+    </DialogActions>
+</MudDialog>

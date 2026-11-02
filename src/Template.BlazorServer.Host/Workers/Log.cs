@@ -13,4 +13,9 @@ internal static partial class Log
 
     [LoggerMessage(Level = LogLevel.Error, Message = "Worker exception. worker=[{worker}]")]
     public static partial void ErrorWorkerException(this ILogger logger, string worker, Exception ex);
+
+    // Notification retention
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Notification expired. rows=[{rows}]")]
+    public static partial void InfoNotificationExpired(this ILogger logger, int rows);
 }

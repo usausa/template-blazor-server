@@ -619,6 +619,10 @@ public static class ApplicationExtensions
         builder.Services.AddOptions<Workers.NotificationWorkerOption>().BindConfiguration("Notification").ValidateDataAnnotations().ValidateOnStart();
         builder.Services.AddSingleton(static p => p.GetRequiredService<IOptions<Workers.NotificationWorkerOption>>().Value);
         builder.Services.AddHostedService<Workers.NotificationWorker>();
+        builder.Services.AddSingleton<NotificationChangeNotifier>();
+        builder.Services.AddOptions<Workers.NotificationRetentionWorkerOption>().BindConfiguration("NotificationRetention").ValidateDataAnnotations().ValidateOnStart();
+        builder.Services.AddSingleton(static p => p.GetRequiredService<IOptions<Workers.NotificationRetentionWorkerOption>>().Value);
+        builder.Services.AddHostedService<Workers.NotificationRetentionWorker>();
 
         // Server status
         builder.Services.AddSingleton<Status.ServerStatusMonitor>();

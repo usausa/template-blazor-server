@@ -1,0 +1,42 @@
+@inherits AppPageBase
+
+<MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" PopoverClass="notification-popover" Class="mr-2">
+    <ActivatorContent>
+        <MudIconButton Color="Color.Inherit" OnClick="@context.ToggleAsync" Class="notification-bell" aria-label="通知">
+            <MudBadge Content="unreadCount" Max="99" Overlap="true" Visible="HasUnread" BadgeClass="notification-badge">
+                <MudIcon Icon="@Icons.Material.Filled.Notifications" />
+            </MudBadge>
+        </MudIconButton>
+    </ActivatorContent>
+    <ChildContent>
+        <div class="notification-menu-header">
+            <MudText Typo="Typo.subtitle1">通知</MudText>
+            <MudSpacer />
+            <MudText Typo="Typo.caption" Class="mud-text-secondary">未読 @unreadCount 件</MudText>
+        </div>
+        <MudDivider />
+        <Condition Value="HasLatest">
+            <ChildContent>
+                <ListItem Items="latest" Context="notification">
+                    <ItemTemplate>
+                        <MudMenuItem Class="notification-item" OnClick="() => OpenAsync(notification)">
+                            <div class="@RowClass(notification)">
+                                <span class="notification-dot"></span>
+                                <div class="notification-text">
+                                    <div class="notification-title">@notification.Title</div>
+                                    <div class="notification-body">@notification.Body</div>
+                                    <div class="notification-time">@FormatTime(notification)</div>
+                                </div>
+                            </div>
+                        </MudMenuItem>
+                    </ItemTemplate>
+                </ListItem>
+            </ChildContent>
+            <ElseContent>
+                <MudText Typo="Typo.body2" Class="notification-empty">通知はありません。</MudText>
+            </ElseContent>
+        </Condition>
+        <MudDivider />
+        <MudMenuItem Href="notifications" Class="notification-all">すべて見る</MudMenuItem>
+    </ChildContent>
+</MudMenu>

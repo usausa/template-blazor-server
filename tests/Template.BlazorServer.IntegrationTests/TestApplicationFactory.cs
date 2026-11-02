@@ -32,6 +32,7 @@ public sealed partial class TestApplicationFactory : WebApplicationFactory<Progr
         builder.UseSetting("ConnectionStrings:Default", $"Data Source={databaseFile};Pooling=False;Foreign Keys=True");
         builder.UseSetting("Prometheus:Uri", string.Empty);
         builder.UseSetting("Notification:Enable", "false");
+        builder.UseSetting("NotificationRetention:Enable", "false");
         builder.UseSetting("Profiler:SqlLog:Enable", "false");
         builder.UseSetting("Profiler:SqlTelemetry:Enable", "false");
         builder.UseSetting("Log:HttpLog", "false");
