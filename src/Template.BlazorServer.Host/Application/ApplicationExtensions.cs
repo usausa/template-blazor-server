@@ -219,7 +219,7 @@ public static class ApplicationExtensions
         app.UseMiddleware<SecurityHeadersMiddleware>(new SecurityHeadersOption
         {
             ReportOnly = app.Services.GetRequiredService<CspSetting>().ReportOnly,
-            ContentSecurityPolicy = $"default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src {scriptSources} 'nonce-{{nonce}}'; connect-src {connectSources}"
+            ContentSecurityPolicy = $"default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data: blob:; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src {scriptSources} 'nonce-{{nonce}}'; connect-src {connectSources}"
         });
 
         return app;

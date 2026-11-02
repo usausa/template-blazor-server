@@ -298,6 +298,119 @@ html, body {
     word-break: break-all;
 }
 
+.files-drop {
+    position: relative;
+    min-height: calc(100vh - 96px);
+    outline: none;
+}
+
+.files-drop-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 2px dashed var(--mud-palette-primary);
+    border-radius: 2px;
+    background-color: rgba(var(--mud-palette-primary-rgb), 0.08);
+    color: var(--mud-palette-primary);
+    pointer-events: none;
+}
+
+.files-drop-active .files-drop-overlay {
+    display: flex;
+}
+
+.files-drop-icon.mud-icon-root {
+    width: 56px;
+    height: 56px;
+}
+
+.files-select {
+    flex: none;
+    white-space: nowrap;
+}
+
+.file-inputs {
+    display: none;
+}
+
+.upload-queue {
+    border: 1px solid var(--mud-palette-lines-default);
+    border-radius: 2px;
+    background-color: var(--mud-palette-surface);
+}
+
+.upload-queue-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+}
+
+.upload-queue-title {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.upload-queue-progress {
+    padding: 0 16px 8px;
+}
+
+.upload-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    border-top: 1px solid var(--mud-palette-lines-default);
+}
+
+.upload-thumb {
+    flex: none;
+    width: 48px;
+    height: 48px;
+    border-radius: 2px;
+    object-fit: cover;
+}
+
+.upload-kind-icon.mud-icon-root {
+    flex: none;
+    width: 48px;
+    height: 32px;
+    color: var(--mud-palette-text-secondary);
+}
+
+.upload-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.upload-item-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.upload-item-detail {
+    display: flex;
+    gap: 8px;
+}
+
+.upload-done-icon.mud-icon-root {
+    margin: 0 5px;
+}
+
+@media (max-width: 600px) {
+    .files-hint {
+        display: none;
+    }
+}
+
 /* Samples */
 .sample-grid {
     display: grid;
