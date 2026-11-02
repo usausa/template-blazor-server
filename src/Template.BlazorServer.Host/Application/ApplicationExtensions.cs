@@ -429,6 +429,9 @@ public static class ApplicationExtensions
         builder.Services.AddSingleton<Circuits.CircuitTracker>();
         builder.Services.AddScoped<Microsoft.AspNetCore.Components.Server.Circuits.CircuitHandler, Circuits.AppCircuitHandler>();
 
+        // Refresh timer
+        builder.Services.AddSingleton<RefreshTimerFactory>();
+
         // MudBlazor
         builder.Services.AddMudServices(static options =>
         {
@@ -612,9 +615,16 @@ public static class ApplicationExtensions
 
         // Notification
         builder.Services.AddSingleton<Infrastructure.Notifications.NotificationBus>();
+        builder.Services.AddSingleton<DataChangeNotifier>();
         builder.Services.AddOptions<Workers.NotificationWorkerOption>().BindConfiguration("Notification").ValidateDataAnnotations().ValidateOnStart();
         builder.Services.AddSingleton(static p => p.GetRequiredService<IOptions<Workers.NotificationWorkerOption>>().Value);
         builder.Services.AddHostedService<Workers.NotificationWorker>();
+
+        // Server status
+        builder.Services.AddSingleton<Status.ServerStatusMonitor>();
+        builder.Services.AddOptions<Workers.ServerStatusWorkerOption>().BindConfiguration("ServerStatus").ValidateDataAnnotations().ValidateOnStart();
+        builder.Services.AddSingleton(static p => p.GetRequiredService<IOptions<Workers.ServerStatusWorkerOption>>().Value);
+        builder.Services.AddHostedService<Workers.ServerStatusWorker>();
 
         // Report
         builder.Services.AddSingleton<Infrastructure.Reports.ReportRenderer>();

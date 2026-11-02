@@ -72,6 +72,8 @@ public sealed partial class DataEditDialog
         public string Name { get; set; } = string.Empty;
 
         public int Value { get; set; }
+
+        public int Version { get; set; }
     }
 
     internal sealed class DataFormValidator : AbstractValidator<DataForm>

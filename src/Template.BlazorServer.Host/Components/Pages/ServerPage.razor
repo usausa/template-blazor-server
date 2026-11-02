@@ -1,0 +1,82 @@
+@page "/server"
+@attribute [Authorize(Policy = Policies.Administrator)]
+
+<PageTitle>Server</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Server</MudText>
+
+<div class="server-summary mb-4">
+    <div class="server-tile">
+        <MudText Typo="Typo.subtitle2">CPU</MudText>
+        <MudText Typo="Typo.h5">@CpuText</MudText>
+    </div>
+    <div class="server-tile">
+        <MudText Typo="Typo.subtitle2">メモリ</MudText>
+        <MudText Typo="Typo.h5">@MemoryText</MudText>
+    </div>
+    <div class="server-tile">
+        <MudText Typo="Typo.subtitle2">GC (0 / 1 / 2 世代)</MudText>
+        <MudText Typo="Typo.h5">@GcText</MudText>
+    </div>
+    <div class="server-tile">
+        <MudText Typo="Typo.subtitle2">スレッドプール</MudText>
+        <MudText Typo="Typo.h5">@ThreadText</MudText>
+    </div>
+    <div class="server-tile">
+        <MudText Typo="Typo.subtitle2">ディスク</MudText>
+        <MudText Typo="Typo.h5">@diskUsage</MudText>
+    </div>
+    <div class="server-tile">
+        <MudText Typo="Typo.subtitle2">Data</MudText>
+        <MudText Typo="Typo.h5">@dataCount 件</MudText>
+    </div>
+</div>
+
+<div class="server-charts mb-4">
+    <div class="server-card">
+        <MudText Typo="Typo.subtitle1">CPU 使用率 (%)</MudText>
+        <Condition Value="HasSamples">
+            <ChildContent>
+                <MudChart T="double" ChartType="ChartType.Line" ChartSeries="cpuSeries" ChartLabels="chartLabels" ChartOptions="cpuOptions" Width="100%" Height="240px" />
+            </ChildContent>
+            <ElseContent>
+                <MudText Typo="Typo.body2">計測中です。</MudText>
+            </ElseContent>
+        </Condition>
+    </div>
+    <div class="server-card">
+        <MudText Typo="Typo.subtitle1">メモリ (MB)</MudText>
+        <Condition Value="HasSamples">
+            <ChildContent>
+                <MudChart T="double" ChartType="ChartType.Line" ChartSeries="memorySeries" ChartLabels="chartLabels" ChartOptions="memoryOptions" Width="100%" Height="240px" />
+            </ChildContent>
+            <ElseContent>
+                <MudText Typo="Typo.body2">計測中です。</MudText>
+            </ElseContent>
+        </Condition>
+    </div>
+</div>
+
+<MudText Typo="Typo.h6" Class="mb-2">回線 (@circuits.Count)</MudText>
+<MudSimpleTable Dense="true" Class="server-table">
+    <thead>
+        <tr>
+            <th>利用者</th>
+            <th>開始</th>
+            <th>状態</th>
+        </tr>
+    </thead>
+    <tbody>
+        <ListItem Items="circuits" Context="circuit">
+            <ItemTemplate>
+                <tr>
+                    <td>@FormatUser(circuit)</td>
+                    <td>@FormatOpenedAt(circuit)</td>
+                    <td>
+                        <MudChip T="string" Size="Size.Small" Color="@ConnectedColor(circuit)">@ConnectedText(circuit)</MudChip>
+                    </td>
+                </tr>
+            </ItemTemplate>
+        </ListItem>
+    </tbody>
+</MudSimpleTable>

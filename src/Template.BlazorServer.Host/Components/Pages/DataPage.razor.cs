@@ -10,18 +10,30 @@ using Template.BlazorServer.Host.Components.Shared;
 
 public sealed partial class DataPage
 {
+    private static readonly TimeSpan RefreshInterval = TimeSpan.FromMinutes(1);
+
 #pragma warning disable CA2213
     private MudDataGrid<DataEntity> grid = default!;
 #pragma warning restore CA2213
 
+    private RefreshTimer refreshTimer = default!;
+
     private string? searchName;
+
+    private string? appliedName;
 
     //--------------------------------------------------------------------------------
     // Property
     //--------------------------------------------------------------------------------
 
     [Inject]
+    public required RefreshTimerFactory RefreshTimerFactory { get; set; }
+
+    [Inject]
     public required DataService DataService { get; set; }
+
+    [Inject]
+    public required DataChangeNotifier DataChangeNotifier { get; set; }
 
     [Inject]
     public required IDialogService DialogService { get; set; }
@@ -42,6 +54,20 @@ public sealed partial class DataPage
     protected override void OnInitialized()
     {
         searchName = Name;
+        appliedName = Name;
+        refreshTimer = RefreshTimerFactory.Create(RefreshInterval, RefreshAsync);
+        DataChangeNotifier.Changed += OnDataChanged;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            DataChangeNotifier.Changed -= OnDataChanged;
+            refreshTimer.Dispose();
+        }
+
+        base.Dispose(disposing);
     }
 
     //--------------------------------------------------------------------------------
@@ -51,6 +77,10 @@ public sealed partial class DataPage
     private Task OnSearchKeyDown(KeyboardEventArgs args) =>
         args.Key == "Enter" ? SearchAsync() : Task.CompletedTask;
 
+    private void OnDataChanged(object? sender, EventArgs e) => refreshTimer.Request();
+
+    private Task RefreshAsync() => InvokeAsync(grid.ReloadServerData);
+
     //--------------------------------------------------------------------------------
     // Grid
     //--------------------------------------------------------------------------------
@@ -58,7 +88,7 @@ public sealed partial class DataPage
     private async Task<GridData<DataEntity>> LoadServerData(GridState<DataEntity> state, CancellationToken cancellationToken)
     {
         var sort = state.SortDefinitions.FirstOrDefault();
-        var result = await DataService.QueryPageAsync(searchName, RequestHelper.Parse(sort?.SortBy, DataSort.Id), sort?.Descending ?? false, state.Page, state.PageSize, cancellationToken);
+        var result = await DataService.QueryPageAsync(appliedName, RequestHelper.Parse(sort?.SortBy, DataSort.Id), sort?.Descending ?? false, state.Page, state.PageSize, cancellationToken);
         return new GridData<DataEntity>
         {
             TotalItems = result.Total,
@@ -68,6 +98,8 @@ public sealed partial class DataPage
 
     private Task SearchAsync()
     {
+        appliedName = searchName;
+
         // Sync search condition to URL
         Navigation.NavigateTo(Navigation.GetUriWithQueryParameter("name", String.IsNullOrEmpty(searchName) ? null : searchName));
         return grid.ReloadServerData();
@@ -104,8 +136,8 @@ public sealed partial class DataPage
             return;
         }
 
-        var result = await DataService.UpdateAsync(edited.Id, edited.Name, edited.Value);
-        switch (result)
+        var result = await DataService.UpdateAsync(edited.Id, edited.Name, edited.Value, edited.Version);
+        switch (result.Status)
         {
             case DataWriteStatus.Success:
                 Snackbar.AddSuccess("更新しました。");
@@ -113,6 +145,10 @@ public sealed partial class DataPage
                 break;
             case DataWriteStatus.NotFound:
                 Snackbar.AddError("対象が存在しません。");
+                await grid.ReloadServerData();
+                break;
+            case DataWriteStatus.VersionMismatch:
+                Snackbar.AddError("ほかで更新されています。");
                 await grid.ReloadServerData();
                 break;
             default:

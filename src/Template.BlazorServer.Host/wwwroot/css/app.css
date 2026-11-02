@@ -75,6 +75,45 @@ html, body {
     margin-top: auto;
 }
 
+/* Server */
+.server-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.server-tile {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px;
+    border: 1px solid var(--mud-palette-lines-default);
+    border-radius: 2px;
+    background-color: var(--mud-palette-surface);
+}
+
+.server-charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 16px;
+}
+
+.server-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+    border: 1px solid var(--mud-palette-lines-default);
+    border-radius: 2px;
+    background-color: var(--mud-palette-surface);
+}
+
+@media (max-width: 700px) {
+    .server-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
 /* Samples */
 .sample-grid {
     display: grid;

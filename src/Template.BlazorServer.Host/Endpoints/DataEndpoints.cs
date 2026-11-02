@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Smart.Mapper;
 
 using Template.BlazorServer.Host.Application;
+using Template.BlazorServer.Host.Infrastructure.Http;
 
 //--------------------------------------------------------------------------------
 // Models
@@ -17,6 +18,8 @@ public sealed class DataListEntry
     public string Name { get; set; } = default!;
 
     public int Value { get; set; }
+
+    public int Version { get; set; }
 
     public DateTime CreatedAt { get; set; }
 }
@@ -39,6 +42,8 @@ public sealed class DataGetResponse
     public string Name { get; set; } = default!;
 
     public int Value { get; set; }
+
+    public int Version { get; set; }
 
     public DateTime CreatedAt { get; set; }
 }
@@ -118,7 +123,8 @@ public static class DataEndpoints
             .Produces(StatusCodes.Status204NoContent)
             .ProducesValidationProblem()
             .ProducesProblem(StatusCodes.Status404NotFound)
-            .ProducesProblem(StatusCodes.Status409Conflict);
+            .ProducesProblem(StatusCodes.Status409Conflict)
+            .ProducesProblem(StatusCodes.Status412PreconditionFailed);
         group.MapDelete("/{id:long}", HandleDeleteAsync)
             .RequireAuthorization(Policies.Administrator)
             .WithName("DataDelete")
@@ -171,12 +177,17 @@ public static class DataEndpoints
 
     private static async ValueTask<IResult> HandleGetAsync(
         DataService dataService,
+        HttpResponse response,
         long id)
     {
         var entity = await dataService.QueryAsync(id);
-        return entity is not null
-            ? TypedResults.Ok(entity.ToGetResponse())
-            : TypedResults.NotFound();
+        if (entity is null)
+        {
+            return TypedResults.NotFound();
+        }
+
+        response.Headers.ETag = EntityTag.From(entity.Version);
+        return TypedResults.Ok(entity.ToGetResponse());
     }
 
     //--------------------------------------------------------------------------------
@@ -199,16 +210,29 @@ public static class DataEndpoints
 
     private static async ValueTask<IResult> HandleUpdateAsync(
         DataService dataService,
+        HttpResponse response,
         long id,
-        DataUpdateRequest request)
+        DataUpdateRequest request,
+        [FromHeader(Name = "If-Match")] string? ifMatch)
     {
-        var result = await dataService.UpdateAsync(id, request.Name, request.Value);
-        return result switch
+        if (!EntityTag.TryParseIfMatch(ifMatch, out var version))
         {
-            DataWriteStatus.Success => TypedResults.NoContent(),
-            DataWriteStatus.NotFound => TypedResults.NotFound(),
-            _ => TypedResults.Problem(statusCode: StatusCodes.Status409Conflict, title: "Duplicate name.")
-        };
+            return TypedResults.Problem(statusCode: StatusCodes.Status412PreconditionFailed, title: "Version mismatch.");
+        }
+
+        var result = await dataService.UpdateAsync(id, request.Name, request.Value, version);
+        switch (result.Status)
+        {
+            case DataWriteStatus.Success:
+                response.Headers.ETag = EntityTag.From(result.Version);
+                return TypedResults.NoContent();
+            case DataWriteStatus.NotFound:
+                return TypedResults.NotFound();
+            case DataWriteStatus.VersionMismatch:
+                return TypedResults.Problem(statusCode: StatusCodes.Status412PreconditionFailed, title: "Version mismatch.");
+            default:
+                return TypedResults.Problem(statusCode: StatusCodes.Status409Conflict, title: "Duplicate name.");
+        }
     }
 
     //--------------------------------------------------------------------------------

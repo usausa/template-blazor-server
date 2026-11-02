@@ -56,13 +56,4 @@ public sealed class ReportPageTests : E2ETestBase
         Assert.Equal("slip.pdf", download.SuggestedFilename);
         Assert.Contains("sheets=invoice&sheets=receipt", download.Url, StringComparison.Ordinal);
     }
-
-    private async Task LoginAsync(string serverAddress)
-    {
-        await Page.GotoAsync(serverAddress + "/login");
-        await Page.FillAsync("#name", "admin");
-        await Page.FillAsync("#password", "admin");
-        await Page.GetByRole(AriaRole.Button, new PageGetByRoleOptions { Name = "ログイン" }).ClickAsync();
-        await Expect(Page.GetByText("Template.BlazorServer")).ToBeVisibleAsync();
-    }
 }

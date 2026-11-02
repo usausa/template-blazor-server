@@ -1,0 +1,7 @@
+namespace Template.BlazorServer.Services;
+
+internal static partial class Log
+{
+    [LoggerMessage(Level = LogLevel.Error, Message = "Data change handler failed.")]
+    public static partial void ErrorDataChangeHandlerFailed(this ILogger logger, Exception ex);
+}

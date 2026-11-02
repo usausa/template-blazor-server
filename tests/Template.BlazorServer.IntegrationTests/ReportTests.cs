@@ -13,9 +13,6 @@ public sealed partial class ReportTests : IClassFixture<TestApplicationFactory>
         this.factory = factory;
     }
 
-    [GeneratedRegex("name=\"__RequestVerificationToken\"[^>]*value=\"([^\"]+)\"")]
-    private static partial Regex AntiforgeryTokenRegex();
-
     [GeneratedRegex(@"/Type\s*/Page\b")]
     private static partial Regex PdfPageRegex();
 
@@ -23,7 +20,7 @@ public sealed partial class ReportTests : IClassFixture<TestApplicationFactory>
     public async Task ProductListReturnsInlinePdfPerPage()
     {
         // Arrange
-        var client = await LoginAsync(factory);
+        var client = await factory.CreateAuthenticatedClientAsync();
 
         // Act
         var response = await client.GetAsync(new Uri("/api/reports/product-list?rows=45", UriKind.Relative), TestContext.Current.CancellationToken);
@@ -41,7 +38,7 @@ public sealed partial class ReportTests : IClassFixture<TestApplicationFactory>
     public async Task DownloadReturnsAttachment()
     {
         // Arrange
-        var client = await LoginAsync(factory);
+        var client = await factory.CreateAuthenticatedClientAsync();
 
         // Act
         var response = await client.GetAsync(new Uri("/api/reports/product-list?rows=5&download=true", UriKind.Relative), TestContext.Current.CancellationToken);
@@ -56,7 +53,7 @@ public sealed partial class ReportTests : IClassFixture<TestApplicationFactory>
     public async Task ProductListWithInvalidRowsReturnsValidationProblem()
     {
         // Arrange
-        var client = await LoginAsync(factory);
+        var client = await factory.CreateAuthenticatedClientAsync();
 
         // Act
         var response = await client.GetAsync(new Uri("/api/reports/product-list?rows=0", UriKind.Relative), TestContext.Current.CancellationToken);
@@ -73,7 +70,7 @@ public sealed partial class ReportTests : IClassFixture<TestApplicationFactory>
     public async Task SlipReturnsSelectedSheets(string path, int pages)
     {
         // Arrange
-        var client = await LoginAsync(factory);
+        var client = await factory.CreateAuthenticatedClientAsync();
 
         // Act
         var response = await client.GetAsync(new Uri(path, UriKind.Relative), TestContext.Current.CancellationToken);
@@ -88,7 +85,7 @@ public sealed partial class ReportTests : IClassFixture<TestApplicationFactory>
     public async Task SlipWithUnknownSheetReturnsBadRequest()
     {
         // Arrange
-        var client = await LoginAsync(factory);
+        var client = await factory.CreateAuthenticatedClientAsync();
 
         // Act
         var response = await client.GetAsync(new Uri("/api/reports/slip?sheets=unknown", UriKind.Relative), TestContext.Current.CancellationToken);
@@ -102,7 +99,7 @@ public sealed partial class ReportTests : IClassFixture<TestApplicationFactory>
     {
         // Arrange
         await using var emptyFactory = new TestApplicationFactory();
-        var client = await LoginAsync(emptyFactory);
+        var client = await emptyFactory.CreateAuthenticatedClientAsync();
 
         // Act
         var response = await client.GetAsync(new Uri("/api/reports/invoice", UriKind.Relative), TestContext.Current.CancellationToken);
@@ -116,7 +113,7 @@ public sealed partial class ReportTests : IClassFixture<TestApplicationFactory>
     {
         // Arrange
         await using var dataFactory = new TestApplicationFactory();
-        var client = await LoginAsync(dataFactory);
+        var client = await dataFactory.CreateAuthenticatedClientAsync();
         for (var i = 1; i <= 26; i++)
         {
             var created = await client.PostAsJsonAsync(new Uri("/api/data/", UriKind.Relative), new { name = $"Item {i}", value = i * 100 }, TestContext.Current.CancellationToken);
@@ -131,20 +128,6 @@ public sealed partial class ReportTests : IClassFixture<TestApplicationFactory>
         response.EnsureSuccessStatusCode();
         Assert.Equal("inline", response.Content.Headers.ContentDisposition?.DispositionType);
         Assert.Equal(2, CountPages(bytes));
-    }
-
-    private static async Task<HttpClient> LoginAsync(TestApplicationFactory target)
-    {
-        var client = target.CreateClient();
-        var loginPage = await client.GetStringAsync(new Uri("/login", UriKind.Relative), TestContext.Current.CancellationToken);
-        using var form = new FormUrlEncodedContent(new Dictionary<string, string>
-        {
-            ["name"] = "admin",
-            ["password"] = "admin",
-            ["__RequestVerificationToken"] = AntiforgeryTokenRegex().Match(loginPage).Groups[1].Value
-        });
-        await client.PostAsync(new Uri("/auth/login", UriKind.Relative), form, TestContext.Current.CancellationToken);
-        return client;
     }
 
     private static int CountPages(byte[] pdf) => PdfPageRegex().Count(Encoding.Latin1.GetString(pdf));
