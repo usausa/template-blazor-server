@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.FeatureManagement;
@@ -178,14 +179,26 @@ public static class ApplicationExtensions
         builder.Services.AddScoped<CspNonce>();
 
         // XForward
-        builder.Services.Configure<ForwardedHeadersOptions>(static options =>
+        builder.Services.AddOptions<ForwardedHeadersOptions>().Configure<ForwardedHeadersSetting>(static (options, setting) =>
         {
             options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            options.ForwardLimit = setting.ForwardLimit;
+            foreach (var network in setting.KnownNetworks)
+            {
+                options.KnownIPNetworks.Add(System.Net.IPNetwork.Parse(network));
+            }
 
-            // Do not restrict to local network/proxy
-            options.KnownIPNetworks.Clear();
-            options.KnownProxies.Clear();
+            foreach (var proxy in setting.KnownProxies)
+            {
+                options.KnownProxies.Add(IPAddress.Parse(proxy));
+            }
         });
+
+        // Kestrel
+        builder.Services.Configure<KestrelServerOptions>(static options => options.AddServerHeader = false);
+
+        // Request timeout
+        builder.Services.AddRequestTimeouts();
 
         return builder;
     }
@@ -257,12 +270,15 @@ public static class ApplicationExtensions
                 b.UseStatusCodePages();
             });
 
-        // Page: error page
+        // Page: error page and not found page
         app.UseWhen(
             static context => !context.Request.Path.StartsWithSegments(ApiRoutes.Prefix, StringComparison.OrdinalIgnoreCase),
             static b =>
             {
                 b.UseExceptionHandler("/error", createScopeForErrors: true);
+                b.UseWhen(
+                    static context => HttpMethods.IsGet(context.Request.Method),
+                    static g => g.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true));
             });
 
         return app;
@@ -571,7 +587,7 @@ public static class ApplicationExtensions
             return new DelegateDbProvider(() => new SqliteConnection(connectionString));
         });
         builder.Services.AddSingleton<IDialect>(new DelegateDialect(
-            static ex => ex is SqliteException { SqliteErrorCode: 19 } or SqliteException { SqliteExtendedErrorCode: 1555 or 2067 },
+            static ex => ex is SqliteException { SqliteExtendedErrorCode: 1555 or 2067 },
             static x => Regex.Replace(x, @"[%_\\]", @"\$0")));
         builder.Services.AddDataAccessors(typeof(DataAccessor).Assembly);
 
@@ -612,6 +628,8 @@ public static class ApplicationExtensions
         builder.Services.AddSingleton(static p => p.GetRequiredService<IOptions<CompressionSetting>>().Value);
         builder.Services.AddOptions<CspSetting>().BindConfiguration("Csp").ValidateDataAnnotations().ValidateOnStart();
         builder.Services.AddSingleton(static p => p.GetRequiredService<IOptions<CspSetting>>().Value);
+        builder.Services.AddOptions<ForwardedHeadersSetting>().BindConfiguration("ForwardedHeaders").ValidateDataAnnotations().ValidateOnStart();
+        builder.Services.AddSingleton(static p => p.GetRequiredService<IOptions<ForwardedHeadersSetting>>().Value);
         builder.Services.AddOptions<AuthSetting>().BindConfiguration("Auth").ValidateDataAnnotations().ValidateOnStart();
         builder.Services.AddSingleton(static p => p.GetRequiredService<IOptions<AuthSetting>>().Value);
         builder.Services.AddOptions<TelemetrySetting>().BindConfiguration("Telemetry").ValidateDataAnnotations().ValidateOnStart();
@@ -683,11 +701,13 @@ public static class ApplicationExtensions
         app.MapReportEndpoints();
 
         // Health
-        app.MapHealthChecks(HealthEndpointPath);
+        app.MapHealthChecks(HealthEndpointPath)
+            .DisableHttpMetrics();
         app.MapHealthChecks(AlivenessEndpointPath, new HealthCheckOptions
         {
             Predicate = static r => r.Tags.Contains("live")
-        });
+        })
+            .DisableHttpMetrics();
 
         return app;
     }

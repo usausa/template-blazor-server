@@ -6,36 +6,36 @@ public sealed class NotificationWorker : BackgroundService
 {
     private readonly ILogger<NotificationWorker> log;
 
+    private readonly TimeProvider timeProvider;
+
     private readonly NotificationWorkerOption options;
 
     private readonly NotificationBus bus;
 
-    private readonly TimeProvider timeProvider;
-
     public NotificationWorker(
         ILogger<NotificationWorker> log,
+        TimeProvider timeProvider,
         NotificationWorkerOption options,
-        NotificationBus bus,
-        TimeProvider timeProvider)
+        NotificationBus bus)
     {
         this.log = log;
+        this.timeProvider = timeProvider;
         this.options = options;
         this.bus = bus;
-        this.timeProvider = timeProvider;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         if (!options.Enable)
         {
-            log.InfoWorkerDisabled(nameof(NotificationWorker));
+            log.WarnWorkerDisabled(nameof(NotificationWorker));
             return;
         }
 
         log.InfoWorkerStart(nameof(NotificationWorker));
         try
         {
-            using var timer = new PeriodicTimer(TimeSpan.FromSeconds(options.IntervalSeconds));
+            using var timer = new PeriodicTimer(TimeSpan.FromSeconds(options.IntervalSeconds), timeProvider);
             while (await timer.WaitForNextTickAsync(stoppingToken))
             {
                 try

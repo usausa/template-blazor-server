@@ -1,3 +1,5 @@
+PRAGMA journal_mode = WAL;
+
 CREATE TABLE IF NOT EXISTS Account (
     Id         INTEGER  NOT NULL,
     Name       TEXT     NOT NULL,

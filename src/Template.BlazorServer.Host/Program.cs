@@ -64,6 +64,9 @@ app.UseErrorHandler();
 // Routing
 app.UseRouting();
 
+// Request timeout
+app.UseRequestTimeouts();
+
 // Compression
 app.UseCompression();
 

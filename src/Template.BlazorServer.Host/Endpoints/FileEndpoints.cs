@@ -34,6 +34,8 @@ public sealed class FileUploadResponse
 
 public static class FileEndpoints
 {
+    private const long MaxUploadSize = 100L * 1024 * 1024;
+
     //--------------------------------------------------------------------------------
     // Mapping
     //--------------------------------------------------------------------------------
@@ -119,6 +121,7 @@ public static class FileEndpoints
     // Upload
     //--------------------------------------------------------------------------------
 
+    [RequestSizeLimit(MaxUploadSize)]
     private static async ValueTask<IResult> HandleUploadAsync(
         HttpContext context,
         IStorage storage,
