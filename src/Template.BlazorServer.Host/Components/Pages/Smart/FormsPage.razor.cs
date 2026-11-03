@@ -24,20 +24,6 @@ public sealed partial class FormsPage
     [Inject]
     public required DataService DataService { get; set; }
 
-    [PersistentState]
-    public string? Name
-    {
-        get => model.Name;
-        set => model.Name = value;
-    }
-
-    [PersistentState]
-    public string? Email
-    {
-        get => model.Email;
-        set => model.Email = value;
-    }
-
     //--------------------------------------------------------------------------------
     // Initialize
     //--------------------------------------------------------------------------------

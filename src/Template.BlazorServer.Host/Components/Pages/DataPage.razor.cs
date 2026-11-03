@@ -10,8 +10,6 @@ using Template.BlazorServer.Host.Components.Shared;
 
 public sealed partial class DataPage
 {
-    private const int DefaultRowsPerPage = 10;
-
     private static readonly TimeSpan RefreshInterval = TimeSpan.FromMinutes(1);
 
 #pragma warning disable CA2213
@@ -19,6 +17,8 @@ public sealed partial class DataPage
 #pragma warning restore CA2213
 
     private RefreshTimer refreshTimer = default!;
+
+    private string? searchName;
 
     private string? appliedName;
 
@@ -47,27 +47,13 @@ public sealed partial class DataPage
     [SupplyParameterFromQuery(Name = "name")]
     public string? Name { get; set; }
 
-    [PersistentState]
-    public string? SearchName { get; set; }
-
-    [PersistentState]
-    public int CurrentPage { get; set; }
-
-    [PersistentState]
-    public int RowsPerPage { get; set; }
-
     //--------------------------------------------------------------------------------
     // Initialize
     //--------------------------------------------------------------------------------
 
     protected override void OnInitialized()
     {
-        SearchName ??= Name;
-        if (RowsPerPage <= 0)
-        {
-            RowsPerPage = DefaultRowsPerPage;
-        }
-
+        searchName = Name;
         appliedName = Name;
         refreshTimer = RefreshTimerFactory.Create(RefreshInterval, RefreshAsync);
         DataChangeNotifier.Changed += OnDataChanged;
@@ -114,10 +100,10 @@ public sealed partial class DataPage
 
     private Task SearchAsync()
     {
-        appliedName = SearchName;
+        appliedName = searchName;
 
         // Sync search condition to URL
-        Navigation.NavigateTo(Navigation.GetUriWithQueryParameter("name", String.IsNullOrEmpty(SearchName) ? null : SearchName));
+        Navigation.NavigateTo(Navigation.GetUriWithQueryParameter("name", String.IsNullOrEmpty(searchName) ? null : searchName));
         return grid.ReloadServerData();
     }
 

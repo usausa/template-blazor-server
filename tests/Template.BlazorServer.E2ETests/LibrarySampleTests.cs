@@ -31,32 +31,6 @@ public sealed class LibrarySampleTests : E2ETestBase
     }
 
     [Fact]
-    public async Task FormInputIsRestoredAfterPause()
-    {
-        // Given
-        await using var factory = new E2EApplicationFactory();
-        factory.UseKestrel(0);
-        factory.StartServer();
-
-        await LoginAsync(factory.ServerAddress);
-        await Page.GotoAsync(factory.ServerAddress + "/smart/forms");
-        await Expect(Page).ToHaveTitleAsync("Forms - Smart.Blazor");
-        await Page.GetByRole(AriaRole.Button, new PageGetByRoleOptions { Name = "Fill by code" }).ClickAsync();
-        await Expect(Page.GetByText("Filled by code")).ToBeVisibleAsync();
-        await Page.GetByLabel("Name").FillAsync("Restored");
-        await Page.GetByLabel("Name").PressAsync("Tab");
-
-        // When
-        Assert.True(await Page.EvaluateAsync<bool>("() => Blazor.pauseCircuit()"));
-        Assert.True(await Page.EvaluateAsync<bool>("() => Blazor.resumeCircuit()"));
-
-        // Then
-        await Expect(Page.GetByLabel("Name")).ToHaveValueAsync("Restored");
-        await Expect(Page.GetByLabel("Email")).ToHaveValueAsync("sample");
-        await Expect(Page.GetByText("Filled by code")).ToBeHiddenAsync();
-    }
-
-    [Fact]
     public async Task HelpIsShownWithF1()
     {
         // Given

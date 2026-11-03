@@ -52,38 +52,6 @@ public sealed class DataPageTests : E2ETestBase
         await Expect(other.GetByText("ほかで更新されています。")).ToBeVisibleAsync();
     }
 
-    [Fact]
-    public async Task SearchAndPageAreRestoredAfterPause()
-    {
-        // Given
-        await using var factory = new E2EApplicationFactory();
-        factory.UseKestrel(0);
-        factory.StartServer();
-
-        await LoginAsync(factory.ServerAddress);
-        for (var i = 1; i <= 11; i++)
-        {
-            var created = await Page.APIRequest.PostAsync(factory.ServerAddress + "/api/data/", new APIRequestContextOptions { DataObject = new { name = $"Paged {i:D2}", value = i } });
-            Assert.True(created.Ok);
-        }
-
-        await Page.GotoAsync(factory.ServerAddress + "/data");
-        await Expect(FindRow(Page, "Paged 01")).ToBeVisibleAsync();
-        await Page.Locator(".mud-table-pagination-actions button").Nth(2).ClickAsync();
-        await Expect(FindRow(Page, "Paged 11")).ToBeVisibleAsync();
-        await Page.GetByLabel("名前").FillAsync("Paged");
-        await Page.GetByLabel("名前").PressAsync("Tab");
-
-        // When
-        Assert.True(await Page.EvaluateAsync<bool>("() => Blazor.pauseCircuit()"));
-        Assert.True(await Page.EvaluateAsync<bool>("() => Blazor.resumeCircuit()"));
-
-        // Then
-        await Expect(FindRow(Page, "Paged 11")).ToBeVisibleAsync();
-        await Expect(FindRow(Page, "Paged 01")).ToBeHiddenAsync();
-        await Expect(Page.GetByLabel("名前")).ToHaveValueAsync("Paged");
-    }
-
     private static ILocator FindRow(IPage page, string name) =>
         page.Locator("tr", new PageLocatorOptions { HasText = name });
 
