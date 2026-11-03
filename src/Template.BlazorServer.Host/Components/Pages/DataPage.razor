@@ -6,7 +6,7 @@
 <MudText Typo="Typo.h4" Class="mb-4">Data</MudText>
 
 <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-4">
-    <MudTextField @bind-Value="searchName"
+    <MudTextField @bind-Value="SearchName"
                   Label="名前"
                   Clearable="true"
                   Immediate="true"
@@ -19,7 +19,7 @@
     <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="AddAsync">追加</MudButton>
 </MudStack>
 
-<MudDataGrid @ref="grid" T="DataEntity" ServerData="LoadServerData" SortMode="SortMode.Single" Dense="true">
+<MudDataGrid @ref="grid" T="DataEntity" ServerData="LoadServerData" SortMode="SortMode.Single" Dense="true" @bind-CurrentPage="CurrentPage" @bind-RowsPerPage="RowsPerPage">
     <Columns>
         <PropertyColumn Property="x => x.Id" Title="ID" />
         <PropertyColumn Property="x => x.Name" Title="名前" />

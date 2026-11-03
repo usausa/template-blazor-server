@@ -26,6 +26,8 @@ public sealed class BlazorOptionsTests : IClassFixture<TestApplicationFactory>
         Assert.Equal(TimeSpan.FromMinutes(3), circuit.DisconnectedCircuitRetentionPeriod);
         Assert.Equal(TimeSpan.FromMinutes(1), circuit.JSInteropDefaultCallTimeout);
         Assert.Equal(10, circuit.MaxBufferedUnacknowledgedRenderBatches);
+        Assert.Equal(1000, circuit.PersistedCircuitInMemoryMaxRetained);
+        Assert.Equal(TimeSpan.FromHours(2), circuit.PersistedCircuitInMemoryRetentionPeriod);
         Assert.Equal(TimeSpan.FromSeconds(30), hub.ClientTimeoutInterval);
         Assert.Equal(TimeSpan.FromSeconds(15), hub.KeepAliveInterval);
         Assert.Equal(TimeSpan.FromSeconds(15), hub.HandshakeTimeout);
