@@ -1,0 +1,31 @@
+@page "/components/upload"
+@attribute [Authorize]
+
+<PageTitle>Upload - Components.Blazor</PageTitle>
+
+<MudText Typo="Typo.h4">Upload</MudText>
+<MudText Class="mb-4">Components.Blazor</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="FileUpload" Result="@result" Wide="true">
+        <MudText Typo="Typo.body2" Class="sample-result">Files are sent from the browser to the API one by one. The sample API counts the size and does not save the files.</MudText>
+        <FileUpload @ref="upload" Url="@SampleUrls.Upload" AllowFolders="true" Paste="true" DragOverClass="sample-upload-active" @bind-Uploading="uploading" OnStarting="OnStarting" OnProgress="OnProgress" OnCompleted="OnCompleted" class="sample-upload" tabindex="0">
+            <MudIcon Icon="@Icons.Material.Filled.CloudUpload" Class="sample-upload-icon" />
+            <MudText>Drop files or folders here, or paste with Ctrl+V.</MudText>
+        </FileUpload>
+        <div class="sample-row">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="uploading" OnClick="SelectFilesAsync">Files</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" Disabled="uploading" OnClick="SelectFolderAsync">Folder</MudButton>
+            <MudButton Variant="Variant.Text" Color="Color.Primary" Disabled="!uploading" OnClick="CancelAsync">Cancel</MudButton>
+        </div>
+        <Condition Value="progress is not null">
+            <MudProgressLinear Value="ProgressPercent" Color="Color.Primary" />
+            <MudText Typo="Typo.body2">@ProgressText</MudText>
+        </Condition>
+        <ListItem Items="errors" Context="error">
+            <ItemTemplate>
+                <div class="sample-log">@error.Path: @error.Status</div>
+            </ItemTemplate>
+        </ListItem>
+    </SampleCard>
+</div>

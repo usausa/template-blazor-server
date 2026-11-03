@@ -1,0 +1,34 @@
+@page "/components/tabs"
+@attribute [Authorize]
+
+<PageTitle>Tabs - Components.Blazor</PageTitle>
+
+<MudText Typo="Typo.h4">Tabs</MudText>
+<MudText Class="mb-4">Components.Blazor</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="RunLockedAsync" Result="@($"Runs: {runCount}")">
+        <MudText Typo="Typo.body2" Class="sample-result">Open this page in two tabs and press the button in both. The work runs one at a time.</MudText>
+        <div class="sample-row">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="RunLockedAsync">Run locked</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="RunLockedWithTimeoutAsync">Run locked (timeout 1 s)</MudButton>
+        </div>
+        <ListItem Items="lockLog" Context="entry">
+            <ItemTemplate>
+                <div class="sample-log">@entry</div>
+            </ItemTemplate>
+        </ListItem>
+    </SampleCard>
+    <SampleCard Title="TellAsync / ListenAsync" Result="@($"Received: {received.Count}")">
+        <MudText Typo="Typo.body2" Class="sample-result">The message is sent to the other tabs of this site.</MudText>
+        <MudTextField T="string" @bind-Value="message" Label="Message" />
+        <div class="sample-row">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="TellAsync">Tell</MudButton>
+        </div>
+        <ListItem Items="received" Context="entry">
+            <ItemTemplate>
+                <div class="sample-log">@entry</div>
+            </ItemTemplate>
+        </ListItem>
+    </SampleCard>
+</div>

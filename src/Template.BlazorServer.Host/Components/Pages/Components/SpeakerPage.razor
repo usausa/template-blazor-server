@@ -1,0 +1,48 @@
+@page "/components/speaker"
+@attribute [Authorize]
+
+<PageTitle>Speaker - Components.Blazor</PageTitle>
+
+<MudText Typo="Typo.h4">Speaker</MudText>
+<MudText Class="mb-4">Components.Blazor</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="Status" Result="@($"IsReady: {Speaker.IsReady} / IsSpeaking: {Speaker.IsSpeaking}")">
+        <Condition Value="Speaker.IsReady">
+            <ChildContent>
+                <MudAlert Severity="Severity.Success" Dense="true">Sound can be played.</MudAlert>
+            </ChildContent>
+            <ElseContent>
+                <MudAlert Severity="Severity.Info" Dense="true">Click or press a key on the page to enable sound.</MudAlert>
+            </ElseContent>
+        </Condition>
+    </SampleCard>
+    <SampleCard Title="Tones" Result="@($"Result: {toneResult}")">
+        <MudText Typo="Typo.body2" Class="sample-result">Sine tones: frequency, duration and delay.</MudText>
+        <div class="sample-row">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="PlayConfirmAsync">Confirm</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="PlayErrorAsync">Error</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="PlayNotifyAsync">Notify</MudButton>
+        </div>
+    </SampleCard>
+    <SampleCard Title="Speech" Result="@($"Result: {speechResult}")" Wide="true">
+        <MudTextField T="string" @bind-Value="text" Label="Text" Lines="3" />
+        <div class="sample-form">
+            <MudSelect T="string" @bind-Value="voice" Label="Voice">
+                <MudSelectItem T="string" Value="@string.Empty">(Default for ja-JP)</MudSelectItem>
+                <ListItem Items="voices" Context="item">
+                    <ItemTemplate>
+                        <MudSelectItem T="string" Value="@item.Name">@VoiceText(item)</MudSelectItem>
+                    </ItemTemplate>
+                </ListItem>
+            </MudSelect>
+            <MudSlider T="double" @bind-Value="rate" Min="0.5" Max="2" Step="0.1" Color="Color.Primary">Rate: @FormatValue(rate)</MudSlider>
+            <MudSlider T="double" @bind-Value="pitch" Min="0" Max="2" Step="0.1" Color="Color.Primary">Pitch: @FormatValue(pitch)</MudSlider>
+            <MudSlider T="double" @bind-Value="volume" Min="0" Max="1" Step="0.1" Color="Color.Primary">Volume: @FormatValue(volume)</MudSlider>
+        </div>
+        <div class="sample-row">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SpeakAsync">Speak</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="CancelAsync">Cancel</MudButton>
+        </div>
+    </SampleCard>
+</div>

@@ -659,6 +659,94 @@ html, body {
     height: 40px;
 }
 
+.sample-board-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.sample-board {
+    --mussel-primary-text: #ccccdc;
+    --mussel-secondary-text: rgba(204, 204, 220, 0.65);
+    --mussel-muted-text: rgba(204, 204, 220, 0.61);
+    --mussel-grid-line: rgba(204, 204, 220, 0.12);
+    --mussel-tooltip-background: rgba(34, 37, 43, 0.94);
+    --mussel-tooltip-border: rgba(204, 204, 220, 0.12);
+    --mussel-tooltip-text: #ccccdc;
+    --mussel-track: #22252b;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 4px;
+    padding: 4px;
+    background-color: #111217;
+    color: #ccccdc;
+}
+
+.sample-board > * {
+    grid-column: span 12;
+    min-width: 0;
+}
+
+.sample-panel {
+    padding: 6px 8px;
+    border: 1px solid rgba(204, 204, 220, 0.12);
+    border-radius: 2px;
+    background-color: #181b1f;
+}
+
+.sample-panel-title {
+    margin-bottom: 4px;
+    font-size: 12px;
+}
+
+@media (min-width: 600px) {
+    .sample-board > .sample-span-3 {
+        grid-column: span 6;
+    }
+}
+
+@media (min-width: 1100px) {
+    .sample-board > .sample-span-3 {
+        grid-column: span 3;
+    }
+
+    .sample-board > .sample-span-4 {
+        grid-column: span 4;
+    }
+
+    .sample-board > .sample-span-6 {
+        grid-column: span 6;
+    }
+
+    .sample-board > .sample-span-8 {
+        grid-column: span 8;
+    }
+}
+
+.sample-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+    gap: 12px;
+}
+
+.sample-stats > * {
+    border: 1px solid var(--mud-palette-lines-default);
+}
+
+.sample-sparklines {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    gap: 12px;
+}
+
+.sample-sparklines > div {
+    display: grid;
+    gap: 4px;
+    color: var(--mud-palette-text-secondary);
+    font-size: 12px;
+}
+
 /* Blazor error UI */
 #blazor-error-ui {
     color-scheme: light only;

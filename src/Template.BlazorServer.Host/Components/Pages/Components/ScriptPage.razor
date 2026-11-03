@@ -1,0 +1,36 @@
+@page "/components/script"
+@attribute [Authorize]
+
+<PageTitle>Script - Components.Blazor</PageTitle>
+
+<MudText Typo="Typo.h4">Script</MudText>
+<MudText Class="mb-4">Components.Blazor</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="ScriptModule" Result="@measureResult">
+        <div @ref="box" class="sample-measure">The module is loaded at the first call.</div>
+        <div class="sample-row">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="MeasureAsync">Measure</MudButton>
+        </div>
+    </SampleCard>
+    <SampleCard Title="SetFocus / HistoryBack">
+        <input id="@FocusTargetId" class="sample-input" placeholder="Focus moves here" />
+        <div class="sample-row">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="FocusAsync">Focus</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="BackAsync">History back</MudButton>
+        </div>
+    </SampleCard>
+    <SampleCard Title="SaveAsFile / OpenNewWindow" Result="@fileResult">
+        <MudText Typo="Typo.body2" Class="sample-result">Files made on the server are passed to the browser.</MudText>
+        <div class="sample-row">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveCsvAsync">Save CSV</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="OpenPdfAsync">Open PDF</MudButton>
+        </div>
+    </SampleCard>
+    <SampleCard Title="Clipboard" Result="@copyResult">
+        <MudTextField T="string" @bind-Value="copyText" Label="Text" />
+        <div class="sample-row">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CopyAsync">Copy</MudButton>
+        </div>
+    </SampleCard>
+</div>

@@ -20,6 +20,7 @@ public sealed class ServerPageTests : E2ETestBase
         // Then
         await Expect(Page).ToHaveTitleAsync("Server");
         await Expect(Page.Locator(".server-table")).ToContainTextAsync("admin");
-        await Expect(Page.Locator(".server-card svg")).ToHaveCountAsync(2, new LocatorAssertionsToHaveCountOptions { Timeout = 15000 });
+        await Expect(Page.Locator(".server-card .mussel-chart-svg")).ToHaveCountAsync(2);
+        await Expect(Page.Locator(".server-card polyline").First).ToBeAttachedAsync(new LocatorAssertionsToBeAttachedOptions { Timeout = 15000 });
     }
 }

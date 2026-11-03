@@ -1,0 +1,68 @@
+@page "/components/keyboard"
+@attribute [Authorize]
+
+<PageTitle>Keyboard - Components.Blazor</PageTitle>
+
+<HotKey Key="Ctrl+S" AllowInInput="true" OnPressed="OnSave" />
+<HotKey Key="F2" Disabled="editDisabled" OnPressed="OnEdit" />
+<HotKey Key="?" OnPressed="OnQuestion" />
+<HotKey Code="Shift+Digit1" OnPressed="OnFirst" />
+<HotKey Key="ArrowUp" AllowRepeat="true" OnPressed="OnUp" />
+<HotKey Key="ArrowDown" AllowRepeat="true" OnPressed="OnDown" />
+<HotKey Key="F1" OnPressed="ShowHelp" />
+<HotKey Key="Escape" Disabled="!helpVisible" OnPressed="HideHelp" />
+
+<MudText Typo="Typo.h4">Keyboard</MudText>
+<MudText Class="mb-4">Components.Blazor</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="HotKey" Result="@($"Last: {lastAction}")">
+        <MudTextField T="string" Label="Ctrl+S works while typing here" />
+        <MudSwitch T="bool" @bind-Value="editDisabled" Label="Disable F2" Color="Color.Primary" />
+        <div class="sample-keys">
+            <ListItem Items="Shortcuts" Context="shortcut">
+                <ItemTemplate>
+                    <kbd>@shortcut.Key</kbd>
+                    <span>@shortcut.Action</span>
+                </ItemTemplate>
+            </ListItem>
+        </div>
+    </SampleCard>
+    <SampleCard Title="AllowRepeat" Result="@($"Value: {level}")">
+        <MudText Typo="Typo.body2" Class="sample-result">Hold ArrowUp or ArrowDown.</MudText>
+        <MudProgressLinear Value="level" Color="Color.Primary" />
+    </SampleCard>
+    <SampleCard Title="Help (F1)" Result="@($"Help: {HelpText}")">
+        <MudText Typo="Typo.body2">Press F1 to show the shortcuts. The help of the browser does not open.</MudText>
+        <div class="sample-row">
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="ShowHelp">Show help</MudButton>
+        </div>
+    </SampleCard>
+    <SampleCard Title="Log">
+        <ListItem Items="log" Context="entry">
+            <ItemTemplate>
+                <div class="sample-log">@entry</div>
+            </ItemTemplate>
+            <EmptyContent>
+                <MudText Typo="Typo.body2" Class="sample-result">Press the keys.</MudText>
+            </EmptyContent>
+        </ListItem>
+    </SampleCard>
+</div>
+
+<MudOverlay @bind-Visible="helpVisible" DarkBackground="true" AutoClose="true">
+    <MudPaper Class="sample-help" Elevation="4">
+        <MudText Typo="Typo.h6" Class="mb-2">Keyboard shortcuts</MudText>
+        <div class="sample-keys">
+            <kbd>F1</kbd>
+            <span>Show this help</span>
+            <ListItem Items="Shortcuts" Context="shortcut">
+                <ItemTemplate>
+                    <kbd>@shortcut.Key</kbd>
+                    <span>@shortcut.Action</span>
+                </ItemTemplate>
+            </ListItem>
+        </div>
+        <MudText Typo="Typo.caption" Class="sample-result mt-2">Press Esc or click to close.</MudText>
+    </MudPaper>
+</MudOverlay>

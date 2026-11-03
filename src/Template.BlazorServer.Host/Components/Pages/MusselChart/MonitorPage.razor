@@ -1,0 +1,54 @@
+@page "/musselchart/monitor"
+@attribute [Authorize]
+
+<PageTitle>Monitor - MusselChart</PageTitle>
+
+<div class="sample-board-header">
+    <div>
+        <MudText Typo="Typo.h4">Monitor</MudText>
+        <MudText Class="mb-4">MusselChart</MudText>
+    </div>
+    <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="ToggleWindow">Range: @WindowText</MudButton>
+</div>
+
+<div class="sample-board mussel-dark">
+    <MusselStatView class="sample-span-3" Title="CPU" Value="Feed.Cpu" TrendValues="Feed.CpuTrend" Unit="%" ValueFormat="N1" Fill="#5794F2" ColorMode="ChartStatColorMode.Background" FillMode="ChartFillMode.Gradient" TrendPlacement="ChartTrendPlacement.Background" LayoutMode="ChartStatLayoutMode.Horizontal" />
+    <MusselStatView class="sample-span-3" Title="Memory" Value="Feed.Memory" TrendValues="Feed.MemoryTrend" Unit="%" ValueFormat="N1" Fill="#B877D9" ColorMode="ChartStatColorMode.Background" FillMode="ChartFillMode.Gradient" TrendPlacement="ChartTrendPlacement.Background" LayoutMode="ChartStatLayoutMode.Horizontal" />
+    <MusselStatView class="sample-span-3" Title="Temp" Value="Feed.Temperature" TrendValues="Feed.TemperatureTrend" Unit="°C" ValueFormat="N0" Fill="#F2495C" ColorMode="ChartStatColorMode.Background" FillMode="ChartFillMode.Gradient" TrendPlacement="ChartTrendPlacement.Background" LayoutMode="ChartStatLayoutMode.Horizontal" />
+    <MusselStatView class="sample-span-3" Title="Network" Value="Feed.Network" TrendValues="Feed.NetworkTrend" Unit=" KB/s" ValueFormat="N0" Fill="#73BF69" ColorMode="ChartStatColorMode.Background" FillMode="ChartFillMode.Gradient" TrendPlacement="ChartTrendPlacement.Background" LayoutMode="ChartStatLayoutMode.Horizontal" />
+
+    <section class="sample-panel sample-span-8">
+        <div class="sample-panel-title">CPU Load (%)</div>
+        <MusselChartView Height="260" Palette="ChartPalettes.BlueShadesDark" LegendMode="ChartLegendMode.Table" LegendValues="ChartLegendValues.Last | ChartLegendValues.Max" LegendToggleEnabled="true" TrackingGroup="monitor" TrackingGroupMode="ChartTrackingGroupMode.Tooltip">
+            <DateTimeAxis WindowSize="Window" />
+            <NumericAxis Minimum="0" Maximum="100" />
+            <LineSeries Items="Feed.Samples" X="static x => x.Time" Y="static x => x.Core1" Title="Core #1" ValueFormat="{0:N1}%" />
+            <LineSeries Items="Feed.Samples" X="static x => x.Time" Y="static x => x.Core2" Title="Core #2" ValueFormat="{0:N1}%" />
+            <LineSeries Items="Feed.Samples" X="static x => x.Time" Y="static x => x.Core3" Title="Core #3" ValueFormat="{0:N1}%" />
+            <LineSeries Items="Feed.Samples" X="static x => x.Time" Y="static x => x.Core4" Title="Core #4" ValueFormat="{0:N1}%" />
+        </MusselChartView>
+    </section>
+
+    <section class="sample-panel sample-span-4">
+        <div class="sample-panel-title">Disk Usage</div>
+        <MusselBarGaugeView Items="Feed.Disks" DisplayMode="ChartBarGaugeMode.Segmented" BarThickness="12" LabelPosition="ChartBarGaugeLabelPosition.Left" Thresholds="DiskThresholds" />
+    </section>
+
+    <section class="sample-panel sample-span-6">
+        <div class="sample-panel-title">Network (KB/s)</div>
+        <MusselChartView Height="180" Palette="ChartPalettes.PurpleShadesDark" LegendVisible="true" TrackingGroup="monitor" TrackingGroupMode="ChartTrackingGroupMode.Tooltip">
+            <DateTimeAxis WindowSize="Window" />
+            <NumericAxis Minimum="0" />
+            <AreaSeries Items="Feed.Samples" X="static x => x.Time" Y="static x => x.Receive" Title="Receive" StackGroup="network" FillOpacity="0.4" ValueFormat="{0:N0} KB/s" LiveIndicatorVisible="true" />
+            <AreaSeries Items="Feed.Samples" X="static x => x.Time" Y="static x => x.Send" Title="Send" StackGroup="network" FillOpacity="0.4" ValueFormat="{0:N0} KB/s" LiveIndicatorVisible="true" />
+        </MusselChartView>
+    </section>
+
+    <section class="sample-panel sample-span-6">
+        <div class="sample-panel-title">Run Queue</div>
+        <MusselChartView Height="180" TrackingGroup="monitor" TrackingGroupMode="ChartTrackingGroupMode.Tooltip">
+            <DateTimeAxis WindowSize="Window" />
+            <BarSeries Items="Feed.Samples" X="static x => x.Time" Y="static x => x.Queue" Title="Queue" Color="#FF9830" ValueFormat="{0:N0}" />
+        </MusselChartView>
+    </section>
+</div>

@@ -1,0 +1,69 @@
+@page "/smart/rendering"
+@attribute [Authorize]
+
+<PageTitle>Rendering - Smart.Blazor</PageTitle>
+
+<MudText Typo="Typo.h4">Rendering</MudText>
+<MudText Class="mb-4">Smart.Blazor</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="LoadingContainer" Result="@($"Status: {status}")" Wide="true">
+        <div class="sample-row">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoadAsync">Load</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="LoadFailedAsync">Load (fail)</MudButton>
+            <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="Reset">Reset</MudButton>
+        </div>
+        <div class="sample-loading">
+            <LoadingContainer Status="status" Value="cities">
+                <NotLoadedContent>
+                    <MudText Class="sample-result">Not loaded yet.</MudText>
+                </NotLoadedContent>
+                <LoadingContent>
+                    <div class="sample-row">
+                        <MudProgressCircular Indeterminate="true" Size="Size.Small" Color="Color.Primary" />
+                        <MudText>Loading...</MudText>
+                    </div>
+                </LoadingContent>
+                <FailedContent>
+                    <div class="sample-row">
+                        <MudText Color="Color.Error">Failed to load.</MudText>
+                        <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="LoadAsync">Retry</MudButton>
+                    </div>
+                </FailedContent>
+                <ChildContent>
+                    <div class="sample-row">
+                        <ListItem Items="context" Context="city">
+                            <ItemTemplate>
+                                <MudChip T="string" Color="Color.Primary" Variant="Variant.Outlined">@city</MudChip>
+                            </ItemTemplate>
+                        </ListItem>
+                    </div>
+                </ChildContent>
+            </LoadingContainer>
+        </div>
+    </SampleCard>
+    <SampleCard Title="HasValue" Result="@($"Value: {SelectedText}")">
+        <MudSwitch T="bool" Value="HasSelected" ValueChanged="OnHasSelectedChanged" Label="Has value" Color="Color.Primary" />
+        <HasValue Value="selected">
+            <ChildContent>
+                <MudAlert Severity="Severity.Info" Dense="true">Selected: @context</MudAlert>
+            </ChildContent>
+            <NullContent>
+                <MudAlert Severity="Severity.Normal" Dense="true">Nothing is selected.</MudAlert>
+            </NullContent>
+        </HasValue>
+    </SampleCard>
+    <SampleCard Title="Range" Result="@($"Count: {count}")">
+        <MudSlider T="int" @bind-Value="count" Min="0" Max="10" Color="Color.Primary">Count</MudSlider>
+        <div class="sample-row">
+            <Range Start="1" Count="count">
+                <MudChip T="int" Color="Color.Primary">@context</MudChip>
+            </Range>
+        </div>
+        <div class="sample-row">
+            <Range Start="0" Step="5" Count="count">
+                <MudChip T="int" Variant="Variant.Outlined">@context</MudChip>
+            </Range>
+        </div>
+    </SampleCard>
+</div>

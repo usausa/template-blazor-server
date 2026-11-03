@@ -21,8 +21,8 @@ public sealed class ServerStatusMonitorTests
         }
 
         // Assert
-        var history = monitor.History();
-        Assert.Equal(60, history.Count);
+        var history = monitor.Samples.ToArray();
+        Assert.Equal(60, history.Length);
         Assert.Equal(Now.AddSeconds(1), history[0].Time);
         Assert.Same(history[^1], monitor.Current);
     }
@@ -76,7 +76,7 @@ public sealed class ServerStatusMonitorTests
         monitor.Clear();
 
         // Assert
-        Assert.Empty(monitor.History());
+        Assert.Empty(monitor.Samples);
         Assert.Null(monitor.Current);
     }
 

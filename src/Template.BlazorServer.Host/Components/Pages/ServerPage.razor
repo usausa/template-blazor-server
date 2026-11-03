@@ -1,5 +1,6 @@
 @page "/server"
 @attribute [Authorize(Policy = Policies.Administrator)]
+@using global::MusselChart
 
 <PageTitle>Server</PageTitle>
 
@@ -35,25 +36,20 @@
 <div class="server-charts mb-4">
     <div class="server-card">
         <MudText Typo="Typo.subtitle1">CPU 使用率 (%)</MudText>
-        <Condition Value="HasSamples">
-            <ChildContent>
-                <MudChart T="double" ChartType="ChartType.Line" ChartSeries="cpuSeries" ChartLabels="chartLabels" ChartOptions="cpuOptions" Width="100%" Height="240px" />
-            </ChildContent>
-            <ElseContent>
-                <MudText Typo="Typo.body2">計測中です。</MudText>
-            </ElseContent>
-        </Condition>
+        <MusselChartView Height="240" EmptyText="計測中です。" TrackingGroup="server">
+            <DateTimeAxis />
+            <NumericAxis Minimum="0" Maximum="100" />
+            <LineSeries Items="Monitor.Samples" X="static x => x.Time.UtcDateTime" Y="static x => x.CpuPercent" Title="CPU" Color="#5794F2" ValueFormat="{0:N1}%" />
+        </MusselChartView>
     </div>
     <div class="server-card">
         <MudText Typo="Typo.subtitle1">メモリ (MB)</MudText>
-        <Condition Value="HasSamples">
-            <ChildContent>
-                <MudChart T="double" ChartType="ChartType.Line" ChartSeries="memorySeries" ChartLabels="chartLabels" ChartOptions="memoryOptions" Width="100%" Height="240px" />
-            </ChildContent>
-            <ElseContent>
-                <MudText Typo="Typo.body2">計測中です。</MudText>
-            </ElseContent>
-        </Condition>
+        <MusselChartView Height="240" EmptyText="計測中です。" TrackingGroup="server">
+            <DateTimeAxis />
+            <NumericAxis IncludeZero="true" />
+            <LineSeries Items="Monitor.Samples" X="static x => x.Time.UtcDateTime" Y="static x => x.WorkingSet / Megabyte" Title="ワーキングセット" Color="#5794F2" ValueFormat="{0:N1} MB" />
+            <LineSeries Items="Monitor.Samples" X="static x => x.Time.UtcDateTime" Y="static x => x.HeapSize / Megabyte" Title="GC ヒープ" Color="#3274D9" ValueFormat="{0:N1} MB" />
+        </MusselChartView>
     </div>
 </div>
 

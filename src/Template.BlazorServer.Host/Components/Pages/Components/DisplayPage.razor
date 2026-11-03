@@ -1,0 +1,57 @@
+@page "/components/display"
+@attribute [Authorize]
+
+<PageTitle>Display - Components.Blazor</PageTitle>
+
+<MediaQuery Query="(max-width: 600px)" @bind-Matches="narrow" />
+<MediaQuery Query="(prefers-color-scheme: dark)" @bind-Matches="dark" />
+<MediaQuery Query="(prefers-reduced-motion: reduce)" @bind-Matches="reducedMotion" />
+
+<MudText Typo="Typo.h4">Display</MudText>
+<MudText Class="mb-4">Components.Blazor</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="MediaQuery" Result="@MediaResult" Wide="true">
+        <MudText Typo="Typo.body2" Class="sample-result">Change the width of the window or the settings of the OS.</MudText>
+        <div class="@MediaClass">
+            <MudPaper Outlined="true" Class="sample-tile">Width: @WidthText</MudPaper>
+            <MudPaper Outlined="true" Class="sample-tile">Color scheme: @SchemeText</MudPaper>
+            <MudPaper Outlined="true" Class="sample-tile">Motion: @MotionText</MudPaper>
+        </div>
+    </SampleCard>
+    <SampleCard Title="NativeDialog (modal)" Result="@($"Closed with: {modalResult}")">
+        <MudSwitch T="bool" @bind-Value="closeOnEscape" Label="Close on Esc" Color="Color.Primary" />
+        <MudSwitch T="bool" @bind-Value="closeOnBackdropClick" Label="Close on backdrop click" Color="Color.Primary" />
+        <div class="sample-row">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenModal">Open</MudButton>
+        </div>
+        <NativeDialog @bind-Open="modalOpen" CloseOnEscape="closeOnEscape" CloseOnBackdropClick="closeOnBackdropClick" OnClose="OnModalClose" class="sample-dialog">
+            @* ReSharper disable Html.AttributeValueNotResolved *@
+            <form method="dialog">
+                <MudText Typo="Typo.h6">Delete</MudText>
+                <MudText Class="my-2">Delete the selected item?</MudText>
+                <div class="sample-dialog-actions">
+                    <button value="cancel">Cancel</button>
+                    <button value="ok" class="sample-dialog-primary">OK</button>
+                </div>
+            </form>
+            @* ReSharper restore Html.AttributeValueNotResolved *@
+        </NativeDialog>
+    </SampleCard>
+    <SampleCard Title="NativeDialog (modeless)" Result="@($"Open: {modelessOpen}")">
+        <MudText Typo="Typo.body2" Class="sample-result">The page can be used while the dialog is open.</MudText>
+        <div class="sample-row">
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="ToggleModeless">Toggle</MudButton>
+        </div>
+        <NativeDialog @bind-Open="modelessOpen" Modal="false" class="sample-dialog sample-dialog-modeless">
+            @* ReSharper disable Html.AttributeValueNotResolved *@
+            <form method="dialog">
+                <MudText Class="mb-2">This dialog does not block the page.</MudText>
+                <div class="sample-dialog-actions">
+                    <button value="close" class="sample-dialog-primary">Close</button>
+                </div>
+            </form>
+            @* ReSharper restore Html.AttributeValueNotResolved *@
+        </NativeDialog>
+    </SampleCard>
+</div>

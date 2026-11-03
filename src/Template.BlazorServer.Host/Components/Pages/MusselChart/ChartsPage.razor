@@ -1,0 +1,36 @@
+@page "/musselchart/charts"
+@attribute [Authorize]
+
+<PageTitle>Charts - MusselChart</PageTitle>
+
+<MudText Typo="Typo.h4">Charts</MudText>
+<MudText Class="mb-4">MusselChart</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="LineSeries / Thresholds">
+        <MusselChartView Height="240" Palette="ChartPalettes.GrafanaLight" Thresholds="TemperatureThresholds" ThresholdsMode="ChartThresholdsMode.Lines | ChartThresholdsMode.Bands" TrackingGroup="weather">
+            <DateTimeAxis />
+            <NumericAxis SoftMinimum="10" SoftMaximum="35" />
+            <LineSeries Items="Weather" X="static x => x.Time" Y="static x => x.Tokyo" Title="Tokyo" ValueFormat="{0:N1} °C" />
+            <LineSeries Items="Weather" X="static x => x.Time" Y="static x => x.Osaka" Title="Osaka" ValueFormat="{0:N1} °C" />
+        </MusselChartView>
+    </SampleCard>
+    <SampleCard Title="AreaSeries / TrackingGroup">
+        <MusselChartView Height="240" Palette="ChartPalettes.GrafanaLight" TrackingGroup="weather" TrackingGroupMode="ChartTrackingGroupMode.Tooltip">
+            <DateTimeAxis />
+            <NumericAxis Minimum="0" Maximum="100" />
+            <AreaSeries Items="Weather" X="static x => x.Time" Y="static x => x.Humidity" Title="Humidity" Color="#3274D9" FillOpacity="0.2" ValueFormat="{0:N0}%" />
+        </MusselChartView>
+    </SampleCard>
+    <SampleCard Title="BarSeries / LegendMode">
+        <MusselChartView Height="240" LegendMode="ChartLegendMode.Table" LegendValues="ChartLegendValues.Min | ChartLegendValues.Max | ChartLegendValues.Mean" LegendVisible="true">
+            <DateTimeAxis />
+            <BarSeries Items="Profits" X="static x => x.Time" Y="static x => x.Value" Title="Profit" Color="#56A64B" ValueFormat="{0:N0}" />
+        </MusselChartView>
+    </SampleCard>
+    <SampleCard Title="EmptyText">
+        <MusselChartView Height="240" EmptyText="No data">
+            <LineSeries Items="Empty" X="static x => x.Time" Y="static x => x.Value" Title="None" />
+        </MusselChartView>
+    </SampleCard>
+</div>

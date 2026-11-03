@@ -1,0 +1,31 @@
+@page "/smart/forms"
+@attribute [Authorize]
+
+<PageTitle>Forms - Smart.Blazor</PageTitle>
+
+<MudText Typo="Typo.h4">Forms</MudText>
+<MudText Class="mb-4">Smart.Blazor</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="CustomValidator / HasError / HasErrorField / EditContextExtensions" Result="@result" Wide="true">
+        <EditForm EditContext="editContext" OnValidSubmit="SubmitAsync">
+            <DataAnnotationsValidator />
+            <CustomValidator @ref="validator" />
+            <HasError>
+                <MudAlert Severity="Severity.Error" Dense="true" Class="mb-2">Check the fields below.</MudAlert>
+            </HasError>
+            <div class="sample-form">
+                <MudTextField T="string" @bind-Value="model.Name" For="() => model.Name" Label="Name" />
+                <HasErrorField For="() => model.Name">
+                    <MudText Typo="Typo.caption" Class="sample-result">A name that is used in Data can't be used here.</MudText>
+                </HasErrorField>
+                <MudTextField T="string" @bind-Value="model.Email" For="() => model.Email" Label="Email" />
+            </div>
+            <div class="sample-row mt-4">
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Submit</MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="FillSample">Fill by code</MudButton>
+                <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="Clear">Clear</MudButton>
+            </div>
+        </EditForm>
+    </SampleCard>
+</div>

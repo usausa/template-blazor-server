@@ -10,37 +10,15 @@ using Template.BlazorServer.Infrastructure.Storage;
 
 public sealed partial class ServerPage
 {
-    private const int LabelStep = 10;
-
     private const double Megabyte = 1024d * 1024d;
 
     private const double Gigabyte = 1024d * 1024d * 1024d;
 
     private static readonly TimeSpan RefreshInterval = TimeSpan.FromSeconds(10);
 
-    private readonly LineChartOptions cpuOptions = new()
-    {
-        ChartPalette = ["#5794F2"],
-        ShowLegend = false,
-        YAxisRequireZeroPoint = true,
-        YAxisSuggestedMax = 100
-    };
-
-    private readonly LineChartOptions memoryOptions = new()
-    {
-        ChartPalette = ["#5794F2", "#3274D9"],
-        YAxisRequireZeroPoint = true
-    };
-
     private RefreshTimer refreshTimer = default!;
 
     private ServerStatusSample? current;
-
-    private string[] chartLabels = [];
-
-    private List<ChartSeries<double>> cpuSeries = [];
-
-    private List<ChartSeries<double>> memorySeries = [];
 
     private IReadOnlyList<CircuitInfo> circuits = [];
 
@@ -69,8 +47,6 @@ public sealed partial class ServerPage
 
     [Inject]
     public required FileStorageOption StorageOptions { get; set; }
-
-    private bool HasSamples => chartLabels.Length > 0;
 
     private string CpuText => current is null ? "-" : $"{current.CpuPercent:0.0} %";
 
@@ -130,15 +106,7 @@ public sealed partial class ServerPage
 
     private async Task LoadAsync()
     {
-        var history = Monitor.History();
         current = Monitor.Current;
-        chartLabels = history.Select((x, i) => (history.Count - 1 - i) % LabelStep == 0 ? $"{x.Time:HH:mm:ss}" : string.Empty).ToArray();
-        cpuSeries = [new ChartSeries<double> { Name = "CPU", Data = history.Select(static x => x.CpuPercent).ToArray() }];
-        memorySeries =
-        [
-            new ChartSeries<double> { Name = "ワーキングセット", Data = history.Select(static x => Math.Round(x.WorkingSet / Megabyte, 1)).ToArray() },
-            new ChartSeries<double> { Name = "GC ヒープ", Data = history.Select(static x => Math.Round(x.HeapSize / Megabyte, 1)).ToArray() }
-        ];
         circuits = CircuitTracker.List();
         diskUsage = MakeDiskUsage();
         dataCount = await DataService.CountAsync(null);

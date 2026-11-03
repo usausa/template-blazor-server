@@ -1,12 +1,10 @@
 namespace Template.BlazorServer.Host.Application.Status;
 
+using MusselChart;
+
 public sealed class ServerStatusMonitor
 {
     private const int Capacity = 60;
-
-    private readonly Lock sync = new();
-
-    private readonly Queue<ServerStatusSample> samples = new();
 
     private readonly ILogger<ServerStatusMonitor> log;
 
@@ -18,31 +16,17 @@ public sealed class ServerStatusMonitor
 
     public ServerStatusSample? Current => current;
 
+    public ChartRingBuffer<ServerStatusSample> Samples { get; } = new(Capacity);
+
     public ServerStatusMonitor(ILogger<ServerStatusMonitor> log)
     {
         this.log = log;
     }
 
-    public IReadOnlyList<ServerStatusSample> History()
-    {
-        lock (sync)
-        {
-            return samples.ToArray();
-        }
-    }
-
     public void Add(ServerStatusSample sample)
     {
-        lock (sync)
-        {
-            samples.Enqueue(sample);
-            while (samples.Count > Capacity)
-            {
-                samples.Dequeue();
-            }
-
-            current = sample;
-        }
+        Samples.Push(sample);
+        current = sample;
 
         var handlers = Updated;
         if (handlers is null)
@@ -65,10 +49,7 @@ public sealed class ServerStatusMonitor
 
     public void Clear()
     {
-        lock (sync)
-        {
-            samples.Clear();
-            current = null;
-        }
+        Samples.Clear();
+        current = null;
     }
 }

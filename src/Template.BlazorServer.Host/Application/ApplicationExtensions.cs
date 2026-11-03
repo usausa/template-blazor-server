@@ -641,6 +641,9 @@ public static class ApplicationExtensions
         builder.Services.AddSingleton<Reports.ProductListReportBuilder>();
         builder.Services.AddSingleton<Reports.SlipReportBuilder>();
 
+        // Sample
+        builder.Services.AddSingleton<Components.Pages.MusselChart.MonitorFeed>();
+
         // Setting
         builder.Services.AddOptions<ProfilerSetting>().BindConfiguration("Profiler").ValidateDataAnnotations().ValidateOnStart();
         builder.Services.AddSingleton(static p => p.GetRequiredService<IOptions<ProfilerSetting>>().Value);

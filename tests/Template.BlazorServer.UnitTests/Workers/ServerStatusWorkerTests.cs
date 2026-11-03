@@ -26,7 +26,7 @@ public sealed class ServerStatusWorkerTests
         await worker.StopAsync(TestContext.Current.CancellationToken);
 
         // Assert
-        Assert.NotEmpty(monitor.History());
+        Assert.NotEmpty(monitor.Samples);
         Assert.InRange(monitor.Current!.CpuPercent, 0, 100);
         Assert.True(worker.ExecuteTask!.IsCompleted);
     }

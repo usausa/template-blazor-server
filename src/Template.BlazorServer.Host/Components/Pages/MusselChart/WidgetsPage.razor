@@ -1,0 +1,33 @@
+@page "/musselchart/widgets"
+@attribute [Authorize]
+
+<PageTitle>Widgets - MusselChart</PageTitle>
+
+<MudText Typo="Typo.h4">Widgets</MudText>
+<MudText Class="mb-4">MusselChart</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="MusselStatView" Wide="true">
+        <div class="sample-stats">
+            <MusselStatView Title="Requests" Value="12840" TrendValues="Trend" TrendPlacement="ChartTrendPlacement.Bottom" />
+            <MusselStatView Title="Errors" Value="3.2" Unit="%" ValueFormat="N1" TrendValues="Trend" ColorMode="ChartStatColorMode.Value" Thresholds="ErrorThresholds" TrendPlacement="ChartTrendPlacement.Bottom" />
+            <MusselStatView Title="Latency" Value="182" Unit=" ms" ValueFormat="N0" ColorMode="ChartStatColorMode.Indicator" Thresholds="LatencyThresholds" TrendPlacement="ChartTrendPlacement.None" />
+            <MusselStatView Title="Users" Value="1420" ColorMode="ChartStatColorMode.Background" Fill="#5794F2" TrendValues="Trend" TrendPlacement="ChartTrendPlacement.Background" />
+            <MusselStatView Title="Load" Value="68.4" Unit="%" ValueFormat="N1" ColorMode="ChartStatColorMode.Background" FillMode="ChartFillMode.Gradient" Fill="#FF9830" TrendValues="Trend" TrendPlacement="ChartTrendPlacement.Background" />
+            <MusselStatView Title="Offline" Value="double.NaN" EmptyText="No data" />
+        </div>
+    </SampleCard>
+    <SampleCard Title="MusselSparklineView" Wide="true">
+        <div class="sample-sparklines">
+            <div><span>Line</span><MusselSparklineView Values="Trend" /></div>
+            <div><span>Area</span><MusselSparklineView Values="Trend" Kind="ChartSparklineKind.Area" Color="#B877D9" /></div>
+            <div><span>Bar</span><MusselSparklineView Values="Changes" Kind="ChartSparklineKind.Bar" Color="#FF9830" /></div>
+        </div>
+    </SampleCard>
+    <SampleCard Title="MusselBarGaugeView">
+        <MusselBarGaugeView Items="Stores" ValueMode="ChartBarGaugeValueMode.ValueOfMaximum" ValueFormat="N0" Color="#3274D9" />
+    </SampleCard>
+    <SampleCard Title="MusselBarGaugeView / Segmented">
+        <MusselBarGaugeView Items="Disks" DisplayMode="ChartBarGaugeMode.Segmented" LabelPosition="ChartBarGaugeLabelPosition.Left" BarThickness="12" Thresholds="DiskThresholds" />
+    </SampleCard>
+</div>

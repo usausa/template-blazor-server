@@ -1,0 +1,33 @@
+@page "/components/device"
+@attribute [Authorize]
+
+<PageTitle>Device - Components.Blazor</PageTitle>
+
+<MudText Typo="Typo.h4">Device</MudText>
+<MudText Class="mb-4">Components.Blazor</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="Screen Wake Lock" Result="@($"IsScreenKeptOn: {Screen.IsScreenKeptOn}")">
+        <MudText Typo="Typo.body2" Class="sample-result">Works on https or localhost.</MudText>
+        <div class="sample-row">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="KeepScreenOnAsync">Keep screen on</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="ReleaseScreenAsync">Release</MudButton>
+        </div>
+    </SampleCard>
+    <SampleCard Title="Fullscreen" Result="@($"Requested: {fullscreen}")">
+        <MudText Typo="Typo.body2" Class="sample-result">The page becomes fullscreen again at the next click.</MudText>
+        <div class="sample-row">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="KeepFullscreenAsync">Keep fullscreen</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="ExitFullscreenAsync">Exit fullscreen</MudButton>
+        </div>
+    </SampleCard>
+    <SampleCard Title="Geolocation" Result="@locationResult" Wide="true">
+        <MudSwitch T="bool" @bind-Value="highAccuracy" Label="High accuracy" Color="Color.Primary" />
+        <div class="sample-row">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="locating" OnClick="GetLocationAsync">Get location</MudButton>
+            <Condition Value="locating">
+                <MudProgressCircular Indeterminate="true" Size="Size.Small" Color="Color.Primary" />
+            </Condition>
+        </div>
+    </SampleCard>
+</div>
