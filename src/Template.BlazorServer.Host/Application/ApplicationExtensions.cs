@@ -422,7 +422,9 @@ public static class ApplicationExtensions
             .AddInteractiveServerComponents(options =>
             {
                 options.DetailedErrors = builder.Environment.IsDevelopment();
-            });
+            })
+            .AddHubOptions(options => builder.Configuration.GetSection("Blazor:Hub").Bind(options));
+        builder.Services.Configure<Microsoft.AspNetCore.Components.Server.CircuitOptions>(builder.Configuration.GetSection("Blazor:Circuit"));
 
         // Error boundary logging
         builder.Services.AddScoped<Microsoft.AspNetCore.Components.Web.IErrorBoundaryLogger, ErrorBoundaryLogger>();
