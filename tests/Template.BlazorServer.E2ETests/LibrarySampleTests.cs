@@ -138,4 +138,62 @@ public sealed class LibrarySampleTests : E2ETestBase
         // Then
         await Expect(tooltips).ToHaveCountAsync(3);
     }
+
+    [Fact]
+    public async Task LanguageIsChangedOnLocalePage()
+    {
+        // Given
+        await using var factory = new E2EApplicationFactory();
+        factory.UseKestrel(0);
+        factory.StartServer();
+
+        await LoginAsync(factory.ServerAddress);
+        await Page.GotoAsync(factory.ServerAddress + "/textresource/locale");
+        await Expect(Page).ToHaveTitleAsync("Locale - TextResource");
+        var members = Page.Locator(".sample-card", new PageLocatorOptions { HasText = "Members" });
+        var validation = Page.Locator(".sample-card", new PageLocatorOptions { HasText = "WithMessage" });
+        var validate = Page.GetByRole(AriaRole.Button, new PageGetByRoleOptions { Name = "Validate" });
+
+        await Expect(Page.GetByText("CurrentCulture: ja-JP / CurrentUICulture: ja-JP")).ToBeVisibleAsync();
+        await Expect(members.GetByText("ハローワールド")).ToBeVisibleAsync();
+        await Expect(members.GetByText("合計 1,980 円")).ToBeVisibleAsync();
+        await validate.ClickAsync();
+        await Expect(validation.GetByText("名前を入力してください。")).ToBeVisibleAsync();
+
+        // When
+        await Page.GetByRole(AriaRole.Button, new PageGetByRoleOptions { Name = "English" }).ClickAsync();
+
+        // Then
+        await Expect(Page.GetByText("CurrentCulture: en-US / CurrentUICulture: en-US")).ToBeVisibleAsync();
+        await Expect(members.GetByText("Hello World")).ToBeVisibleAsync();
+        await Expect(members.GetByText("Total 1,980 yen")).ToBeVisibleAsync();
+        await validate.ClickAsync();
+        await Expect(validation.GetByText("Please enter a name.")).ToBeVisibleAsync();
+
+        // When
+        await Page.GetByRole(AriaRole.Button, new PageGetByRoleOptions { Name = "日本語" }).ClickAsync();
+
+        // Then
+        await Expect(Page.GetByText("CurrentCulture: ja-JP / CurrentUICulture: ja-JP")).ToBeVisibleAsync();
+        await Expect(members.GetByText("ハローワールド")).ToBeVisibleAsync();
+    }
+
+    [Fact]
+    public async Task BrowserLanguageDoesNotChangeCulture()
+    {
+        // Given
+        await using var factory = new E2EApplicationFactory();
+        factory.UseKestrel(0);
+        factory.StartServer();
+
+        await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { Locale = "en-US" });
+        var page = await context.NewPageAsync();
+        await LoginAsync(page, factory.ServerAddress);
+
+        // When
+        await page.GotoAsync(factory.ServerAddress + "/textresource/locale");
+
+        // Then
+        await Expect(page.GetByText("CurrentCulture: ja-JP / CurrentUICulture: ja-JP")).ToBeVisibleAsync();
+    }
 }

@@ -1,0 +1,80 @@
+@page "/textresource/locale"
+@attribute [Authorize]
+
+<PageTitle>Locale - TextResource</PageTitle>
+
+<MudText Typo="Typo.h4">Locale</MudText>
+<MudText Class="mb-4">TextResource</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="Language" Result="@CultureText" Wide="true">
+        <div class="sample-row">
+            <MudButton Variant="@LanguageVariant(Cultures.Japanese)" Color="Color.Primary" OnClick="@(() => ChangeCulture(Cultures.Japanese))">日本語</MudButton>
+            <MudButton Variant="@LanguageVariant(Cultures.English)" Color="Color.Primary" OnClick="@(() => ChangeCulture(Cultures.English))">English</MudButton>
+        </div>
+    </SampleCard>
+    <SampleCard Title="Members">
+        <MudSimpleTable Dense="true">
+            <thead>
+                <tr>
+                    <th>Member</th>
+                    <th>Text</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Messages.HelloWorld</td>
+                    <td>@Messages.HelloWorld</td>
+                </tr>
+                <tr>
+                    <td>Messages.ItemCount(3)</td>
+                    <td>@Messages.ItemCount(3)</td>
+                </tr>
+                <tr>
+                    <td>Messages.Total(1980)</td>
+                    <td>@Messages.Total(1980)</td>
+                </tr>
+                <tr>
+                    <td>Messages.Symbols</td>
+                    <td>@Messages.Symbols</td>
+                </tr>
+            </tbody>
+        </MudSimpleTable>
+    </SampleCard>
+    <SampleCard Title="WithMessage">
+        <MudForm @ref="form" Model="model">
+            <MudTextField @bind-Value="model.Name"
+                          For="@(() => model.Name)"
+                          Validation="@Validator.ValidateValue"
+                          Label="@Messages.Name"
+                          Immediate="true" />
+        </MudForm>
+        <div class="sample-row">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ValidateAsync">Validate</MudButton>
+        </div>
+    </SampleCard>
+    <SampleCard Title="Keys / GetTextFor / GetText" Wide="true">
+        <MudSimpleTable Dense="true">
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>ja</th>
+                    <th>en</th>
+                    <th>current</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ListItem Items="Messages.Keys" Context="key">
+                    <ItemTemplate>
+                        <tr>
+                            <td>@key</td>
+                            <td>@Messages.GetTextFor(key, JapaneseCulture)</td>
+                            <td>@Messages.GetTextFor(key, EnglishCulture)</td>
+                            <td>@Messages.GetText(key)</td>
+                        </tr>
+                    </ItemTemplate>
+                </ListItem>
+            </tbody>
+        </MudSimpleTable>
+    </SampleCard>
+</div>

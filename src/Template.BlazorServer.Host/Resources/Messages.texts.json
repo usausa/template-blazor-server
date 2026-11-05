@@ -1,0 +1,12 @@
+{
+  // 見本の文言
+  "HelloWorld": { "ja": "ハローワールド", "en": "Hello World" },
+  "ItemCount": { "ja": "{count} 件", "en": "{count} items" },
+  "Total": { "ja": "合計 {value:N0} 円", "en": "Total {value:N0} yen" },
+  "Symbols": { "ja": "記号 <tag> & \"引用\" {{波かっこ}}", "en": "Symbols <tag> & \"quote\" {{braces}}" },
+
+  // 入力の検証
+  "Name": { "ja": "名前", "en": "Name" },
+  "NameRequired": { "ja": "名前を入力してください。", "en": "Please enter a name." },
+  "NameMaxLength": { "ja": "名前は{max}文字以内で入力してください。", "en": "Name must be {max} characters or less." }
+}

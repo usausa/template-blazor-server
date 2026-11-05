@@ -46,4 +46,5 @@ global using Template.BlazorServer.Models.Entity;
 global using Template.BlazorServer.Models.Parameters;
 global using Template.BlazorServer.Services;
 global using Template.BlazorServer.Host.Application;
+global using Template.BlazorServer.Host.Resources;
 global using Template.BlazorServer.Host.Settings;

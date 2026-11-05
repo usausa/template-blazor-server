@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Data.Sqlite;
@@ -346,6 +347,23 @@ public static class ApplicationExtensions
         builder.Services.AddCascadingAuthenticationState();
 
         return builder;
+    }
+
+    //--------------------------------------------------------------------------------
+    // Localization
+    //--------------------------------------------------------------------------------
+
+    public static WebApplication UseLocalization(this WebApplication app)
+    {
+        app.UseRequestLocalization(static options =>
+        {
+            options.SetDefaultCulture(Cultures.Japanese);
+            options.AddSupportedCultures(Cultures.Japanese, Cultures.English);
+            options.AddSupportedUICultures(Cultures.Japanese, Cultures.English);
+            options.RequestCultureProviders = [new CookieRequestCultureProvider()];
+        });
+
+        return app;
     }
 
     //--------------------------------------------------------------------------------
@@ -724,6 +742,9 @@ public static class ApplicationExtensions
 
         // Auth
         app.MapAuthEndpoints();
+
+        // Culture
+        app.MapCultureEndpoints();
 
         // API
         app.MapDataEndpoints();

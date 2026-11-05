@@ -14,9 +14,12 @@ public sealed partial class TestApplicationFactory : WebApplicationFactory<Progr
     [GeneratedRegex("name=\"__RequestVerificationToken\"[^>]*value=\"([^\"]+)\"")]
     private static partial Regex AntiforgeryTokenRegex();
 
-    public async Task<HttpClient> CreateAuthenticatedClientAsync()
+    public Task<HttpClient> CreateAuthenticatedClientAsync() =>
+        CreateAuthenticatedClientAsync(new WebApplicationFactoryClientOptions());
+
+    public async Task<HttpClient> CreateAuthenticatedClientAsync(WebApplicationFactoryClientOptions options)
     {
-        var client = CreateClient();
+        var client = CreateClient(options);
         var loginPage = await client.GetStringAsync(new Uri("/login", UriKind.Relative), TestContext.Current.CancellationToken);
         using var form = new FormUrlEncodedContent(new Dictionary<string, string>
         {

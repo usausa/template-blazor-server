@@ -20,6 +20,7 @@ public sealed class SamplePageTests : E2ETestBase
         ("musselchart/monitor", "Monitor - MusselChart", ".mussel-stat"),
         ("musselchart/charts", "Charts - MusselChart", ".mussel-chart-svg"),
         ("musselchart/widgets", "Widgets - MusselChart", ".mussel-sparkline"),
+        ("textresource/locale", "Locale - TextResource", ".sample-card"),
         ("ignite/buttons", "Buttons - Ignite UI", "igc-button"),
         ("ignite/inputs", "Inputs - Ignite UI", "igc-input"),
         ("ignite/selection", "Selection - Ignite UI", "igc-combo"),

@@ -64,6 +64,9 @@ app.UseErrorHandler();
 // Routing
 app.UseRouting();
 
+// Localization
+app.UseLocalization();
+
 // Request timeout
 app.UseRequestTimeouts();
 
