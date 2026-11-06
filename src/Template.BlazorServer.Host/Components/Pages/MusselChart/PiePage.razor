@@ -1,0 +1,25 @@
+@page "/musselchart/pie"
+@attribute [Authorize]
+
+<PageTitle>Pie - MusselChart</PageTitle>
+
+<MudText Typo="Typo.h4">Pie</MudText>
+<MudText Class="mb-4">MusselChart</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="MusselPieChartView / LegendToggleEnabled">
+        <MusselPieChartView Height="240" Items="Expenses" CenterLabel="Total" LegendValueMode="ChartLegendValueMode.Percent" LegendToggleEnabled="true" MaxSlices="6" />
+    </SampleCard>
+    <SampleCard Title="MusselPieChartView / InnerRadius">
+        <MusselPieChartView Height="240" Items="Expenses" InnerRadius="0" LabelsMode="ChartPieLabelsMode.Inside" Palette="ChartPalettes.GrafanaLight" OthersLabel="Rest" MaxSlices="6" />
+    </SampleCard>
+    <SampleCard Title="MusselPieChartView / SweepAngle">
+        <MusselPieChartView Height="240" Items="Traffic" StartAngle="270" SweepAngle="180" InnerRadius="0.7" CenterLabel="Visits" LegendPosition="ChartLegendPosition.Right" LegendValueMode="ChartLegendValueMode.Value" />
+    </SampleCard>
+    <SampleCard Title="MusselPieChartView / LabelsMode">
+        <MusselPieChartView Height="240" Items="Expenses" LabelsMode="ChartPieLabelsMode.Outside" LabelContent="ChartPieLabelContent.LabelAndPercent" LegendVisible="false" CenterValueMode="ChartCenterValueMode.None" SortMode="ChartSortMode.Descending" />
+    </SampleCard>
+    <SampleCard Title="EmptyText">
+        <MusselPieChartView Height="240" Items="Empty" EmptyText="No data" />
+    </SampleCard>
+</div>

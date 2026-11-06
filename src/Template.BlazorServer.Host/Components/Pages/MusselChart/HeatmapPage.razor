@@ -1,0 +1,19 @@
+@page "/musselchart/heatmap"
+@attribute [Authorize]
+
+<PageTitle>Heatmap - MusselChart</PageTitle>
+
+<MudText Typo="Typo.h4">Heatmap</MudText>
+<MudText Class="mb-4">MusselChart</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="MusselHeatmapView">
+        <MusselHeatmapView Height="280" Items="Accesses" Row="static x => x.Day" Column="static x => x.Hour" Value="static x => x.Count" ValueFormat="N0" />
+    </SampleCard>
+    <SampleCard Title="MusselHeatmapView / LayoutMode">
+        <MusselHeatmapView Height="280" Items="Activities" LayoutMode="ChartHeatmapLayoutMode.Calendar" Date="static x => x.Date" Value="static x => x.Value" ColorScale="BlueScale" ValueFormat="N0" />
+    </SampleCard>
+    <SampleCard Title="MusselHeatmapView / LegendPosition" Wide="true">
+        <MusselHeatmapView Height="220" Items="Loads" Row="static x => x.Server" Column="static x => x.Time" Value="static x => x.Load" LegendPosition="ChartLegendPosition.Right" ColorScale="ChartPalettes.OrangesLight" CellGap="2" ValueFormat="{0:N0}%" Minimum="0" Maximum="100" />
+    </SampleCard>
+</div>

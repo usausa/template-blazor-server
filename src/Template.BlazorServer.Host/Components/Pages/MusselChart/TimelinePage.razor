@@ -1,0 +1,22 @@
+@page "/musselchart/timeline"
+@attribute [Authorize]
+
+<PageTitle>State timeline - MusselChart</PageTitle>
+
+<MudText Typo="Typo.h4">State timeline</MudText>
+<MudText Class="mb-4">MusselChart</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="MusselStateTimelineView / ValueMappings">
+        <MusselStateTimelineView Height="220" Items="States" Row="static x => x.Server" Start="static x => x.Start" State="static x => x.State" Maximum="Now" ValueMappings="Mappings" />
+    </SampleCard>
+    <SampleCard Title="MusselStateTimelineView / Thresholds">
+        <MusselStateTimelineView Height="220" Items="Levels" Row="static x => x.Server" Start="static x => x.Start" State="static x => x.Load" Maximum="Now" Thresholds="LoadThresholds" AlignValue="ChartValueAlignment.Center" ValueFormat="{0:N0}%" />
+    </SampleCard>
+    <SampleCard Title="MusselStateTimelineView / MergeValues">
+        <MusselStateTimelineView Height="220" Items="Levels" Row="static x => x.Server" Start="static x => x.Start" State="static x => x.Load" Maximum="Now" MergeValues="false" ShowValue="ChartVisibilityMode.Never" FillOpacity="1" RowHeight="0.8" ValueFormat="{0:N0}%" />
+    </SampleCard>
+    <SampleCard Title="MusselStateTimelineView / End">
+        <MusselStateTimelineView Height="220" Items="Jobs" Row="static x => x.Worker" Start="static x => x.Start" End="static x => x.End" State="static x => x.State" LineWidth="1" FillOpacity="0.3" LegendPosition="ChartLegendPosition.Right" />
+    </SampleCard>
+</div>

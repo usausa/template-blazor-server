@@ -1,0 +1,55 @@
+@page "/musselchart/bars"
+@attribute [Authorize]
+
+<PageTitle>Bars - MusselChart</PageTitle>
+
+<MudText Typo="Typo.h4">Bars</MudText>
+<MudText Class="mb-4">MusselChart</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="BarSeries / LineSeries / LegendToggleEnabled">
+        <MusselChartView Height="240" LegendToggleEnabled="true">
+            <CategoryAxis />
+            <BarSeries Items="Sales" Category="static x => x.Month" Y="static x => x.Store" Title="Store" ValueFormat="N0" />
+            <BarSeries Items="Sales" Category="static x => x.Month" Y="static x => x.Online" Title="Online" ValueFormat="N0" />
+            <LineSeries Items="Sales" Category="static x => x.Month" Y="static x => x.Target" Title="Target" ValueFormat="N0" />
+        </MusselChartView>
+    </SampleCard>
+    <SampleCard Title="BarSeries / StackGroup">
+        <MusselChartView Height="240">
+            <CategoryAxis />
+            <BarSeries Items="Sales" Category="static x => x.Month" Y="static x => x.Store" Title="Store" StackGroup="total" ValueFormat="N0" />
+            <BarSeries Items="Sales" Category="static x => x.Month" Y="static x => x.Online" Title="Online" StackGroup="total" ValueFormat="N0" />
+            <BarSeries Items="Sales" Category="static x => x.Month" Y="static x => x.Wholesale" Title="Wholesale" StackGroup="total" ValueFormat="N0" />
+        </MusselChartView>
+    </SampleCard>
+    <SampleCard Title="BarSeries / StackMode">
+        <MusselChartView Height="240" StackMode="ChartStackMode.Percent">
+            <CategoryAxis />
+            <BarSeries Items="Sales" Category="static x => x.Month" Y="static x => x.Store" Title="Store" StackGroup="total" ValueFormat="N0" />
+            <BarSeries Items="Sales" Category="static x => x.Month" Y="static x => x.Online" Title="Online" StackGroup="total" ValueFormat="N0" />
+            <BarSeries Items="Sales" Category="static x => x.Month" Y="static x => x.Wholesale" Title="Wholesale" StackGroup="total" ValueFormat="N0" />
+        </MusselChartView>
+    </SampleCard>
+    <SampleCard Title="BarSeries / Orientation">
+        <MusselChartView Height="240" Orientation="ChartOrientation.Horizontal" LegendVisible="false">
+            <CategoryAxis />
+            <BarSeries Items="Ranking" Category="static x => x.Name" Y="static x => x.Value" Title="Units" Color="#3274D9" ValueFormat="N0" />
+        </MusselChartView>
+    </SampleCard>
+    <SampleCard Title="RangeBarSeries">
+        <MusselChartView Height="240" Palette="ChartPalettes.GrafanaLight">
+            <CategoryAxis />
+            <RangeBarSeries Items="Temperatures" Category="static x => x.Month" Low="static x => x.Low" High="static x => x.High" Title="Range" ValueFormat="{0:N1} °C" />
+            <LineSeries Items="Temperatures" Category="static x => x.Month" Y="static x => x.Mean" Title="Mean" ValueFormat="{0:N1} °C" />
+        </MusselChartView>
+    </SampleCard>
+    <SampleCard Title="BarSeries / DateTimeAxis">
+        <MusselChartView Height="240" Palette="ChartPalettes.MaterialLight">
+            <DateTimeAxis />
+            <BarSeries Items="Flows" X="static x => x.Time" Y="static x => x.In" Title="In" StackGroup="flow" ValueFormat="N0" />
+            <BarSeries Items="Flows" X="static x => x.Time" Y="static x => x.Other" Title="Other" StackGroup="flow" ValueFormat="N0" />
+            <BarSeries Items="Flows" X="static x => x.Time" Y="static x => x.Out" Title="Out" StackGroup="flow" ValueFormat="N0" />
+        </MusselChartView>
+    </SampleCard>
+</div>

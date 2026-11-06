@@ -1,0 +1,22 @@
+@page "/musselchart/radar"
+@attribute [Authorize]
+
+<PageTitle>Radar - MusselChart</PageTitle>
+
+<MudText Typo="Typo.h4">Radar</MudText>
+<MudText Class="mb-4">MusselChart</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="MusselRadarChartView / LegendToggleEnabled">
+        <MusselRadarChartView Height="300" Minimum="0" Maximum="100" LegendToggleEnabled="true">
+            <RadarSeries Items="ProductA" Category="static x => x.Name" Y="static x => x.Score" Title="Product A" ValueFormat="N0" />
+            <RadarSeries Items="ProductB" Category="static x => x.Name" Y="static x => x.Score" Title="Product B" ValueFormat="N0" />
+        </MusselRadarChartView>
+    </SampleCard>
+    <SampleCard Title="MusselRadarChartView / GridShape">
+        <MusselRadarChartView Height="300" GridShape="ChartRadarGridShape.Circle" Palette="ChartPalettes.GrafanaLight" LegendPosition="ChartLegendPosition.Right">
+            <RadarSeries Items="Team" Title="Team" FillOpacity="0.3" />
+            <RadarSeries Items="Average" Title="Average" Thickness="1" FillOpacity="0" />
+        </MusselRadarChartView>
+    </SampleCard>
+</div>

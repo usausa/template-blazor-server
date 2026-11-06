@@ -1,0 +1,25 @@
+@page "/musselchart/radial"
+@attribute [Authorize]
+
+<PageTitle>Radial bars - MusselChart</PageTitle>
+
+<MudText Typo="Typo.h4">Radial bars</MudText>
+<MudText Class="mb-4">MusselChart</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="MusselRadialBarView / OverflowMode">
+        <MusselRadialBarView Height="240" Items="Activities" OverflowMode="ChartOverflowMode.Wrap" CapStyle="ChartCapStyle.Round" Palette="ChartPalettes.GrafanaLight" LegendValueMode="ChartLegendValueMode.Percent" />
+    </SampleCard>
+    <SampleCard Title="MusselRadialBarView / SweepAngle / ThresholdMarkersVisible">
+        <MusselRadialBarView Height="240" Items="Cpu" StartAngle="250" SweepAngle="220" FillMode="ChartFillMode.Gradient" Thresholds="LoadThresholds" ThresholdMarkersVisible="true" LegendVisible="false" />
+    </SampleCard>
+    <SampleCard Title="MusselRadialBarView / DisplayMode">
+        <MusselRadialBarView Height="240" Items="Memory" DisplayMode="ChartRadialBarMode.Segmented" SegmentCount="24" Thresholds="LoadThresholds" LegendVisible="false" />
+    </SampleCard>
+    <SampleCard Title="MusselRadialBarView / BarGlow">
+        <MusselRadialBarView Height="240" Items="Servers" BarGlow="true" Thresholds="LoadThresholds" LegendValueMode="ChartLegendValueMode.Value" ValueFormat="{0:N0}%" CenterValueMode="ChartCenterValueMode.None" />
+    </SampleCard>
+    <SampleCard Title="MusselRadialBarView / CenterValueMode">
+        <MusselRadialBarView Height="240" Items="Servers" FillMode="ChartFillMode.Gradient" CenterValueMode="ChartCenterValueMode.Total" CenterLabel="Total" ValueFormat="N0" LegendPosition="ChartLegendPosition.Bottom" />
+    </SampleCard>
+</div>
