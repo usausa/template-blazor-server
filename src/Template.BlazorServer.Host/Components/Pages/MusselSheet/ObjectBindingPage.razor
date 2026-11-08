@@ -1,0 +1,28 @@
+@page "/musselsheet/object-binding"
+@attribute [Authorize]
+
+<PageTitle>Object binding - MusselSheet</PageTitle>
+
+<MudText Typo="Typo.h4">Object binding</MudText>
+<MudText Class="mb-4">MusselSheet</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="Bind / Cell / Rows" Result="@message" Wide="true">
+        <MudText Typo="Typo.body2">Bind ties cells to properties and rows to list items. Changes on either side show on the other.</MudText>
+        <div class="sample-row">
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="AddLine">Add a line</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="RemoveFirstLine">Remove the first line</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="ChangeCustomer">Change the customer</MudButton>
+        </div>
+        <div class="sample-sheet">
+            <MusselSheetView Sheet="sheet"
+                             LastRowEnterMode="SheetLastRowEnterMode.AddRow"
+                             AllowInsertRows="true"
+                             AllowDeleteRows="true"
+                             RowsInserting="OnRowsInserting"
+                             RowsDeleting="OnRowsDeleting"
+                             CellCommitted="OnCellCommitted" />
+        </div>
+        <pre class="sample-sheet-model">@Describe()</pre>
+    </SampleCard>
+</div>

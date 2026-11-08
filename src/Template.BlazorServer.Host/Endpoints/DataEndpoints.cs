@@ -1,6 +1,6 @@
 namespace Template.BlazorServer.Host.Endpoints;
 
-using CsvHelper.Configuration;
+using CsvHelper;
 
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -92,13 +92,22 @@ public static partial class DataMapper
 // Csv
 //--------------------------------------------------------------------------------
 
-public sealed class DataExportMap : ClassMap<DataEntity>
+[CsvRecordMap(typeof(DataEntity))]
+internal sealed partial class DataExportMap
 {
-    public DataExportMap()
-    {
-        AutoMap(CultureInfo.InvariantCulture);
-        Map(static x => x.CreatedAt).Convert(static args => args.Value.CreatedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture));
-    }
+    [CsvConverter(typeof(LocalDateTimeConverter))]
+    public DateTime CreatedAt { get; set; }
+}
+
+internal sealed class LocalDateTimeConverter : ICsvConverter<DateTime>
+{
+    private const string Format = "yyyy/MM/dd HH:mm:ss";
+
+    public DateTime Read(CsvReader reader, int index) =>
+        DateTime.ParseExact(reader.GetString(index), Format, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal).ToUniversalTime();
+
+    public void Write(CsvWriter writer, DateTime value) =>
+        writer.WriteField(value.ToLocalTime().ToString(Format, CultureInfo.InvariantCulture));
 }
 
 //--------------------------------------------------------------------------------
@@ -107,6 +116,8 @@ public sealed class DataExportMap : ClassMap<DataEntity>
 
 public static class DataEndpoints
 {
+    private static readonly CsvWriterOptions ExportOptions = new() { Quoting = CsvQuoting.WhenNeededOrWhitespace, WriteByteOrderMark = true };
+
     //--------------------------------------------------------------------------------
     // Mapping
     //--------------------------------------------------------------------------------
@@ -179,9 +190,7 @@ public static class DataEndpoints
         TypedResults.Stream(
             async stream =>
             {
-                await using var writer = new StreamWriter(stream, new UTF8Encoding(true));
-                await using var csv = new CsvHelper.CsvWriter(writer, CultureInfo.InvariantCulture);
-                csv.Context.RegisterClassMap<DataExportMap>();
+                await using var csv = CsvWriter.Create(stream, ExportOptions);
                 await csv.WriteRecordsAsync(dataService.QueryExportEnumerable(cancellationToken), cancellationToken);
             },
             "text/csv",

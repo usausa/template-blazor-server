@@ -6,43 +6,49 @@ using Microsoft.Playwright;
 
 public sealed class SamplePageTests : E2ETestBase
 {
-    private static readonly (string Path, string Title, string Selector)[] SamplePages =
+    private static readonly (string Group, string Path, string Title, string Selector)[] SamplePages =
     [
-        ("smart/rendering", "Rendering - Smart.Blazor", ".sample-loading"),
-        ("smart/forms", "Forms - Smart.Blazor", ".sample-form"),
-        ("components/keyboard", "Keyboard - Components.Blazor", ".sample-keys"),
-        ("components/display", "Display - Components.Blazor", "dialog.sample-dialog"),
-        ("components/script", "Script - Components.Blazor", ".sample-measure"),
-        ("components/device", "Device - Components.Blazor", ".sample-card"),
-        ("components/speaker", "Speaker - Components.Blazor", ".mud-slider"),
-        ("components/tabs", "Tabs - Components.Blazor", ".sample-card"),
-        ("components/upload", "Upload - Components.Blazor", ".sample-upload"),
-        ("musselchart/monitor", "Monitor - MusselChart", ".mussel-stat"),
-        ("musselchart/charts", "Charts - MusselChart", ".mussel-chart-svg"),
-        ("musselchart/bars", "Bars - MusselChart", ".mussel-chart-svg"),
-        ("musselchart/points", "Points - MusselChart", ".mussel-chart-svg"),
-        ("musselchart/pie", "Pie - MusselChart", ".mussel-pie"),
-        ("musselchart/radar", "Radar - MusselChart", ".mussel-radar"),
-        ("musselchart/heatmap", "Heatmap - MusselChart", ".mussel-heatmap"),
-        ("musselchart/timeline", "State timeline - MusselChart", ".mussel-timeline"),
-        ("musselchart/radial", "Radial bars - MusselChart", ".mussel-radial"),
-        ("musselchart/widgets", "Widgets - MusselChart", ".mussel-sparkline"),
-        ("textresource/locale", "Locale - TextResource", ".sample-card"),
-        ("ignite/buttons", "Buttons - Ignite UI", "igc-button"),
-        ("ignite/inputs", "Inputs - Ignite UI", "igc-input"),
-        ("ignite/selection", "Selection - Ignite UI", "igc-combo"),
-        ("ignite/scheduling", "Scheduling - Ignite UI", "igc-calendar"),
-        ("ignite/layout", "Layout - Ignite UI", "igc-tile-manager"),
-        ("ignite/navigation", "Navigation - Ignite UI", "igc-stepper"),
-        ("ignite/display", "Display - Ignite UI", "igc-qr-code"),
-        ("ignite/notifications", "Notifications - Ignite UI", "igc-dialog"),
-        ("ignite/chat", "Chat - Ignite UI", "igc-chat"),
-        ("ignite/grid", "Grid Lite - Ignite UI", "igc-grid-lite"),
-        ("syncfusion/buttons", "Buttons - Syncfusion", ".e-btn-group"),
-        ("syncfusion/inputs", "Inputs - Syncfusion", ".e-upload"),
-        ("syncfusion/calendars", "Calendars - Syncfusion", ".e-calendar"),
-        ("syncfusion/popups", "Popups - Syncfusion", ".e-spinner-pane"),
-        ("syncfusion/chart", "Chart - Syncfusion", ".e-chart")
+        ("Fundamentals", "smart/rendering", "Rendering - Smart.Blazor", ".sample-loading"),
+        ("Fundamentals", "components/display", "Display - Components.Blazor", "dialog.sample-dialog"),
+        ("Fundamentals", "components/script", "Script - Components.Blazor", ".sample-measure"),
+        ("Fundamentals", "textresource/locale", "Locale - TextResource", ".sample-card"),
+        ("Forms", "smart/forms", "Validation - Smart.Blazor", ".sample-form"),
+        ("Sheets", "musselsheet/form", "Form - MusselSheet", ".mussel-sheet-viewport"),
+        ("Sheets", "musselsheet/cell-kinds", "Cell kinds - MusselSheet", ".mussel-sheet-viewport"),
+        ("Sheets", "musselsheet/object-binding", "Object binding - MusselSheet", ".mussel-sheet-viewport"),
+        ("Collections", "components/sortable", "Sortable - Components.Blazor", ".sample-sort-item"),
+        ("Collections", "components/kanban", "Kanban - Components.Blazor", ".sample-kanban-card"),
+        ("Charts", "musselchart/monitor", "Monitor - MusselChart", ".mussel-stat"),
+        ("Charts", "musselchart/charts", "Charts - MusselChart", ".mussel-chart-svg"),
+        ("Charts", "musselchart/bars", "Bars - MusselChart", ".mussel-chart-svg"),
+        ("Charts", "musselchart/points", "Points - MusselChart", ".mussel-chart-svg"),
+        ("Charts", "musselchart/pie", "Pie - MusselChart", ".mussel-pie"),
+        ("Charts", "musselchart/radar", "Radar - MusselChart", ".mussel-radar"),
+        ("Charts", "musselchart/heatmap", "Heatmap - MusselChart", ".mussel-heatmap"),
+        ("Charts", "musselchart/timeline", "State timeline - MusselChart", ".mussel-timeline"),
+        ("Charts", "musselchart/radial", "Radial bars - MusselChart", ".mussel-radial"),
+        ("Charts", "musselchart/widgets", "Widgets - MusselChart", ".mussel-sparkline"),
+        ("Platform", "components/keyboard", "Keyboard - Components.Blazor", ".sample-keys"),
+        ("Platform", "components/device", "Device - Components.Blazor", ".sample-card"),
+        ("Platform", "components/speaker", "Speaker - Components.Blazor", ".mud-slider"),
+        ("Platform", "components/tabs", "Tabs - Components.Blazor", ".sample-card"),
+        ("Platform", "components/upload", "Upload - Components.Blazor", ".sample-upload"),
+        ("Platform", "components/save", "Save - Components.Blazor", ".sample-card"),
+        ("Ignite UI", "ignite/buttons", "Buttons - Ignite UI", "igc-button"),
+        ("Ignite UI", "ignite/inputs", "Inputs - Ignite UI", "igc-input"),
+        ("Ignite UI", "ignite/selection", "Selection - Ignite UI", "igc-combo"),
+        ("Ignite UI", "ignite/scheduling", "Scheduling - Ignite UI", "igc-calendar"),
+        ("Ignite UI", "ignite/layout", "Layout - Ignite UI", "igc-tile-manager"),
+        ("Ignite UI", "ignite/navigation", "Navigation - Ignite UI", "igc-stepper"),
+        ("Ignite UI", "ignite/display", "Display - Ignite UI", "igc-qr-code"),
+        ("Ignite UI", "ignite/notifications", "Notifications - Ignite UI", "igc-dialog"),
+        ("Ignite UI", "ignite/chat", "Chat - Ignite UI", "igc-chat"),
+        ("Ignite UI", "ignite/grid", "Grid Lite - Ignite UI", "igc-grid-lite"),
+        ("Syncfusion", "syncfusion/buttons", "Buttons - Syncfusion", ".e-btn-group"),
+        ("Syncfusion", "syncfusion/inputs", "Inputs - Syncfusion", ".e-upload"),
+        ("Syncfusion", "syncfusion/calendars", "Calendars - Syncfusion", ".e-calendar"),
+        ("Syncfusion", "syncfusion/popups", "Popups - Syncfusion", ".e-spinner-pane"),
+        ("Syncfusion", "syncfusion/chart", "Chart - Syncfusion", ".e-chart")
     ];
 
     [Fact]
@@ -65,10 +71,10 @@ public sealed class SamplePageTests : E2ETestBase
 
         await LoginAsync(factory.ServerAddress);
 
-        foreach (var (path, title, selector) in SamplePages)
+        foreach (var (group, path, title, selector) in SamplePages)
         {
             // When
-            await Page.Locator($"a[href='{path}']").ClickAsync();
+            await OpenMenuAsync(group, path);
 
             // Then
             await Expect(Page).ToHaveTitleAsync(title);
@@ -76,6 +82,25 @@ public sealed class SamplePageTests : E2ETestBase
         }
 
         Assert.Empty(errors);
+    }
+
+    [Fact]
+    public async Task MenuGroupsAreClosedExceptCurrent()
+    {
+        // Given
+        await using var factory = new E2EApplicationFactory();
+        factory.UseKestrel(0);
+        factory.StartServer();
+
+        await LoginAsync(factory.ServerAddress);
+        await Expect(Page.Locator("a[href='data']")).Not.ToBeVisibleAsync();
+
+        // When
+        await Page.GotoAsync(factory.ServerAddress + "/components/kanban");
+
+        // Then
+        await Expect(Page.Locator("a[href='components/kanban']")).ToBeVisibleAsync();
+        await Expect(Page.Locator("a[href='data']")).Not.ToBeVisibleAsync();
     }
 
     [Fact(Timeout = 120_000)]
@@ -88,11 +113,11 @@ public sealed class SamplePageTests : E2ETestBase
         factory.StartServer();
 
         await LoginAsync(factory.ServerAddress);
-        await Page.Locator("a[href='ignite/grid']").ClickAsync();
+        await OpenMenuAsync("Ignite UI", "ignite/grid");
         await Expect(Page.Locator("igc-grid-lite")).ToBeVisibleAsync();
 
         // When
-        await Page.Locator("a[href='ignite/selection']").ClickAsync();
+        await OpenMenuAsync("Ignite UI", "ignite/selection");
         await Page.Locator("igc-combo").ClickAsync().WaitAsync(cancellationToken);
         await Page.GetByText("Osaka", new PageGetByTextOptions { Exact = true }).ClickAsync().WaitAsync(cancellationToken);
 

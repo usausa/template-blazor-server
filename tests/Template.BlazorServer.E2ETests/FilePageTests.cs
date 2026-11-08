@@ -32,7 +32,7 @@ public sealed class FilePageTests : E2ETestBase
         factory.StartServer();
 
         await LoginAsync(factory.ServerAddress);
-        await Page.Locator("a[href='files']").ClickAsync();
+        await OpenMenuAsync("Features", "files");
         await Expect(Page).ToHaveTitleAsync("Files");
 
         // When

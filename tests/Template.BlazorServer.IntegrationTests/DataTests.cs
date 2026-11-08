@@ -2,6 +2,7 @@ namespace Template.BlazorServer;
 
 using System.Globalization;
 using System.Net.Http.Json;
+using System.Text;
 
 using Template.BlazorServer.Host.Endpoints;
 
@@ -70,5 +71,25 @@ public sealed class DataTests : IClassFixture<TestApplicationFactory>
         Assert.NotNull(entity);
         Assert.Equal("Id,Name,Value,Version,CreatedAt", lines[0]);
         Assert.Contains($"{id},ExportItem,5,1,{entity.CreatedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture)}", lines);
+    }
+
+    [Fact]
+    public async Task ExportQuotesFieldsAfterByteOrderMark()
+    {
+        // Arrange
+        var client = await factory.CreateAuthenticatedClientAsync();
+        await client.PostAsJsonAsync(new Uri("/api/data/", UriKind.Relative), new DataCreateRequest { Name = "Export, \"Quoted\"", Value = 6 }, TestContext.Current.CancellationToken);
+        await client.PostAsJsonAsync(new Uri("/api/data/", UriKind.Relative), new DataCreateRequest { Name = " Export Spaced ", Value = 7 }, TestContext.Current.CancellationToken);
+
+        // Act
+        var bytes = await client.GetByteArrayAsync(new Uri("/api/data/csv", UriKind.Relative), TestContext.Current.CancellationToken);
+        var csv = Encoding.UTF8.GetString(bytes.AsSpan(Encoding.UTF8.Preamble.Length));
+
+        // Assert
+        Assert.True(bytes.AsSpan().StartsWith(Encoding.UTF8.Preamble));
+        Assert.StartsWith("Id,Name,Value,Version,CreatedAt\r\n", csv, StringComparison.Ordinal);
+        Assert.Contains(",\"Export, \"\"Quoted\"\"\",6,1,", csv, StringComparison.Ordinal);
+        Assert.Contains(",\" Export Spaced \",7,1,", csv, StringComparison.Ordinal);
+        Assert.EndsWith("\r\n", csv, StringComparison.Ordinal);
     }
 }

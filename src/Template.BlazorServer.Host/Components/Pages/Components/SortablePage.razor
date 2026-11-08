@@ -1,0 +1,31 @@
+@page "/components/sortable"
+@attribute [Authorize]
+
+<PageTitle>Sortable - Components.Blazor</PageTitle>
+
+<MudText Typo="Typo.h4">Sortable</MudText>
+<MudText Class="mb-4">Components.Blazor</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="SortableZone" Result="@ItemsResult">
+        <MudText Typo="Typo.body2">Drag with the mouse, hold and drag with a touch, or press Space on an item and move it with the arrow keys.</MudText>
+        <SortableZone class="sample-sort-list" OnMove="OnItemMoved">
+            @foreach (var item in items)
+            {
+                <MudPaper @key="item" Outlined="true" Class="sample-sort-item" tabindex="0">@item.Name</MudPaper>
+            }
+        </SortableZone>
+    </SampleCard>
+    <SampleCard Title="Orientation / Handle / Filter" Result="@TilesResult">
+        <MudText Typo="Typo.body2">Drag by the handle. The pinned item stays in place.</MudText>
+        <SortableZone class="sample-sort-row" Orientation="SortableOrientation.Horizontal" Handle=".sample-sort-handle" Filter=".sample-sort-pinned" OnMove="OnTileMoved">
+            @foreach (var tile in tiles)
+            {
+                <MudPaper @key="tile" Outlined="true" Class="@(tile.Pinned ? "sample-sort-tile sample-sort-pinned" : "sample-sort-tile")">
+                    <MudIcon Icon="@(tile.Pinned ? Icons.Material.Filled.PushPin : Icons.Material.Filled.DragIndicator)" Size="Size.Small" Class="sample-sort-handle" />
+                    <span>@tile.Name</span>
+                </MudPaper>
+            }
+        </SortableZone>
+    </SampleCard>
+</div>

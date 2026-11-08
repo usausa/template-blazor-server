@@ -39,6 +39,17 @@ public abstract class E2ETestBase : PageTest
         await Expect(page.GetByText("Template.BlazorServer")).ToBeVisibleAsync();
     }
 
+    protected async Task OpenMenuAsync(string group, string path)
+    {
+        var link = Page.Locator($"a[href='{path}']");
+        if (!await link.IsVisibleAsync())
+        {
+            await Page.GetByRole(AriaRole.Button, new PageGetByRoleOptions { Name = $"Toggle {group}", Exact = true }).ClickAsync();
+        }
+
+        await link.ClickAsync();
+    }
+
     private string MakeTracePath()
     {
         var name = TestContext.Current.Test?.TestDisplayName ?? GetType().Name;

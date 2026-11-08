@@ -13,7 +13,7 @@ public sealed class ReportPageTests : E2ETestBase
         factory.StartServer();
 
         await LoginAsync(factory.ServerAddress);
-        await Page.Locator("a[href='reports']").ClickAsync();
+        await OpenMenuAsync("Features", "reports");
         await Expect(Page).ToHaveTitleAsync("Reports");
 
         var pdfResponse = new TaskCompletionSource<IResponse>();
@@ -45,7 +45,7 @@ public sealed class ReportPageTests : E2ETestBase
         factory.StartServer();
 
         await LoginAsync(factory.ServerAddress);
-        await Page.Locator("a[href='reports']").ClickAsync();
+        await OpenMenuAsync("Features", "reports");
         var card = Page.Locator(".report-card").Nth(2);
         await card.GetByLabel("納品書").UncheckAsync();
 

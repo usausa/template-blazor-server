@@ -17,7 +17,7 @@ public sealed class NavMenuTests : MudBlazorTestBase
         var cut = Render<NavMenu>();
 
         // Assert
-        Assert.Equal(40, cut.FindAll("a").Count);
+        Assert.Equal(46, cut.FindAll("a").Count);
         Assert.Empty(cut.FindAll("a[href='server']"));
     }
 
@@ -33,7 +33,7 @@ public sealed class NavMenuTests : MudBlazorTestBase
         var cut = Render<NavMenu>();
 
         // Assert
-        Assert.Equal(41, cut.FindAll("a").Count);
+        Assert.Equal(47, cut.FindAll("a").Count);
         Assert.Single(cut.FindAll("a[href='server']"));
     }
 }

@@ -1,0 +1,22 @@
+@page "/musselsheet/form"
+@attribute [Authorize]
+
+<PageTitle>Form - MusselSheet</PageTitle>
+
+<MudText Typo="Typo.h4">Form</MudText>
+<MudText Class="mb-4">MusselSheet</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="Sheet / Configure / RowsInserting" Result="@message" Wide="true">
+        <MudText Typo="Typo.body2">Enter on the last detail row adds a row, up to 10. The amounts and the total are calculated.</MudText>
+        <div class="sample-sheet">
+            <MusselSheetView Sheet="sheet"
+                             LastRowEnterMode="SheetLastRowEnterMode.AddRow"
+                             AllowInsertRows="true"
+                             AllowDeleteRows="true"
+                             RowsInserting="OnRowsInserting"
+                             RowsDeleting="OnRowsDeleting"
+                             CellCommitted="OnCellCommitted" />
+        </div>
+    </SampleCard>
+</div>

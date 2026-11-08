@@ -1,0 +1,30 @@
+@page "/components/save"
+@attribute [Authorize]
+
+<PageTitle>Save - Components.Blazor</PageTitle>
+
+<MudText Typo="Typo.h4">Save</MudText>
+<MudText Class="mb-4">Components.Blazor</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="SaveAsync (byte[])" Result="@textResult">
+        <MudText Typo="Typo.body2">Chrome and Edge ask where to save. Other browsers download the file.</MudText>
+        <MudTextField T="string" @bind-Value="text" Label="Text" Lines="3" />
+        <div class="sample-row">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveTextAsync">Save text</MudButton>
+        </div>
+    </SampleCard>
+    <SampleCard Title="SaveAsync (Stream)" Result="@csvResult">
+        <MudText Typo="Typo.body2">The data is sent after the location is chosen.</MudText>
+        <MudNumericField T="int" @bind-Value="rows" Label="Rows" Min="1" Max="MaxRows" />
+        <div class="sample-row">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveCsvAsync">Save CSV</MudButton>
+        </div>
+    </SampleCard>
+    <SampleCard Title="SaveAsync (Uri)" Result="@urlResult">
+        <MudText Typo="Typo.body2">The browser gets the Data CSV from the URL and writes it to the chosen file.</MudText>
+        <div class="sample-row">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveUrlAsync">Save Data CSV</MudButton>
+        </div>
+    </SampleCard>
+</div>

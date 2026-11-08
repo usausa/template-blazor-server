@@ -1,0 +1,16 @@
+@page "/musselsheet/cell-kinds"
+@attribute [Authorize]
+
+<PageTitle>Cell kinds - MusselSheet</PageTitle>
+
+<MudText Typo="Typo.h4">Cell kinds</MudText>
+<MudText Class="mb-4">MusselSheet</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="CellKind / Input rules" Result="@message" Wide="true">
+        <MudText Typo="Typo.body2">Configure sets the kind and the rules of a range. Type into the Input column.</MudText>
+        <div class="sample-sheet">
+            <MusselSheetView Sheet="sheet" CellCommitted="OnCellCommitted" />
+        </div>
+    </SampleCard>
+</div>

@@ -27,6 +27,8 @@ using MiniDataProfiler.Listener.OpenTelemetry;
 using MudBlazor;
 using MudBlazor.Services;
 
+using MusselSheet;
+
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -467,6 +469,9 @@ public static class ApplicationExtensions
 
         // Components.Blazor
         builder.Services.AddBlazorComponents();
+
+        // MusselSheet
+        builder.Services.AddMusselSheet();
 
         // Ignite UI
         builder.Services.AddIgniteUIBlazor();

@@ -4,11 +4,14 @@
 
 | 分類 | 画面 |
 | --- | --- |
-| 基本 | Login / Home / Data / Files / Reports / Notifications / Server |
-| Smart.Blazor | Rendering / Forms |
-| Components.Blazor | Keyboard / Display / Script / Device / Speaker / Tabs / Upload |
-| MusselChart | Monitor / Charts / Bars / Points / Pie / Radar / Heatmap / State timeline / Radial bars / Widgets |
-| TextResource | Locale |
+| 基本 | Login / Home |
+| Features | Data / Files / Reports / Notifications / Server |
+| Fundamentals | Rendering / Display / Script / Locale |
+| Forms | Validation |
+| Sheets | Form / Cell kinds / Object binding |
+| Collections | Sortable / Kanban |
+| Charts | Monitor / Charts / Bars / Points / Pie / Radar / Heatmap / State timeline / Radial bars / Widgets |
+| Platform | Keyboard / Device / Speaker / Tabs / Upload / Save |
 | Ignite UI | Buttons / Inputs / Selection / Scheduling / Layout / Navigation / Display / Notifications / Chat / Grid Lite |
 | Syncfusion | Buttons / Inputs / Calendars / Popups / Chart |
 

@@ -15,7 +15,7 @@ public sealed class ServerPageTests : E2ETestBase
         await LoginAsync(factory.ServerAddress);
 
         // When
-        await Page.Locator("a[href='server']").ClickAsync();
+        await OpenMenuAsync("Features", "server");
 
         // Then
         await Expect(Page).ToHaveTitleAsync("Server");

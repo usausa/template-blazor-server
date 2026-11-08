@@ -1,0 +1,29 @@
+@page "/components/kanban"
+@attribute [Authorize]
+
+<PageTitle>Kanban - Components.Blazor</PageTitle>
+
+<MudText Typo="Typo.h4">Kanban</MudText>
+<MudText Class="mb-4">Components.Blazor</MudText>
+
+<div class="sample-grid">
+    <SampleCard Title="Group / OverClass / GhostClass / PlaceholderClass" Result="@CardsResult" Wide="true">
+        <MudText Typo="Typo.body2">Move the cards between the columns. The columns share a group, and the look while dragging comes from the classes.</MudText>
+        <div class="sample-kanban">
+            @foreach (var column in SortableSample.Columns)
+            {
+                <div class="sample-kanban-column">
+                    <MudText Typo="Typo.subtitle2">@column</MudText>
+                    <SortableZone class="sample-kanban-zone" Name="@column" Group="kanban" OverClass="sample-kanban-over" GhostClass="sample-kanban-ghost" PlaceholderClass="sample-kanban-slot" OnMove="OnCardMoved">
+                        @foreach (var card in columns[column])
+                        {
+                            <MudCard @key="card" Outlined="true" Class="sample-kanban-card" tabindex="0">
+                                <MudCardContent Class="pa-3">@card.Title</MudCardContent>
+                            </MudCard>
+                        }
+                    </SortableZone>
+                </div>
+            }
+        </div>
+    </SampleCard>
+</div>

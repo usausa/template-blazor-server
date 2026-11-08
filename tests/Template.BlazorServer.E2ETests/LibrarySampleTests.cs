@@ -18,7 +18,7 @@ public sealed class LibrarySampleTests : E2ETestBase
         var created = await Page.APIRequest.PostAsync(factory.ServerAddress + "/api/data/", new APIRequestContextOptions { DataObject = new { name = "Taken", value = 1 } });
         Assert.True(created.Ok);
         await Page.GotoAsync(factory.ServerAddress + "/smart/forms");
-        await Expect(Page).ToHaveTitleAsync("Forms - Smart.Blazor");
+        await Expect(Page).ToHaveTitleAsync("Validation - Smart.Blazor");
 
         // When
         await Page.GetByLabel("Name").FillAsync("Taken");
@@ -110,6 +110,27 @@ public sealed class LibrarySampleTests : E2ETestBase
 
         // Then
         await Expect(Page.GetByText("Completed: 2 succeeded, 0 failed")).ToBeVisibleAsync();
+    }
+
+    [Fact]
+    public async Task TextIsDownloadedWithoutSavePicker()
+    {
+        // Given
+        await using var factory = new E2EApplicationFactory();
+        factory.UseKestrel(0);
+        factory.StartServer();
+
+        await LoginAsync(factory.ServerAddress);
+        await Page.AddInitScriptAsync("delete window.showSaveFilePicker;");
+        await Page.GotoAsync(factory.ServerAddress + "/components/save");
+        await Expect(Page).ToHaveTitleAsync("Save - Components.Blazor");
+
+        // When
+        var download = await Page.RunAndWaitForDownloadAsync(() => Page.GetByRole(AriaRole.Button, new PageGetByRoleOptions { Name = "Save text" }).ClickAsync());
+
+        // Then
+        Assert.Equal("sample.txt", download.SuggestedFilename);
+        await Expect(Page.GetByText("Downloaded")).ToBeVisibleAsync();
     }
 
     [Fact]

@@ -17,7 +17,7 @@ public sealed class NotificationPageTests : E2ETestBase
         await LoginAsync(factory.ServerAddress);
         var other = await Context.NewPageAsync();
         await other.GotoAsync(factory.ServerAddress + "/");
-        await Page.Locator("a[href='notifications']").ClickAsync();
+        await OpenMenuAsync("Features", "notifications");
         await Expect(Page).ToHaveTitleAsync("Notifications");
 
         // When
