@@ -2,7 +2,7 @@
 
 English | [日本語](README.ja.md)
 
-Blazor Server application template (.NET 10).
+[Template](https://usausa.github.io/template/) project for Blazor Server.
 
 # ✅ Implement
 
