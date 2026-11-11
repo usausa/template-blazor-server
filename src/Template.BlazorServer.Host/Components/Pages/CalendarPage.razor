@@ -1,0 +1,164 @@
+@page "/calendar"
+@attribute [Authorize]
+@using BlazorComponents
+@using MusselCalendar
+
+<PageTitle>Calendar</PageTitle>
+
+<HotKey Key="d" Disabled="KeysDisabled" OnPressed="() => ChangeViewAsync(CalendarViewKind.Day)" />
+<HotKey Key="w" Disabled="KeysDisabled" OnPressed="() => ChangeViewAsync(CalendarViewKind.Week)" />
+<HotKey Key="m" Disabled="KeysDisabled" OnPressed="() => ChangeViewAsync(CalendarViewKind.Month)" />
+<HotKey Key="x" Disabled="KeysDisabled" OnPressed="() => ChangeViewAsync(CalendarViewKind.Days)" />
+<HotKey Key="t" Disabled="KeysDisabled" OnPressed="GoTodayAsync" />
+<HotKey Key="j" Disabled="KeysDisabled" OnPressed="() => MoveAsync(1)" />
+<HotKey Key="n" Disabled="KeysDisabled" OnPressed="() => MoveAsync(1)" />
+<HotKey Key="k" Disabled="KeysDisabled" OnPressed="() => MoveAsync(-1)" />
+<HotKey Key="p" Disabled="KeysDisabled" OnPressed="() => MoveAsync(-1)" />
+<HotKey Key="c" Disabled="KeysDisabled" OnPressed="CreateAsync" />
+<HotKey Key="Escape" Disabled="!HasPopup" OnPressed="Close" />
+
+<div class="calendar-host">
+    <MudText Typo="Typo.h4" Class="mb-4">Calendar</MudText>
+    @if (!ready)
+    {
+        <MudProgressLinear Indeterminate="true" Color="Color.Primary" />
+    }
+    else
+    {
+        <div class="calendar-page">
+            <div class="calendar-toolbar">
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="GoTodayAsync">今日</MudButton>
+                <MudIconButton Icon="@Icons.Material.Filled.ChevronLeft" Size="Size.Small" aria-label="前へ" OnClick="() => MoveAsync(-1)" />
+                <MudIconButton Icon="@Icons.Material.Filled.ChevronRight" Size="Size.Small" aria-label="次へ" OnClick="() => MoveAsync(1)" />
+                <MudText Typo="Typo.h6" Class="calendar-title">@Title</MudText>
+                <MudSpacer />
+                <MudToggleGroup T="CalendarViewKind" Value="view" ValueChanged="ChangeViewAsync" Size="Size.Small" Outlined="true">
+                    <MudToggleItem Value="CalendarViewKind.Day" Text="日" />
+                    <MudToggleItem Value="CalendarViewKind.Week" Text="週" />
+                    <MudToggleItem Value="CalendarViewKind.Days" Text="4日" />
+                    <MudToggleItem Value="CalendarViewKind.Month" Text="月" />
+                </MudToggleGroup>
+            </div>
+            <div class="calendar-side">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="CreateAsync">作成</MudButton>
+                <MusselMiniMonth Date="date"
+                                 DateChanged="ChangeDateAsync"
+                                 FirstDayOfWeek="FirstDayOfWeek"
+                                 Highlight="Range"
+                                 PreviousText="前の月"
+                                 NextText="次の月"
+                                 TimeProvider="clock" />
+                <div class="calendar-list">
+                    <div class="calendar-list-header">
+                        <MudText Typo="Typo.subtitle2">マイカレンダー</MudText>
+                        <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" aria-label="カレンダーを追加" OnClick="AddCalendarAsync" />
+                    </div>
+                    <ListItem Items="calendars" Context="calendar">
+                        <ItemTemplate>
+                            <div class="calendar-list-item">
+                                <label class="calendar-check">
+                                    <input type="checkbox" checked="@IsVisible(calendar)" style="accent-color: @calendar.Color" @onchange="e => SetVisibleAsync(calendar, e.Value is true)" />
+                                    <span>@calendar.Name</span>
+                                </label>
+                                <MudMenu Icon="@Icons.Material.Filled.MoreVert"
+                                         Size="Size.Small"
+                                         AriaLabel="@($"{calendar.Name} の操作")"
+                                         AnchorOrigin="Origin.BottomRight"
+                                         TransformOrigin="Origin.TopRight">
+                                    <MudMenuItem OnClick="() => EditCalendarAsync(calendar)">編集</MudMenuItem>
+                                    <AuthorizeView Roles="@Roles.Administrator" Context="auth">
+                                        <MudMenuItem OnClick="() => DeleteCalendarAsync(calendar)">削除</MudMenuItem>
+                                    </AuthorizeView>
+                                </MudMenu>
+                            </div>
+                        </ItemTemplate>
+                    </ListItem>
+                </div>
+                <MudText Typo="Typo.caption" Class="calendar-zone">タイムゾーン: @zone.Id</MudText>
+            </div>
+            <div class="calendar-main">
+                <MusselCalendarView class="calendar-view"
+                                    View="view"
+                                    Date="date"
+                                    DayCount="DayCount"
+                                    FirstDayOfWeek="FirstDayOfWeek"
+                                    Items="items"
+                                    AllDayText="終日"
+                                    MoreFormat="他 {0} 件"
+                                    TimeProvider="clock"
+                                    RangeSelected="OnRangeSelected"
+                                    ItemClicked="OnItemClicked"
+                                    ItemChanged="OnItemChangedAsync"
+                                    MoreClicked="OnMoreClicked"
+                                    DayClicked="OnDayClickedAsync" />
+            </div>
+        </div>
+    }
+</div>
+
+@if (draft is not null)
+{
+    <div class="calendar-backdrop" @onclick="Close"></div>
+    <MudPaper Elevation="8" Class="calendar-popup" Style="@PopupStyle(draft.Anchor)">
+        <MudTextField T="string"
+                      @bind-Value="draftTitle"
+                      Label="タイトルを追加"
+                      MaxLength="@Length.CalendarEventTitle"
+                      AutoFocus="true"
+                      Immediate="true"
+                      OnKeyDown="OnDraftKeyDownAsync" />
+        <div class="calendar-popup-text">@RangeText(draft.Start, draft.End, draft.AllDay)</div>
+        <MudSelect T="long" @bind-Value="draftCalendarId" Label="カレンダー" Dense="true">
+            <ListItem Items="calendars" Context="calendar">
+                <ItemTemplate>
+                    <MudSelectItem T="long" Value="@calendar.Id">@calendar.Name</MudSelectItem>
+                </ItemTemplate>
+            </ListItem>
+        </MudSelect>
+        <div class="calendar-popup-actions">
+            <MudButton OnClick="MoreOptionsAsync">その他の設定</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveDraftAsync">保存</MudButton>
+        </div>
+    </MudPaper>
+}
+
+@if ((selected is not null) && (SelectedEntity is { } entity))
+{
+    <div class="calendar-backdrop" @onclick="Close"></div>
+    <MudPaper Elevation="8" Class="calendar-popup" Style="@PopupStyle(selected.Anchor)">
+        <div class="calendar-popup-head">
+            <span class="calendar-swatch" style="--calendar-color: @CalendarColor(entity.CalendarId)"></span>
+            <span class="calendar-popup-title">@entity.Title</span>
+        </div>
+        <div class="calendar-popup-text">@RangeText(selected.Item.Start, selected.Item.End, selected.Item.AllDay)</div>
+        <div class="calendar-popup-text">@CalendarName(entity.CalendarId)</div>
+        @if (!String.IsNullOrEmpty(entity.Description))
+        {
+            <div class="calendar-popup-note">@entity.Description</div>
+        }
+        <div class="calendar-popup-actions">
+            <MudButton StartIcon="@Icons.Material.Filled.Edit" OnClick="EditSelectedAsync">編集</MudButton>
+            <MudButton StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="DeleteSelectedAsync">削除</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Close">閉じる</MudButton>
+        </div>
+    </MudPaper>
+}
+
+@if (more is not null)
+{
+    <div class="calendar-backdrop" @onclick="Close"></div>
+    <MudPaper Elevation="8" Class="calendar-popup" Style="@PopupStyle(more.Anchor)">
+        <div class="calendar-popup-title">@more.Day.ToString("M月d日 (ddd)", CultureInfo.CurrentCulture)</div>
+        <div class="calendar-more-list">
+            <ListItem Items="more.Items" Context="item">
+                <ItemTemplate>
+                    <button type="button" class="calendar-more-item" @onclick="() => OpenFromMore(item)">
+                        <span class="calendar-swatch" style="--calendar-color: @item.Color"></span>
+                        <span>@(item.AllDay ? "終日" : item.Start.ToString("H:mm", CultureInfo.CurrentCulture))</span>
+                        <span>@item.Title</span>
+                    </button>
+                </ItemTemplate>
+            </ListItem>
+        </div>
+    </MudPaper>
+}

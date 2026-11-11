@@ -11,4 +11,8 @@ public static class Length
     public const int NotificationBody = 1000;
 
     public const int NotificationLink = 200;
+
+    public const int CalendarEventTitle = 100;
+
+    public const int CalendarEventDescription = 1000;
 }

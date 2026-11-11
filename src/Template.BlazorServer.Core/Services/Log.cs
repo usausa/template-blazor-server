@@ -7,4 +7,7 @@ internal static partial class Log
 
     [LoggerMessage(Level = LogLevel.Error, Message = "Notification change handler failed.")]
     public static partial void ErrorNotificationChangeHandlerFailed(this ILogger logger, Exception ex);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Calendar change handler failed.")]
+    public static partial void ErrorCalendarChangeHandlerFailed(this ILogger logger, Exception ex);
 }

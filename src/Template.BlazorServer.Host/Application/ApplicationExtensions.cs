@@ -647,6 +647,7 @@ public static class ApplicationExtensions
         // Notification
         builder.Services.AddSingleton<Infrastructure.Notifications.NotificationBus>();
         builder.Services.AddSingleton<DataChangeNotifier>();
+        builder.Services.AddSingleton<CalendarChangeNotifier>();
         builder.Services.AddOptions<Workers.NotificationWorkerOption>().BindConfiguration("Notification").ValidateDataAnnotations().ValidateOnStart();
         builder.Services.AddSingleton(static p => p.GetRequiredService<IOptions<Workers.NotificationWorkerOption>>().Value);
         builder.Services.AddHostedService<Workers.NotificationWorker>();
@@ -753,6 +754,7 @@ public static class ApplicationExtensions
 
         // API
         app.MapDataEndpoints();
+        app.MapCalendarEndpoints();
         app.MapFileEndpoints();
         app.MapReportEndpoints();
         app.MapSampleEndpoints();
@@ -790,6 +792,11 @@ public static class ApplicationExtensions
         {
             var setting = app.Services.GetRequiredService<AuthSetting>();
             await app.Services.GetRequiredService<AccountService>().InitializeAsync(setting.InitialAccount, Roles.Administrator);
+            await app.Services.GetRequiredService<CalendarService>().InitializeAsync(
+            [
+                new CalendarEntity { Name = "仕事", Color = CalendarColors.Blue },
+                new CalendarEntity { Name = "個人", Color = CalendarColors.Green }
+            ]);
         }
     }
 

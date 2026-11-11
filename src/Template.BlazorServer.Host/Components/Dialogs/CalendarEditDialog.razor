@@ -1,0 +1,31 @@
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">@Title</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @ref="form" Model="model">
+            <MudTextField @bind-Value="model.Name"
+                          For="@(() => model.Name)"
+                          Validation="@Validator.ValidateValue"
+                          Label="名前"
+                          MaxLength="@Length.Name"
+                          Immediate="true" />
+            <MudText Typo="Typo.body2" Class="mt-4">色</MudText>
+            <div class="calendar-colors">
+                <ListItem Items="CalendarColors.All" Context="color">
+                    <ItemTemplate>
+                        <MudIconButton Icon="@ColorIcon(color)"
+                                       Style="@($"color: {color}")"
+                                       aria-label="@ColorNames[color]"
+                                       aria-pressed="@(color == model.Color ? "true" : "false")"
+                                       OnClick="() => model.Color = color" />
+                    </ItemTemplate>
+                </ListItem>
+            </div>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="OnOkClick">OK</MudButton>
+        <MudButton Color="Color.Default" OnClick="OnCancelClick">CANCEL</MudButton>
+    </DialogActions>
+</MudDialog>

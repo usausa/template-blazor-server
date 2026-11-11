@@ -14,6 +14,7 @@ public sealed partial class NavMenu
         new("Features", Icons.Material.Filled.Dashboard,
         [
             new("data", "Data"),
+            new("calendar", "Calendar"),
             new("files", "Files"),
             new("reports", "Reports"),
             new("notifications", "Notifications"),

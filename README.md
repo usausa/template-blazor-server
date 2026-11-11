@@ -1,11 +1,15 @@
 # Template project for Blazor Server
 
-## 機能
+English | [日本語](README.ja.md)
 
-| 分類 | 画面 |
+Blazor Server application template (.NET 10).
+
+# ✅ Implement
+
+| Category | Feature |
 | --- | --- |
-| 基本 | Login / Home |
-| Features | Data / Files / Reports / Notifications / Server |
+| Basic | Login / Home |
+| Features | Data / Calendar / Files / Reports / Notifications / Server |
 | Fundamentals | Rendering / Display / Script / Locale |
 | Forms | Validation |
 | Sheets | Form / Cell kinds / Object binding |
@@ -15,26 +19,37 @@
 | Ignite UI | Buttons / Inputs / Selection / Scheduling / Layout / Navigation / Display / Notifications / Chat / Grid Lite |
 | Syncfusion | Buttons / Inputs / Calendars / Popups / Chart |
 
-## E2E テスト
+# 📚 Docs
 
-E2E(`tests/Template.BlazorServer.E2ETests`)は Playwright で動かす。日常の実行には含めず、必要なときとリリース前に流す。コマンドはリポジトリ直下の PowerShell で実行する。
+The documents in `docs` are in Japanese.
 
-```powershell
-# ブラウザの入手(初回。ビルドで出力されるスクリプトを使う)
-dotnet build tests/Template.BlazorServer.E2ETests
-pwsh tests/Template.BlazorServer.E2ETests/bin/Debug/net10.0/playwright.ps1 install
+| Document | Contents |
+| --- | --- |
+| [e2e.md](docs/e2e.md) | E2E tests (Playwright) |
 
-# 実行(既定は Chromium・画面なし)
-dotnet run --project tests/Template.BlazorServer.E2ETests
+# 🔗 Related Projects
 
-# 画面を出して実行
-$env:HEADED = "1"; dotnet run --project tests/Template.BlazorServer.E2ETests; Remove-Item Env:HEADED
+| Project | Description |
+| --- | --- |
+| [template-web-api](https://github.com/usausa/template-web-api) | Web API template (Minimal API) |
+| [template-web-fullstack](https://github.com/usausa/template-web-fullstack) | Full-stack template |
+| [template-web-mvc](https://github.com/usausa/template-web-mvc) | ASP.NET Core MVC template with Identity and passkeys |
+| [template-blazor-server-identity](https://github.com/usausa/template-blazor-server-identity) | Blazor Server template with ASP.NET Core Identity and passkeys |
+| [template-blazor-wasm](https://github.com/usausa/template-blazor-wasm) | Blazor WebAssembly + ASP.NET Core API template |
+| [template-grpc-server](https://github.com/usausa/template-grpc-server) | gRPC server template |
 
-# ブラウザを切り替える(chromium / firefox / webkit)
-$env:BROWSER = "firefox"; dotnet run --project tests/Template.BlazorServer.E2ETests; Remove-Item Env:BROWSER
+# 📦 My Libraries
 
-# Playwright Inspector で 1 手ずつ実行
-$env:PWDEBUG = "1"; dotnet run --project tests/Template.BlazorServer.E2ETests; Remove-Item Env:PWDEBUG
-```
-
-- 失敗したテストだけ、操作ごとの画面・DOM・通信・コンソールを記録したトレースを `tests/Template.BlazorServer.E2ETests/bin/Debug/net10.0/playwright-traces/<テストの表示名>.zip` に残す。`pwsh tests/Template.BlazorServer.E2ETests/bin/Debug/net10.0/playwright.ps1 show-trace <zip>` か https://trace.playwright.dev で開く
+| Library | Description |
+| --- | --- |
+| [Usa.Smart.Blazor](https://github.com/usausa/Smart-Net-Blazor) | Blazor helpers |
+| [Usa.Smart.Data.Accessor](https://github.com/usausa/Smart-Net-Data-Accessor) | Source generator based data accessor |
+| [Usa.Smart.Mapper](https://github.com/usausa/Smart-Net-Mapper) | Object mapper |
+| [Components.Blazor](https://github.com/usausa/BlazorComponents) | Blazor components(input, screen, file, audio, storage, etc.) |
+| [MusselChart](https://github.com/usausa/mussel-chart) | SVG chart for Blazor |
+| [MusselSheet](https://github.com/usausa/mussel-sheet) | Excel-like input sheet for Blazor |
+| [MusselCalendar](https://github.com/usausa/mussel-calendar) | Calendar views for Blazor |
+| [OysterReport](https://github.com/usausa/oyster-report) | PDF builder |
+| [MiniDataProfiler](https://github.com/usausa/mini-data-profiler) | SQL profiler |
+| [BunnyTail.ServiceRegistration](https://github.com/usausa/bunnytail-service-registration) | Service registration generator |
+| [BunnyTail.TextResource](https://github.com/usausa/bunnytail-text-resource) | Text resource generator |

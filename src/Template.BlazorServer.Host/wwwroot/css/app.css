@@ -298,6 +298,211 @@ html, body {
     word-break: break-all;
 }
 
+.calendar-host {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 96px);
+    min-height: 480px;
+}
+
+.calendar-page {
+    display: grid;
+    flex: 1 1 auto;
+    grid-template-columns: 240px minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    min-height: 0;
+    border: 1px solid var(--mud-palette-lines-default);
+    background-color: var(--mud-palette-surface);
+}
+
+.calendar-toolbar {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--mud-palette-lines-default);
+}
+
+.calendar-title {
+    margin-left: 8px;
+}
+
+.calendar-side {
+    --mussel-primary-text: var(--mud-palette-text-primary);
+    --mussel-muted-text: var(--mud-palette-text-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    min-height: 0;
+    padding: 16px 12px;
+    overflow-y: auto;
+    border-right: 1px solid var(--mud-palette-lines-default);
+}
+
+.calendar-list {
+    width: 100%;
+}
+
+.calendar-list-header,
+.calendar-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.calendar-check {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    cursor: pointer;
+}
+
+.calendar-check input {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+}
+
+.calendar-check span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.calendar-zone {
+    color: var(--mud-palette-text-secondary);
+}
+
+.calendar-main {
+    min-width: 0;
+    min-height: 0;
+}
+
+.mussel-calendar.calendar-view {
+    --mussel-calendar-line: var(--mud-palette-lines-default);
+    --mussel-calendar-text: var(--mud-palette-text-primary);
+    --mussel-calendar-muted: var(--mud-palette-text-secondary);
+    --mussel-calendar-background: var(--mud-palette-surface);
+    --mussel-calendar-outside: var(--mud-palette-background-gray);
+    --mussel-calendar-today: var(--mud-palette-primary);
+    --mussel-calendar-today-text: var(--mud-palette-primary-text);
+    --mussel-calendar-now: var(--mud-palette-error);
+    --mussel-calendar-hover: var(--mud-palette-action-default-hover);
+    --mussel-calendar-range: rgba(var(--mud-palette-primary-rgb), 0.16);
+    --mussel-calendar-range-border: rgba(var(--mud-palette-primary-rgb), 0.6);
+}
+
+.calendar-side .mussel-mini-month {
+    --mussel-calendar-today: var(--mud-palette-primary);
+    --mussel-calendar-today-text: var(--mud-palette-primary-text);
+    --mussel-calendar-hover: var(--mud-palette-action-default-hover);
+    --mussel-calendar-range: rgba(var(--mud-palette-primary-rgb), 0.12);
+}
+
+.calendar-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1100;
+}
+
+.calendar-popup {
+    position: fixed;
+    z-index: 1101;
+    display: grid;
+    gap: 12px;
+    width: 320px;
+    padding: 16px;
+}
+
+.calendar-popup-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.calendar-popup-title {
+    font-size: 1.125rem;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+}
+
+.calendar-popup-text {
+    color: var(--mud-palette-text-secondary);
+}
+
+.calendar-popup-note {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.calendar-popup-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.calendar-swatch {
+    flex: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background-color: var(--calendar-color);
+}
+
+.calendar-more-list {
+    display: grid;
+    gap: 2px;
+}
+
+.calendar-more-item {
+    display: grid;
+    grid-template-columns: 12px auto minmax(0, 1fr);
+    align-items: center;
+    justify-content: start;
+    gap: 8px;
+    padding: 4px 8px;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.calendar-more-item:hover {
+    background-color: var(--mud-palette-action-default-hover);
+}
+
+.calendar-dialog-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.calendar-colors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+@media (max-width: 720px) {
+    .calendar-page {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .calendar-side {
+        display: none;
+    }
+}
+
 .files-drop {
     position: relative;
     min-height: calc(100vh - 96px);

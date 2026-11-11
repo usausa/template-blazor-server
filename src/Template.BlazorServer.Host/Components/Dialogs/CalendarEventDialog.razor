@@ -1,0 +1,61 @@
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">@Title</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @ref="form" Model="model">
+            <MudTextField @bind-Value="model.Title"
+                          For="@(() => model.Title)"
+                          Validation="@Validator.ValidateValue"
+                          Label="タイトル"
+                          MaxLength="@Length.CalendarEventTitle"
+                          Immediate="true" />
+            <MudSwitch T="bool" @bind-Value="model.AllDay" Label="終日" Color="Color.Primary" Class="mt-4" />
+            <div class="calendar-dialog-row">
+                <MudDatePicker @bind-Date="model.StartDate"
+                               For="@(() => model.StartDate)"
+                               Validation="@Validator.ValidateValue"
+                               Label="開始日" />
+                @if (!model.AllDay)
+                {
+                    <MudTimePicker @bind-Time="model.StartTime"
+                                   For="@(() => model.StartTime)"
+                                   Validation="@Validator.ValidateValue"
+                                   Label="開始時刻" />
+                }
+            </div>
+            <div class="calendar-dialog-row">
+                <MudDatePicker @bind-Date="model.EndDate"
+                               For="@(() => model.EndDate)"
+                               Validation="@Validator.ValidateValue"
+                               Label="終了日" />
+                @if (!model.AllDay)
+                {
+                    <MudTimePicker @bind-Time="model.EndTime"
+                                   For="@(() => model.EndTime)"
+                                   Validation="@Validator.ValidateValue"
+                                   Label="終了時刻" />
+                }
+            </div>
+            <MudSelect T="long" @bind-Value="model.CalendarId" Label="カレンダー" Class="mt-4">
+                <ListItem Items="Calendars" Context="calendar">
+                    <ItemTemplate>
+                        <MudSelectItem T="long" Value="@calendar.Id">@calendar.Name</MudSelectItem>
+                    </ItemTemplate>
+                </ListItem>
+            </MudSelect>
+            <MudTextField @bind-Value="model.Description"
+                          For="@(() => model.Description)"
+                          Validation="@Validator.ValidateValue"
+                          Label="説明"
+                          Lines="3"
+                          MaxLength="@Length.CalendarEventDescription"
+                          Immediate="true"
+                          Class="mt-4" />
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="OnOkClick">OK</MudButton>
+        <MudButton Color="Color.Default" OnClick="OnCancelClick">CANCEL</MudButton>
+    </DialogActions>
+</MudDialog>
