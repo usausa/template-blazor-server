@@ -1,7 +1,5 @@
 # Template project for Blazor Server
 
-English | [日本語](README.ja.md)
-
 [Template](https://usausa.github.io/template/) project for Blazor Server.
 
 # ✅ Implement
