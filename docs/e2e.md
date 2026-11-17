@@ -5,7 +5,7 @@ E2E(`tests/Template.BlazorServer.E2ETests`)は Playwright で動かす。日常�
 ```powershell
 # ブラウザの入手(初回。ビルドで出力されるスクリプトを使う)
 dotnet build tests/Template.BlazorServer.E2ETests
-pwsh tests/Template.BlazorServer.E2ETests/bin/Debug/net10.0/playwright.ps1 install
+pwsh tests/Template.BlazorServer.E2ETests/bin/Debug/net11.0/playwright.ps1 install
 
 # 実行(既定は Chromium・画面なし)
 dotnet run --project tests/Template.BlazorServer.E2ETests
@@ -20,4 +20,4 @@ $env:BROWSER = "firefox"; dotnet run --project tests/Template.BlazorServer.E2ETe
 $env:PWDEBUG = "1"; dotnet run --project tests/Template.BlazorServer.E2ETests; Remove-Item Env:PWDEBUG
 ```
 
-- 失敗したテストだけ、操作ごとの画面・DOM・通信・コンソールを記録したトレースを `tests/Template.BlazorServer.E2ETests/bin/Debug/net10.0/playwright-traces/<テストの表示名>.zip` に残す。`pwsh tests/Template.BlazorServer.E2ETests/bin/Debug/net10.0/playwright.ps1 show-trace <zip>` か https://trace.playwright.dev で開く
+- 失敗したテストだけ、操作ごとの画面・DOM・通信・コンソールを記録したトレースを `tests/Template.BlazorServer.E2ETests/bin/Debug/net11.0/playwright-traces/<テストの表示名>.zip` に残す。`pwsh tests/Template.BlazorServer.E2ETests/bin/Debug/net11.0/playwright.ps1 show-trace <zip>` か https://trace.playwright.dev で開く

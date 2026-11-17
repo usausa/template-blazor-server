@@ -1,7 +1,6 @@
 namespace Template.BlazorServer.Host.Components.Pages;
 
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 
 using MudBlazor;
 
@@ -28,9 +27,6 @@ public sealed partial class NotificationsPage
 
     [Inject]
     public required RefreshTimerFactory RefreshTimerFactory { get; set; }
-
-    [Inject]
-    public required AuthenticationStateProvider AuthenticationStateProvider { get; set; }
 
     [Inject]
     public required NotificationService NotificationService { get; set; }
@@ -62,10 +58,15 @@ public sealed partial class NotificationsPage
         NotificationChangeNotifier.Changed += OnNotificationChanged;
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        var state = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var state = await AuthenticationState;
+        var previous = userName;
         userName = HttpServiceContext.GetUserId(state.User);
+        if (!String.IsNullOrEmpty(previous) && (previous != userName))
+        {
+            await grid.ReloadServerData();
+        }
     }
 
     protected override void Dispose(bool disposing)

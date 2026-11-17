@@ -44,4 +44,23 @@ public sealed class CircuitTrackerTests
         Assert.False(tracker.List()[0].Connected);
         Assert.Equal(1, changed);
     }
+
+    [Fact]
+    public void SetUserUpdatesOnlyWhenChanged()
+    {
+        // Arrange
+        var tracker = new CircuitTracker();
+        tracker.Add(new CircuitInfo("a", "admin", Now, true));
+        var changed = 0;
+        tracker.Changed += (_, _) => changed++;
+
+        // Act
+        tracker.SetUser("a", "admin");
+        tracker.SetUser("a", null);
+        tracker.SetUser("x", "user");
+
+        // Assert
+        Assert.Null(tracker.List()[0].User);
+        Assert.Equal(1, changed);
+    }
 }

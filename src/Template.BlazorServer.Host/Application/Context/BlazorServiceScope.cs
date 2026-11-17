@@ -7,24 +7,20 @@ public sealed class BlazorServiceScope
 {
     private readonly TimeProvider timeProvider;
 
-    private readonly AuthenticationStateProvider authenticationStateProvider;
-
     private readonly ApplicationServiceContextProvider provider;
 
     public BlazorServiceScope(
         TimeProvider timeProvider,
-        AuthenticationStateProvider authenticationStateProvider,
         ApplicationServiceContextProvider provider)
     {
         this.timeProvider = timeProvider;
-        this.authenticationStateProvider = authenticationStateProvider;
         this.provider = provider;
     }
 
     // AsyncLocal は非同期メソッドの中で設定しても呼び出し元へ伝わらないため、ここでは値の生成だけを用意し、Begin は境界のメソッドが直接呼ぶ
-    public async ValueTask<Func<ServiceContext>> PrepareAsync()
+    public async ValueTask<Func<ServiceContext>> PrepareAsync(Task<AuthenticationState> authenticationState)
     {
-        var state = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var state = await authenticationState;
         var userId = HttpServiceContext.GetUserId(state.User);
         return () => new ServiceContext(timeProvider.GetLocalNow(), userId);
     }

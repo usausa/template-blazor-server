@@ -1,6 +1,7 @@
 namespace Template.BlazorServer.Host.Components;
 
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 
 using Template.BlazorServer.Host.Application.Context;
 
@@ -9,11 +10,14 @@ public abstract class AppPageBase : AppComponentBase, IHandleEvent
     [Inject]
     private BlazorServiceScope ServiceScope { get; set; } = default!;
 
-    Task IHandleEvent.HandleEventAsync(EventCallbackWorkItem callback, object? arg) => HandleEventAsync(callback, arg);
+    [CascadingParameter]
+    protected Task<AuthenticationState> AuthenticationState { get; set; } = default!;
+
+    Task IHandleEvent.HandleEventAsync(EventCallbackWorkItem item, object? arg) => HandleEventAsync(item, arg);
 
     protected async Task HandleEventAsync(EventCallbackWorkItem callback, object? arg)
     {
-        using var scope = ServiceScope.Begin(await ServiceScope.PrepareAsync());
+        using var scope = ServiceScope.Begin(await ServiceScope.PrepareAsync(AuthenticationState));
 
         var task = callback.InvokeAsync(arg);
         var shouldAwait = task.Status != TaskStatus.RanToCompletion && task.Status != TaskStatus.Canceled;
@@ -40,7 +44,8 @@ public abstract class AppPageBase : AppComponentBase, IHandleEvent
 
     public override async Task SetParametersAsync(ParameterView parameters)
     {
-        using var scope = ServiceScope.Begin(await ServiceScope.PrepareAsync());
+        var authenticationState = parameters.GetValueOrDefault(nameof(AuthenticationState), AuthenticationState);
+        using var scope = ServiceScope.Begin(await ServiceScope.PrepareAsync(authenticationState));
         await base.SetParametersAsync(parameters);
     }
 }

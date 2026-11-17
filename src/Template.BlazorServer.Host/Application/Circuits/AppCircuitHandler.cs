@@ -3,7 +3,7 @@ namespace Template.BlazorServer.Host.Application.Circuits;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 
-public sealed class AppCircuitHandler : CircuitHandler
+public sealed class AppCircuitHandler : CircuitHandler, IDisposable
 {
     private readonly ILogger<AppCircuitHandler> log;
 
@@ -12,6 +12,8 @@ public sealed class AppCircuitHandler : CircuitHandler
     private readonly AuthenticationStateProvider authenticationStateProvider;
 
     private readonly CircuitTracker tracker;
+
+    private string circuitId = string.Empty;
 
     public AppCircuitHandler(
         ILogger<AppCircuitHandler> log,
@@ -25,8 +27,15 @@ public sealed class AppCircuitHandler : CircuitHandler
         this.tracker = tracker;
     }
 
+    public void Dispose()
+    {
+        authenticationStateProvider.AuthenticationStateChanged -= OnAuthenticationStateChanged;
+    }
+
     public override async Task OnCircuitOpenedAsync(Circuit circuit, CancellationToken cancellationToken)
     {
+        circuitId = circuit.Id;
+        authenticationStateProvider.AuthenticationStateChanged += OnAuthenticationStateChanged;
         var state = await authenticationStateProvider.GetAuthenticationStateAsync();
         var user = state.User.Identity?.Name;
         tracker.Add(new CircuitInfo(circuit.Id, user, timeProvider.GetLocalNow(), true));
@@ -50,5 +59,20 @@ public sealed class AppCircuitHandler : CircuitHandler
         tracker.Remove(circuit.Id);
         log.InfoCircuitClosed(circuit.Id, tracker.Count);
         return Task.CompletedTask;
+    }
+
+    private void OnAuthenticationStateChanged(Task<AuthenticationState> task) => _ = UpdateUserAsync(task);
+
+    private async Task UpdateUserAsync(Task<AuthenticationState> task)
+    {
+        try
+        {
+            var state = await task;
+            tracker.SetUser(circuitId, state.User.Identity?.Name);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            log.ErrorCircuitUserUpdateFailed(circuitId, ex);
+        }
     }
 }

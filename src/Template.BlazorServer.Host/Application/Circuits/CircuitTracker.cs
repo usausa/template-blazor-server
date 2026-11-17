@@ -29,6 +29,15 @@ public sealed class CircuitTracker
         }
     }
 
+    public void SetUser(string id, string? user)
+    {
+        if (circuits.TryGetValue(id, out var info) && (info.User != user))
+        {
+            circuits[id] = info with { User = user };
+            Changed?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
     public void Remove(string id)
     {
         if (circuits.TryRemove(id, out _))

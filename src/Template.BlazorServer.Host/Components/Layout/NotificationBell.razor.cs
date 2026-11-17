@@ -1,7 +1,6 @@
 namespace Template.BlazorServer.Host.Components.Layout;
 
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 
 using MudBlazor;
 
@@ -31,9 +30,6 @@ public sealed partial class NotificationBell
     public required RefreshTimerFactory RefreshTimerFactory { get; set; }
 
     [Inject]
-    public required AuthenticationStateProvider AuthenticationStateProvider { get; set; }
-
-    [Inject]
     public required NotificationService NotificationService { get; set; }
 
     [Inject]
@@ -59,11 +55,15 @@ public sealed partial class NotificationBell
         NotificationChangeNotifier.Changed += OnNotificationChanged;
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        var state = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        userName = HttpServiceContext.GetUserId(state.User);
-        await LoadAsync();
+        var state = await AuthenticationState;
+        var name = HttpServiceContext.GetUserId(state.User);
+        if (name != userName)
+        {
+            userName = name;
+            await LoadAsync();
+        }
     }
 
     protected override void Dispose(bool disposing)
