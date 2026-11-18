@@ -1,5 +1,6 @@
 namespace Template.BlazorServer.Host.Endpoints;
 
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.Net.Http.Headers;
 
 using Template.BlazorServer.Host.Application;
@@ -84,7 +85,6 @@ public static class FileEndpoints
             .Produces<Stream>(StatusCodes.Status200OK, "image/jpeg", "image/png", "image/gif", "image/bmp", "image/webp", "video/mp4", "video/webm", "audio/mpeg", "audio/wav", "audio/ogg", "text/plain", "application/pdf")
             .ProducesProblem(StatusCodes.Status404NotFound);
         group.MapPost("/upload/{**path}", HandleUploadAsync)
-            .DisableAntiforgery()
             .WithName("FileUpload")
             .Produces<FileUploadResponse>()
             .WithRequestTimeout(TimeSpan.FromMinutes(10));
@@ -169,11 +169,17 @@ public static class FileEndpoints
     //--------------------------------------------------------------------------------
 
     [RequestSizeLimit(MaxUploadSize)]
+    [RequireAntiforgeryToken]
     private static async ValueTask<IResult> HandleUploadAsync(
         HttpContext context,
         IStorage storage,
         string? path)
     {
+        if (context.Features.Get<IAntiforgeryValidationFeature>() is not { IsValid: true })
+        {
+            return TypedResults.Problem(statusCode: StatusCodes.Status400BadRequest, title: "Antiforgery validation failed.");
+        }
+
         var form = await context.Request.ReadFormAsync(context.RequestAborted);
         if (form.Files.Count == 0)
         {

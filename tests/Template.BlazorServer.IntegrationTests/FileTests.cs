@@ -79,6 +79,28 @@ public sealed class FileTests : IClassFixture<TestApplicationFactory>
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
+    [Theory]
+    [InlineData("cross-site", HttpStatusCode.BadRequest)]
+    [InlineData("same-site", HttpStatusCode.BadRequest)]
+    [InlineData("same-origin", HttpStatusCode.OK)]
+    public async Task UploadAllowsOnlySameOrigin(string site, HttpStatusCode expected)
+    {
+        // Arrange
+        var client = await factory.CreateAuthenticatedClientAsync();
+        using var content = new MultipartFormDataContent();
+        using var file = new ByteArrayContent(Png);
+        content.Add(file, "files", $"{site}.png");
+        using var request = new HttpRequestMessage(HttpMethod.Post, new Uri("/api/files/upload/", UriKind.Relative));
+        request.Content = content;
+        request.Headers.Add("Sec-Fetch-Site", site);
+
+        // Act
+        var response = await client.SendAsync(request, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(expected, response.StatusCode);
+    }
+
     private static async Task UploadAsync(HttpClient client, string name, byte[] data)
     {
         using var content = new MultipartFormDataContent();

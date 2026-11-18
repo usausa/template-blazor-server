@@ -1,5 +1,6 @@
 namespace Template.BlazorServer.Host.Endpoints;
 
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 public static class AuthEndpoints
@@ -19,7 +20,8 @@ public static class AuthEndpoints
         group.MapPost("/logout", HandleLogoutAsync)
             .RequireAuthorization()
             .WithName("AuthLogout")
-            .Produces(StatusCodes.Status302Found);
+            .Produces(StatusCodes.Status302Found)
+            .Produces(StatusCodes.Status400BadRequest);
     }
 
     //--------------------------------------------------------------------------------
@@ -55,8 +57,14 @@ public static class AuthEndpoints
         return TypedResults.LocalRedirect(String.IsNullOrEmpty(target) ? "~/" : "~/" + target);
     }
 
+    [RequireAntiforgeryToken]
     private static async ValueTask<IResult> HandleLogoutAsync(HttpContext context)
     {
+        if (context.Features.Get<IAntiforgeryValidationFeature>() is not { IsValid: true })
+        {
+            return TypedResults.BadRequest();
+        }
+
         await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
         return TypedResults.LocalRedirect("~/login");

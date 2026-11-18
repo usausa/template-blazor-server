@@ -9,8 +9,11 @@ public sealed class SampleTests : IClassFixture<TestApplicationFactory>
         this.factory = factory;
     }
 
-    [Fact]
-    public async Task UploadRequiresAntiforgeryToken()
+    [Theory]
+    [InlineData("cross-site", HttpStatusCode.BadRequest)]
+    [InlineData("same-site", HttpStatusCode.BadRequest)]
+    [InlineData("same-origin", HttpStatusCode.OK)]
+    public async Task UploadAllowsOnlySameOrigin(string site, HttpStatusCode expected)
     {
         // Arrange
         var client = await factory.CreateAuthenticatedClientAsync();
@@ -19,11 +22,14 @@ public sealed class SampleTests : IClassFixture<TestApplicationFactory>
         using var file = new ByteArrayContent("sample"u8.ToArray());
         content.Add(path, "relativePath");
         content.Add(file, "files", "sample.txt");
+        using var request = new HttpRequestMessage(HttpMethod.Post, new Uri("/api/samples/upload", UriKind.Relative));
+        request.Content = content;
+        request.Headers.Add("Sec-Fetch-Site", site);
 
         // Act
-        var response = await client.PostAsync(new Uri("/api/samples/upload", UriKind.Relative), content, TestContext.Current.CancellationToken);
+        var response = await client.SendAsync(request, TestContext.Current.CancellationToken);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(expected, response.StatusCode);
     }
 }
