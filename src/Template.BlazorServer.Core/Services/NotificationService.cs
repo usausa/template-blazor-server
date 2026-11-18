@@ -29,7 +29,7 @@ public sealed class NotificationService
     public async ValueTask<PagedResult<NotificationEntity>> QueryPageAsync(string userName, bool unreadOnly, int page, int size, CancellationToken cancellationToken = default)
     {
         var total = await notificationAccessor.CountAsync(userName, unreadOnly, cancellationToken);
-        var items = await notificationAccessor.QueryPageAsync(userName, unreadOnly, size, page * size, cancellationToken);
+        var items = await notificationAccessor.QueryPageAsync(userName, unreadOnly, size, (long)page * size, cancellationToken);
         return new PagedResult<NotificationEntity>(total, page, size, items);
     }
 

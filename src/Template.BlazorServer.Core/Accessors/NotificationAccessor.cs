@@ -14,7 +14,7 @@ public sealed partial class NotificationAccessor
     public partial ValueTask<int> CountAsync(string userName, bool unreadOnly, CancellationToken cancellationToken);
 
     [Query]
-    public partial ValueTask<List<NotificationEntity>> QueryPageAsync(string userName, bool unreadOnly, int limit, int offset, CancellationToken cancellationToken);
+    public partial ValueTask<List<NotificationEntity>> QueryPageAsync(string userName, bool unreadOnly, int limit, long offset, CancellationToken cancellationToken);
 
     [Execute]
     public partial ValueTask<int> InsertAsync(string? userName, string title, string body, string? link, DateTime createdAt);
